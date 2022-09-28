@@ -1,0 +1,7 @@
+module.exports = (req, res, next) => {
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.clearCookie();
+      res.end();
+    });
+  };
