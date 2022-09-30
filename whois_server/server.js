@@ -98,8 +98,8 @@ db.sequelize.sync()
   //   console.log("Drop and re-sync db.")
   // })
   // .then(() => {
-  //   const whoisdbs = require("./app/controllers/whois.controller.js");
-  //   whoisdbs.UpdateDataBase();
+    // const whoisdbs = require("./app/controllers/whois.controller.js");
+    // whoisdbs.UpdateDataBase();
   // })
 
   

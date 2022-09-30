@@ -19,5 +19,6 @@ db.sessionsdbs = require("./session.model.js")(sequelize, Sequelize);
 db.usersdbs = require("./users.model.js")(sequelize, Sequelize);
 db.nsserversdbs = require("./nsservers.model.js")(sequelize, Sequelize);
 db.registrantsdbs = require("./registrants.model.js")(sequelize, Sequelize);
+db.newsdbs = require("./news.model.js")(sequelize, Sequelize);
 
 module.exports = { sequelize, db };

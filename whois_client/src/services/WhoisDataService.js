@@ -49,5 +49,39 @@ class WhoisDataService {
   GetDomain(data){
     return http.post(`/users/AllDomains`, data);
   }
+  GetNews(data){
+    return http.post(`/news`, data);
+  }
+  GetNewsTitle(data){
+    return http.post(`/news/title`, data);
+  }
+  GetCountNews(){
+    return http.get(`/news/count`);
+  }
+  GetRole(data){
+    return http.post(`/users/getrole`, data);
+  }
+  /////////////////////////////////
+  GetAllUsers(id){
+    return http.get(`/admin/user/${id}`);
+  }
+  GetCountUsers(){
+    return http.get(`/admin/countusers`);
+  }
+  DeleteUser(data){
+    return http.post(`/admin/userdelete`, data);
+  }
+  ChangeRole(data){
+    return http.post(`/admin/changerole`, data);
+  }
+  CreateNews(data){
+    return http.post(`/admin/news`, data);
+  }
+  ChangeNews(data){
+    return http.put(`/admin/news`, data);
+  }
+  DeleteNews(){
+    return http.delete(`/admin/news`);
+  }
 }
 export default new WhoisDataService();

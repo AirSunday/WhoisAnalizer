@@ -188,66 +188,7 @@ exports.Get10 = (req, res) => {
         });
     }
   };
-  
-// exports.update = (req, res) => {
-//     const id = req.params.id;
-//     Whoisdb.update(req.body, {
-//       where: { id: id }
-//     })
-//       .then(num => {
-//         if (num == 1) {
-//           res.send({
-//             message: "WhoisDB was updated successfully."
-//           });
-//         } else {
-//           res.send({
-//             message: `Cannot update WhisDB with id=${id}. Maybe WhoisDB was not found or req.body is empty!`
-//           });
-//         }
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message: "Error updating WhoisDB with id=" + id
-//         });
-//       });
-//   };
-// exports.delete = (req, res) => {
-//     const id = req.params.id;
-//     Whoisdb.destroy({
-//       where: { id: id }
-//     })
-//       .then(num => {
-//         if (num == 1) {
-//           res.send({
-//             message: "WhoisDB was deleted successfully!"
-//           });
-//         } else {
-//           res.send({
-//             message: `Cannot delete WhoisDB with id=${id}. Maybe WhoisDB was not found!`
-//           });
-//         }
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message: "Could not delete WhoiDB with id=" + id
-//         });
-//       });
-//   };
-// exports.deleteAll = (req, res) => {
-//     Whoisdb.destroy({
-//       where: {},
-//       truncate: false
-//     })
-//       .then(nums => {
-//         res.send({ message: `${nums} WhoisDB were deleted successfully!` });
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message:
-//             err.message || "Some error occurred while removing all WhoisDB."
-//         });
-//       });
-//   };
+
 
 exports.GetWhoisInfo = (req, res) => {
   // res.cookie('token', '12345ABCDE');

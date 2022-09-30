@@ -132,9 +132,6 @@
                 this.tech.info = [];
               }
             })
-            .catch(e => {
-              console.log(e);
-            });
       },
     },
     created() {

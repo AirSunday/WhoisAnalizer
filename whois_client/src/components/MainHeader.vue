@@ -35,14 +35,6 @@ data() {
           userStatus: false,
       };
     },
-    methods: {
-      StatusUserCheck(hideForm, uemail, ustatus){
-        this.authForm = hideForm;
-        this.userEmail = uemail;
-        this.userStatus = ustatus;
-        console.log(uemail);
-      },
-    },
 }
 </script>
 

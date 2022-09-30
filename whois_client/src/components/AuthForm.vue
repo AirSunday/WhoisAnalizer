@@ -333,7 +333,7 @@ export default {
 
 .AuthFormMain{
     position: fixed;
-    z-index: 2;
+    z-index: 4;
     right: 0;
     top: 0;
     height: 100%;
@@ -343,11 +343,11 @@ export default {
 }
 
 .cl-btn-7 {
-    width: 40px;
-    height: 40px;
+    width: 3vw;
+    height: 3vw;
     border-radius: 40px;
     position: relative;
-    z-index: 1;
+    z-index: 3;
     margin: 20px auto;
     cursor: pointer;
     right: 30%;
@@ -356,12 +356,12 @@ export default {
     content: '+';
     color: #bda496;
     position: absolute;
-    z-index: 2;
+    z-index: 4;
     transform: rotate(45deg);
-    font-size: 50px;
+    font-size: 5vw;
     line-height: 1;
-    top: -5px;
-    left: 6px;
+    top: -1vw;
+    left: 0.2vw;
     transition: all 0.3s cubic-bezier(0.77, 0, 0.2, 0.85);
 }
 .cl-btn-7:after {
@@ -373,7 +373,7 @@ export default {
     height: 100%;
     border-radius: 100%;
     background: #bda496;
-    z-index: 1;
+    z-index: 3;
     transition: all 0.3s cubic-bezier(0.77, 0, 0.2, 0.85);
     transform: scale(0.01);
 }
@@ -407,7 +407,7 @@ export default {
 
 .AuthFormInput{
     margin-left: 7vw;
-    top: 15vh;
+    top: 10vw;
     position: absolute;
 }
 .input-line{

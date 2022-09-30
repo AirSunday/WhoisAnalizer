@@ -2,6 +2,7 @@ const db = require("../models").db;
 var sequelize = require('sequelize');
 const { where } = require("sequelize");
 const Usersdb = db.usersdbs;
+const Newsdb = db.newsdbs;
 const Sessiondb = db.sessionsdbs;
 const Op = db.Sequelize.Op;
 const Bluebird = require('bluebird');
@@ -30,7 +31,6 @@ exports.Authentication = (req, res) => {
   })
   
 }
-
 exports.getUserById = userId => Usersdb.findOne({
   where: { userId },
 });
@@ -87,7 +87,6 @@ exports.findOneId = (req, res) => {
       });
     });
 };
-
 exports.findOneEmail = (req, res) => {
   const email = req.body.email;
   Usersdb.findOne({ where: {email: email} })
@@ -107,7 +106,6 @@ exports.findOneEmail = (req, res) => {
       });
     });
 };
-
 exports.update = (req, res) => {
   const id = req.body.userId;
 
@@ -151,7 +149,7 @@ exports.delete = (req, res) => {
       });
     });
 };
-exports.AddDomain = (req, res) =>{
+exports.AddDomain = (req, res) => {
     const id = req.body.userId;
     Usersdb.findOne({ where: { userId: id } }).then(user => {
       if(user){
@@ -170,7 +168,7 @@ exports.AddDomain = (req, res) =>{
       })
     });
 };
-exports.DeleteDomain = (req, res) =>{
+exports.DeleteDomain = (req, res) => {
     const id = req.body.userId;
     Usersdb.findOne({ where: { userId: id } }).then(user => {
       if(user){
@@ -188,7 +186,7 @@ exports.DeleteDomain = (req, res) =>{
       })
     });
 };
-exports.GetDomain = (req, res) =>{
+exports.GetDomain = (req, res) => {
     const id = req.body.userId;
     console.log(req.body)
     Usersdb.findOne({ where: { userId: id } })
@@ -208,3 +206,35 @@ exports.GetDomain = (req, res) =>{
         });
       });
 };
+exports.GetNews = (req, res) => {
+  var page = req.body.page;
+  var count = req.body.count;
+  var arrNews = [];
+  Newsdb.findAll({attributes: [ 'news_id', 'title', 'preview', 'updatedAt'], order: ['updatedAt'], offset: (page - 1)*count, limit: count })
+    .then(response => {
+      response.forEach(element => {
+        arrNews.push(element.dataValues);
+      });
+      res.send(arrNews);
+    })
+}
+exports.GetNewsText = (req, res) => {
+  Newsdb.findOne({attributes: [ 'text' ], where: { news_id : req.body.news_id } }).then(response => {
+    res.send(response);
+  })
+}
+exports.GetCountNews = (req, res) => {
+    Newsdb.findAll({
+        attributes: [ 
+          [sequelize.fn('count', sequelize.col('title')), 'title_count']
+        ],
+    }).then(count => {
+        if(count) res.send(count);
+    })
+}
+exports.GetUserRole = (req, res) => {
+  Usersdb.findOne({ attributes: ['role'], where: {userId: req.body.userId} })
+    .then(role => {
+      res.send({role: role});
+    })
+}

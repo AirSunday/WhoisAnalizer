@@ -1,6 +1,7 @@
 module.exports = app => {
     const whoisdbs = require("../controllers/whois.controller.js");
     const usersdbs = require("../controllers/users.controller.js");
+    const adminController = require("../controllers/admin.controller.js");
     var router = require("express").Router();
     // 
     router.get("/get/get10/:id", whoisdbs.Get10);
@@ -29,10 +30,32 @@ module.exports = app => {
     // 
     router.delete("/users", usersdbs.delete);
     //
-    router.get("/users", usersdbs.Authentication)
+    router.get("/users", usersdbs.Authentication);
     //
-    // router.post('/sign-in', require('../controllers/sign-in'));
-    // router.post('/sign-out', require('../controllers/sign-out'));
+    router.post("/news", usersdbs.GetNews);
+    //
+    router.post("/news/title", usersdbs.GetNewsText);
+    //
+    router.get("/news/count", usersdbs.GetCountNews);
+    //
+    router.post("/users/getrole", usersdbs.GetUserRole);
+    //
+    //
+    //
+    //
+    router.get("/admin/user/:id", adminController.GetAllUsers);
+    //
+    router.get("/admin/countusers", adminController.GetCountUsers);
+    //
+    router.post("/admin/userdelete", adminController.DeleteUser);
+    //
+    router.post("/admin/changerole", adminController.ChangeRole);
+    //
+    router.post("/admin/news", adminController.CreateNews);
+    //
+    router.put("/admin/news", adminController.ChangeNews);
+    //
+    router.delete("/admin/news", adminController.DeleteNews);
     //
     app.use('/api', router);
   };
