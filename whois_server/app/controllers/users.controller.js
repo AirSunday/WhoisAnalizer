@@ -210,7 +210,7 @@ exports.GetNews = (req, res) => {
   var page = req.body.page;
   var count = req.body.count;
   var arrNews = [];
-  Newsdb.findAll({attributes: [ 'news_id', 'title', 'preview', 'updatedAt'], order: ['updatedAt'], offset: (page - 1)*count, limit: count })
+  Newsdb.findAll({attributes: [ 'news_id', 'title', 'preview', 'updatedAt'], order: [['updatedAt', 'DESC']], offset: (page - 1)*count, limit: count })
     .then(response => {
       response.forEach(element => {
         arrNews.push(element.dataValues);

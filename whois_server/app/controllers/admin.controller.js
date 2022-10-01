@@ -120,10 +120,17 @@ exports.ChangeNews = (req, res) => {
                     if(news){
                         news.title = req.body.title == '' ?  news.title : req.body.title;
                         news.text = req.body.text == '' ?  news.text : req.body.text;
+                        news.preview = req.body.text == '' ?  news.preview : req.body.text.substring(0, 80);
 
-                        news.save().then(response => {
-                            res.send();
-                        });
+                        news.save().then(() => {
+                            res.status(200).send({
+                                message: "delete complite"
+                            })
+                            }).catch(() => {
+                                res.status(500).send({
+                                    message: "delete not complite"
+                                });
+                            })
                     }
                 })
         })
@@ -136,9 +143,15 @@ exports.DeleteNews = (req, res) => {
             if(!role) return;
 
             Newsdb.destroy({ where: { news_id : req.body.news_id }})
-                .then(data => {
-                    res.send(data);
-            });
+                .then(() => {
+                    res.status(200).send({
+                        message: "delete complite"
+                    })
+                }).catch(() => {
+                    res.status(500).send({
+                        message: "delete not complite"
+                    });
+                })
         })
     })
 }
@@ -164,6 +177,24 @@ exports.ChangeRole = (req, res) => {
                             });
                         })
                 });
+        })
+    })
+}
+
+exports.GetAllTitleNews = (req, res) => {
+    FindSession(req).then(val => {
+        FindAdmin(val).then(role => {
+            if(!role) return;
+
+            const id = req.params.id;
+            Newsdb.findAll({attributes: [ 'news_id', 'title' ], order: [['updatedAt' ,'DESC']], 
+                offset: (id - 1)*10, limit: 10 }).then(response => {
+                    var news = []
+                    response.forEach(element => {
+                        news.push(element.dataValues);
+                    });
+                    res.send(news);
+            })
         })
     })
 }

@@ -53,9 +53,11 @@ module.exports = app => {
     //
     router.post("/admin/news", adminController.CreateNews);
     //
+    router.post("/admin/getallnews/:id", adminController.GetAllTitleNews);
+    //
     router.put("/admin/news", adminController.ChangeNews);
     //
-    router.delete("/admin/news", adminController.DeleteNews);
+    router.post("/admin/newsdelete", adminController.DeleteNews);
     //
     app.use('/api', router);
   };

@@ -77,11 +77,14 @@ class WhoisDataService {
   CreateNews(data){
     return http.post(`/admin/news`, data);
   }
+  GetAllNews(id){
+    return http.post(`/admin/getallnews/${id}`);
+  }
   ChangeNews(data){
     return http.put(`/admin/news`, data);
   }
-  DeleteNews(){
-    return http.delete(`/admin/news`);
+  DeleteNews(data){
+    return http.post(`/admin/newsdelete`, data);
   }
 }
 export default new WhoisDataService();

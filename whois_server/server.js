@@ -101,5 +101,3 @@ db.sequelize.sync()
     // const whoisdbs = require("./app/controllers/whois.controller.js");
     // whoisdbs.UpdateDataBase();
   // })
-
-  
