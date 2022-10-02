@@ -94,6 +94,12 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
+  var cron = require('node-cron');
+
+  cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
+    require("./app/controllers/users.controller.js").CheckUsersDomain();
+  });
+
   // db.sequelize.sync({ force: true }).then(() => {
   //   console.log("Drop and re-sync db.")
   // })

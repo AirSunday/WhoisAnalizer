@@ -4,20 +4,19 @@ const whois = require('whois');
 const { rawListeners } = require("process");
 const { Console } = require("console");
 // const { registrantsdbs } = require("../models");
+const whoiser = require('whoiser')
 const Whoisdb = db.whoisdbs;
 const NsServersdb = db.nsserversdbs;
 const Registrantsdb = db.registrantsdbs
 const Op = db.Sequelize.Op;
 
-Registrantsdb.hasMany(Whoisdb, {
-  foreignKey: 'registrant'
-})
-Whoisdb.belongsTo(Registrantsdb, {
-  foreignKey: 'registrant'
-})
+// Registrantsdb.hasMany(Whoisdb, {
+//   foreignKey: 'registrant'
+// })
+// Whoisdb.belongsTo(Registrantsdb, {
+//   foreignKey: 'registrant'
+// })
 
-
-// Create and Save a new Tutorial
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.domain_name) {
@@ -46,7 +45,6 @@ exports.create = (req, res) => {
         });
       });
   };
-// Retrieve all WhoisDB from the database.
 exports.findAll = (req, res) => {
     const domainName = req.query.domain_name;
     Whoisdb.findAll({ where: domainName })
@@ -60,7 +58,6 @@ exports.findAll = (req, res) => {
         });
       });
   };
-// Find a single Tutorial with an id
 exports.Get10 = (req, res) => {
     const id = req.params.id;
     Whoisdb.findAll({ include: Registrantsdb,
@@ -103,7 +100,6 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-
   exports.GetNsServers = (req, res) => {
     const id = req.params.id;
     NsServersdb.findAll({
@@ -124,7 +120,6 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-
   exports.GetRegistrant = (req, res) => {
     Registrantsdb.findAll({ order: [['count', 'DESC']] })
       .then(data => {
@@ -142,7 +137,6 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-
   exports.GetCountDomain = (req, res) => {
     const table = req.params.table;
     if(table == 'domain') {
@@ -188,12 +182,7 @@ exports.Get10 = (req, res) => {
         });
     }
   };
-
-
 exports.GetWhoisInfo = (req, res) => {
-  // res.cookie('token', '12345ABCDE');
-  // res.send('Set Cookie');
-  
     whois.lookup(req.body.name, function(err, data) {
       res.status(201).json(data)
     });
@@ -276,28 +265,49 @@ exports.UpdateDataBase = (req, res) => {
 
           let promise = new Promise((resolve, reject) => {
 
-            whois.lookup(domain.toLowerCase().trim(), function(err, data) {
-              lineCount++;
-              console.log("_____________________________" + lineCount + "_____________________________") 
-              newDomain.domain_name = domain.toLowerCase();
-              data.split('\n').forEach((element, key, data) => {
-                if (element.indexOf('nserver') >= 0)
-                  AddNsServer(element.replace('nserver:', '').trim(), newDomain )
-                else if (element.indexOf('registrar') >= 0)
-                  AddRegistrant(element.replace('registrar:', '').trim(), newDomain )
-                else if (element.indexOf('free-date:') >= 0) 
-                  newDomain.release_date = element.replace('free-date:', '').trim()
-                else if (element.indexOf('created:') >= 0){
-                  const createTime = new Date(
-                      element.replace('created:', '').trim().split('T')[0]);
-                  const today = new Date();
-                  newDomain.age = today.getFullYear() - createTime.getFullYear();
-                }
-                if (Object.is(data.length - 1, key)) {
-                  resolve();
-                }
-              })
+            whoiser(domain.toLowerCase().trim()).then(data => {
+              if(data['whois.tcinet.ru']['Name Server'] != '') {
+                lineCount++;
+                console.log("_____________________________" + lineCount + "_____________________________") 
+                newDomain.domain_name = domain.toLowerCase();
+
+                const createTime = new Date(
+                  data['whois.tcinet.ru']['Created Date'].split('T')[0]);
+                const today = new Date();
+                newDomain.age = today.getFullYear() - createTime.getFullYear();
+
+                newDomain.release_date = data['whois.tcinet.ru']['free-date'];
+                data['whois.tcinet.ru']['Name Server'].forEach(element => {
+                  AddNsServer(element, newDomain)
+                });
+                AddRegistrant(data['whois.tcinet.ru']['Registrar'], newDomain);
+              }
+              resolve();
             })
+            
+
+            // whois.lookup(domain.toLowerCase().trim(), function(err, data) {
+            //   lineCount++;
+            //   console.log("_____________________________" + lineCount + "_____________________________") 
+            //   newDomain.domain_name = domain.toLowerCase();
+            //   data.split('\n').forEach((element, key, data) => {
+            //     if (element.indexOf('nserver') >= 0)
+            //       AddNsServer(element.replace('nserver:', '').trim(), newDomain )
+            //     else if (element.indexOf('registrar') >= 0)
+            //       AddRegistrant(element.replace('registrar:', '').trim(), newDomain )
+            //     else if (element.indexOf('free-date:') >= 0) 
+            //       newDomain.release_date = element.replace('free-date:', '').trim()
+            //     else if (element.indexOf('created:') >= 0){
+            //       const createTime = new Date(
+            //           element.replace('created:', '').trim().split('T')[0]);
+            //       const today = new Date();
+            //       newDomain.age = today.getFullYear() - createTime.getFullYear();
+            //     }
+            //     if (Object.is(data.length - 1, key)) {
+            //       resolve();
+            //     }
+            //   })
+            // })
 
           });
 

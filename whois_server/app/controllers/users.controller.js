@@ -1,13 +1,11 @@
 const db = require("../models").db;
 var sequelize = require('sequelize');
-const { where } = require("sequelize");
 const Usersdb = db.usersdbs;
 const Newsdb = db.newsdbs;
 const Sessiondb = db.sessionsdbs;
 const Op = db.Sequelize.Op;
-const Bluebird = require('bluebird');
-const passport = require('passport');
-const { session, use } = require("passport");
+const transporter = require('../config/email.config');
+const whois = require('whois');
 
 async function FindSession (req, res) {
   // console.log(req.headers.cookie)
@@ -237,4 +235,38 @@ exports.GetUserRole = (req, res) => {
     .then(role => {
       res.send({role: role});
     })
+}
+
+function SendMessage(name, email, domain){
+  transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: 'dom2564@icloud.com', // email FOR RELEASE BUT FOR DEBAUG USE dom2564@icloud.com
+    subject: 'Message from WhoisAnaliz',
+    text: `The domain name ${domain} you were tracking has been released`,
+    html:
+      `Diar ${name}, The domain name <i>${domain}</i> you were tracking has been <strong>released</strong>`,
+  })
+}
+
+const whoiser = require('whoiser', {follow: 1})
+async function WhoisGet(domain) {
+  let domainInfo = await whoiser.domain(domain);
+  return Object.values(domainInfo)[0]['Name Server'];
+  }
+
+exports.CheckUsersDomain = () => {
+
+  Usersdb.findAll({ where : { [Op.not]: {'domains' : '' } } })
+    .then(response => {
+      response.forEach(user => {
+        user.dataValues.domains.split(' ').forEach(domain => {
+          WhoisGet(domain).then(res => {
+            if(res.length == 0)
+              SendMessage(user.dataValues.name, user.dataValues.email, domain);
+          })
+        })
+      });
+    })
+
+  
 }
