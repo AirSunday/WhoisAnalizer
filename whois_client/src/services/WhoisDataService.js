@@ -86,5 +86,11 @@ class WhoisDataService {
   DeleteNews(data){
     return http.post(`/admin/newsdelete`, data);
   }
+  GetUrlDomain(){
+    return http.post(`/admin/url/get`);
+  }
+  ChangeUrlDomain(data){
+    return http.post(`admin/url/change`, data);
+  }
 }
 export default new WhoisDataService();

@@ -1,21 +1,20 @@
 const db = require("../models").db;
 var sequelize = require('sequelize');
 const whois = require('whois');
-const { rawListeners } = require("process");
-const { Console } = require("console");
-// const { registrantsdbs } = require("../models");
 const whoiser = require('whoiser')
 const Whoisdb = db.whoisdbs;
 const NsServersdb = db.nsserversdbs;
-const Registrantsdb = db.registrantsdbs
+const Registrantsdb = db.registrantsdbs;
 const Op = db.Sequelize.Op;
+const http = require('https');
+const fs = require('fs');
 
-// Registrantsdb.hasMany(Whoisdb, {
-//   foreignKey: 'registrant'
-// })
-// Whoisdb.belongsTo(Registrantsdb, {
-//   foreignKey: 'registrant'
-// })
+Registrantsdb.hasMany(Whoisdb, {
+  foreignKey: 'registrant'
+})
+Whoisdb.belongsTo(Registrantsdb, {
+  foreignKey: 'registrant'
+})
 
 exports.create = (req, res) => {
     // Validate request
@@ -186,24 +185,22 @@ exports.GetWhoisInfo = (req, res) => {
     whois.lookup(req.body.name, function(err, data) {
       res.status(201).json(data)
     });
-};
+  };
 
+/////////////////
 function AddNewDomain(newDomain){
   Whoisdb.create( newDomain )
 }
-
 function UpdateRegistrant(newDomain){
   Whoisdb.update({ registrant: newDomain.registrant  }, {
     where: { domain_name: newDomain.domain_name }
   })
 }
-
 function UpdateNsserver(newDomain){
   Whoisdb.update({ ns_servers: newDomain.ns_servers  }, {
     where: { domain_name: newDomain.domain_name }
   })
 }
-
 function AddRegistrant(registrant, newDomain){
   Registrantsdb.findOne({ where: {name: registrant} })
       .then(domainBD => {
@@ -224,7 +221,6 @@ function AddRegistrant(registrant, newDomain){
         }
   })
 } 
-
 function AddNsServer(nsServer, newDomain) {
   NsServersdb.findOne({ where: {name: nsServer} })
       .then(domainBD => {
@@ -244,22 +240,21 @@ function AddNsServer(nsServer, newDomain) {
           });
   })
 }
-
 exports.UpdateDataBase = (req, res) => {
 
-  const fs = require('fs');
   const readline = require('readline');
-  
+
   async function processLineByLine() {
-    // const fileStream = fs.createReadStream('D:\\ВУЗ\\диплом\\test.txt');
-    const fileStream = fs.createReadStream('D:\\ВУЗ\\диплом\\ru_domains.txt');
-    
+
+    const fileStream = fs.createReadStream('./app/data/ru_domains.txt');
+
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity
     });
     var lineCount = 0;
     for await (const line of rl) {
+      if(lineCount > 200) return;
           var domain = line.split('	')[0];
           var newDomain = {domain_name: '', age: 0, release_date: 0, ns_servers: '', registrant: 0 }
 
@@ -321,3 +316,25 @@ exports.UpdateDataBase = (req, res) => {
   }
   processLineByLine();
 }
+
+exports.DownloadDomains = (req, res) => {
+  fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
+    download(data)
+  });
+}
+async function download(url) {
+  var file = fs.createWriteStream('app/data/ru_domains.gz');
+  http.get(url, function(response) {
+    response.pipe(file);
+    response.on('end', function() {
+      file.close();
+      const zlib = require('zlib');
+      const fs = require('fs');
+      const inputFile = fs.createReadStream('./app/data/ru_domains.gz');
+      const outputFile = fs.createWriteStream('./app/data/ru_domains.txt');
+      inputFile.pipe(zlib.createUnzip()).pipe(outputFile);
+    });
+  }).on('error', function(err) {
+    fs.unlink('app/data/ru_domains.gz');
+  });
+};

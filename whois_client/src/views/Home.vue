@@ -3,7 +3,7 @@
     <AuthForm :ModView="'Main'"/>
     
         <div class="HeaderMain">
-          <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/>
+          <!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
           <p class="HeaderMainP">Whois</p>
           <p class="HeaderMainP" style="top: 15vw">Analiz</p>
           <div class="ScrollPage">
@@ -133,6 +133,10 @@
           this.yDown = null;       
         },
         scrollHeader(event) {
+
+        //debouncer https://doka.guide/js/debounce/
+
+
           if(this.CanSwap){
             this.CanSwap = false;
             if(event.deltaY > 0){

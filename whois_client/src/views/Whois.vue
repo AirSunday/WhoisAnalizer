@@ -1,7 +1,7 @@
 <template>
   <MainHeader :HeaderPos="'whois'"></MainHeader>
   
-  <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/>
+  <!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
 
 
     <div class="InfoMain">

@@ -36,35 +36,37 @@ exports.getUserByEmail = email => Usersdb.findOne({
   where: { email },
 });
 exports.create = (req, res) => {
-  console.log(req.body)
-  // Validate request
-  if (!req.body.name) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-    return;
-  }
-  // Create a Whoisdb
-  const usersdb = {
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    role: 'user',
-    status: '',
-    domains: '',
-  };
-  // Save Tutorial in the database
-  Usersdb.create(usersdb)
+  console.log("dada")
+  Usersdb.findAll({
+    attributes: [ 
+      [sequelize.fn('count', sequelize.col('name')), 'user_count']
+    ],
+  })
     .then(data => {
-      res.send(data);
-      // require('./app/controllers/sign-in')({email: req.body.email, password: req.body.password})
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the User."
+      
+      const usersdb = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        role: 'user',
+        status: '',
+        domains: '',
+      };
+      if (data[0].dataValues.user_count == 0) usersdb.role = 'admin';
+      
+        // Save Tutorial in the database
+      Usersdb.create(usersdb)
+      .then(data => {
+        res.send(data);
+        // require('./app/controllers/sign-in')({email: req.body.email, password: req.body.password})
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the User."
+        });
       });
-    });
+    })
 };
 exports.findOneId = (req, res) => {
   const id = req.body.userId;

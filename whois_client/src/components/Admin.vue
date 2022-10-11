@@ -1,9 +1,17 @@
 <template>
   
-    <button @click="this.ShowUsers = !this.ShowUsers; ShowUsersClick()" class="AddNewsBtn">Show Users</button>
-    <button @click="ShowAddNews = !ShowAddNews" class="AddNewsBtn">Add News</button>
-    <button @click="ShowChangeNews = !ShowChangeNews; ShowNewsClick()" class="AddNewsBtn">Chage News</button>
-  
+  <div style="display: flex; justify-content: space-between;">
+    <div>
+      <button @click="this.ShowUsers = !this.ShowUsers; ShowUsersClick()" class="AddNewsBtn">Show Users</button>
+      <button @click="ShowAddNews = !ShowAddNews" class="AddNewsBtn">Add News</button>
+      <button @click="ShowChangeNews = !ShowChangeNews; ShowNewsClick()" class="AddNewsBtn">Chage News</button>
+    </div>
+    <div class="AdminURL">
+      <input v-model="URLdomain" type='text' placeholder='URL to download domains' class='input-line'/>
+      <button @click="SaveURL">Save</button>
+    </div>
+  </div>
+
     <div v-show="ShowChangeNews" class="ShowUsersBlock">
         <table>
             <tr>
@@ -71,7 +79,7 @@
             <td @click="GoPageAdmin(2)"> &gt;&gt; </td>
         </table>
     </div>
-  
+
   <AlertMessages ref="AddAlertMess"/>
   </template>
   
@@ -100,9 +108,14 @@
         ShowUsers: false,
         ShowChangeNews: false,
         UpdateNewsShow: false,
+        URLdomain: '',
       }
     },
-    created() {  
+    created() { 
+      WhoisDataService.GetUrlDomain().then(res => {
+        this.URLdomain = res.data.url;
+      })
+      
       WhoisDataService.GetCountUsers().then(res => {
         this.CountUser = Math.ceil(res.data[0].name_count / 10);
       }).catch(this.CountUser = 0);
@@ -112,6 +125,14 @@
       }).catch(this.CountNews = 0);
     },
     methods: {
+      SaveURL(){
+        WhoisDataService.ChangeUrlDomain({ url: this.URLdomain }).then(res => {
+          if(res.statusText == "OK") 
+              this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Update successful' });
+          else 
+            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Error successful' });
+        })
+      },
       GoPageAdmin(direction){
         if(direction == 1 && this.PageUsers < this.CountUser) this.PageUsers += 1;
         else if (direction == -1 && this.PageUsers > 1) this.PageUsers -= 1;
@@ -222,6 +243,31 @@
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
 
+.AdminURL input {
+  padding-left: 5px;
+  border-radius: 30px;
+  border-color: #b8937e;
+  width: 20vw;
+  margin-bottom: 2vw;
+  height: calc(1em + 0.5vw);
+  font-size: calc(0.6em + 0.5vw);
+}
+
+.AdminURL button {
+    background: #bda496;
+    color: #FFF;
+    border: none;
+    border-radius: 30px;
+    width: 5vw;
+    height: 3vw;
+    font-size: 1vw;
+    margin: 1vw;
+  }
+  .AdminURL button:hover{
+      opacity: 0.6;
+      background: #EEE;
+      color: #bda496;
+  }
 .AdminClick {
     font-size: 3vw;
 }

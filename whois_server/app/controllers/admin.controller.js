@@ -198,3 +198,16 @@ exports.GetAllTitleNews = (req, res) => {
         })
     })
 }
+
+const fs = require('fs');
+exports.GetUrlDomain = (req, res) => {
+    fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
+        res.send({url: data});
+    });
+}
+
+exports.ChangeUrlDomain = (req, res) => {
+    fs.truncate('app/data/URL_domains.txt', 0, function(){});
+    fs.writeFile('app/data/URL_domains.txt', req.body.url, function(){});
+    res.send();
+}
