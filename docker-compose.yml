@@ -1,0 +1,68 @@
+version: "3.8"
+services:
+    # postgres:
+    #     image: postgres:14.1-alpine
+    #     restart: always
+    #     env_file: .env
+    #     environment:
+    #       - POSTGRES_USER=postgres
+    #       - POSTGRES_PASSWORD=123
+    #       - POSTGRES_DB=WhoisDataBase
+    #     ports:
+    #       - "5432:5432"
+    #     volumes:
+    #       - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+    # server:
+    #     build: whois_server/
+    #     ports:
+    #         - "8080:8080"
+    #     depends_on:
+    #         - postgres
+    # # nginx:
+    # #     restart: always
+    # #     build: nginx/
+    # #     ports:
+    # #         - "80:80"
+    # client:
+    #     build: whois_client/
+    #     network_mode: host
+    #     ports:
+    #       - "8081:8081"
+    #     depends_on:
+    #       - server
+
+  postgres:
+    image: postgres:14.1-alpine
+    # restart: always
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+
+  node:
+    build: whois_server/
+    image: node-app
+    env_file:
+      - "./whois_server/.env"
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=123
+      - DATABASE_NAME=WhoisDataBase
+      - DATABASE_HOST=postgres # NAME OF THE SERVICE
+    depends_on:
+      - postgres
+
+  vue:
+    build: whois_client/
+    image: vue-app
+    ports:
+      - 8081:8080
+    depends_on:
+        - node
