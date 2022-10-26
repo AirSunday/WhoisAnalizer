@@ -1,6 +1,4 @@
 <template>
-
-<!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
 <MainHeader :HeaderPos="'analiz'"></MainHeader>
 
     <div class="radios">

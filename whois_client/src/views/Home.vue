@@ -3,7 +3,6 @@
     <AuthForm :ModView="'Main'"/>
     
         <div class="HeaderMain">
-          <!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
           <p class="HeaderMainP">Whois</p>
           <p class="HeaderMainP" style="top: 15vw">Analiz</p>
           <div class="ScrollPage">
@@ -76,6 +75,7 @@
     <script>
     
     import AuthForm from '../components/AuthForm.vue';
+    import {debounce} from '../services/debounce';
     
     export default {
       name: 'HomeMain',
@@ -89,15 +89,17 @@
           top2: 94,
           top3: 95,
           top4: 96,
-          CanSwap: true,
           scrollPos: 0,
           yDown: null,
         }
       },
       created() {
-        window.addEventListener("wheel", (event) => { this.scrollHeader(event) });
-        window.addEventListener("touchstart", (event) => { this.handleTouchStart(event) });
-        window.addEventListener("touchmove", (event) => { this.handleTouchMove(event) });
+        const debounceScrollHeader = debounce(this.scrollHeader, 300);
+        const debounceHandleTouchStart = debounce(this.handleTouchStart, 300);
+        const debounceHandleTouchMove = debounce(this.handleTouchMove, 300);
+        window.addEventListener("wheel", (event) => { debounceScrollHeader(event) });
+        window.addEventListener("touchstart", (event) => { debounceHandleTouchStart(event) });
+        window.addEventListener("touchmove", (event) => { debounceHandleTouchMove(event) });
       },
       methods: {
         
@@ -107,17 +109,16 @@
         getTouches(evt) {
             return evt.touches;
         },
-        handleTouchStart(event){
+        handleTouchStart (event) {
           const firstTouch = this.getTouches(event)[0];                                    
           this.yDown = firstTouch.clientY; 
         },
-        handleTouchMove(event){
+        handleTouchMove(event) {
           if ( ! this.yDown ) {
               return;
           }                                  
           var yUp = event.touches[0].clientY;
           var yDiff = this.yDown - yUp;
-          this.CanSwap = false;
           if ( yDiff > 0 ) {
             if(this.top1 == 93) this.top1 = 3; 
             else if(this.top2 == 94) this.top2 = 5; 
@@ -129,16 +130,11 @@
             else if(this.top2 != 94) this.top2 = 94; 
             else if(this.top1 != 93) this.top1 = 93;
           }
-          setTimeout(this.swapPage, 500);
           this.yDown = null;       
         },
         scrollHeader(event) {
 
         //debouncer https://doka.guide/js/debounce/
-
-
-          if(this.CanSwap){
-            this.CanSwap = false;
             if(event.deltaY > 0){
               if(this.top1 == 93) this.top1 = 3; 
               else if(this.top2 == 94) this.top2 = 5; 
@@ -151,11 +147,6 @@
               else if(this.top2 != 94) this.top2 = 94; 
               else if(this.top1 != 93) this.top1 = 93;
             }
-            setTimeout(this.swapPage, 500);
-          }
-          else{
-            this.pos = window.scrollY;
-          }
         },
       }
     }
@@ -387,7 +378,7 @@
       text-align: center;
       color: #a08063;
       font-family: "Montserrat", sans-serif;
-      font-size: 1vw;
+      font-size: max(1vw, 7px);
       font-weight: semibold;
     }
     
@@ -396,12 +387,13 @@
     }
     
     .panel4 p{
-      font-size: 1.5vw;
+      font-size: max(1.5vw, 15px);
     }
     
     .panel4 img{
       height: auto;
       width: 5vw;
+      min-width: 70px;
     }
     </style>
     

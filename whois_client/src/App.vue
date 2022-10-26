@@ -1,5 +1,4 @@
 <template>
-  <img :src="require(`./components/images/back.png`)" alt="not found" class="imgBack"/>
   <router-view></router-view>
 
 </template>
@@ -11,12 +10,8 @@ export default {
 </script>
 
 <style>
-.imgBack{
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -1;
-  width: 100%;
-  height: auto;
-}
+body {
+    background-image: url('./components/images/back.png'); /* Путь к фоновому изображению */
+    background-color: #c7b39b; /* Цвет фона */
+   }
 </style>

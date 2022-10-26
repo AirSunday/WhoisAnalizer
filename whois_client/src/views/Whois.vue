@@ -1,9 +1,5 @@
 <template>
   <MainHeader :HeaderPos="'whois'"></MainHeader>
-  
-  <!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
-
-
     <div class="InfoMain">
       <div class="inputBlock">
           <input type="text"

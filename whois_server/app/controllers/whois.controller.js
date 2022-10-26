@@ -4,9 +4,12 @@ const whois = require('whois');
 const whoiser = require('whoiser')
 const Whoisdb = db.whoisdbs;
 const NsServersdb = db.nsserversdbs;
+const Newsdb = db.newsdbs;
 const Registrantsdb = db.registrantsdbs;
 const Op = db.Sequelize.Op;
 const http = require('https');
+const readline = require('readline');
+const lineByLine = require('n-readlines');
 const fs = require('fs');
 
 Registrantsdb.hasMany(Whoisdb, {
@@ -99,7 +102,7 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-  exports.GetNsServers = (req, res) => {
+exports.GetNsServers = (req, res) => {
     const id = req.params.id;
     NsServersdb.findAll({
       order: [['count', 'DESC']], offset: (id - 1)*20, limit: 20 
@@ -119,7 +122,7 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-  exports.GetRegistrant = (req, res) => {
+exports.GetRegistrant = (req, res) => {
     Registrantsdb.findAll({ order: [['count', 'DESC']] })
       .then(data => {
         if (data) {
@@ -136,7 +139,7 @@ exports.Get10 = (req, res) => {
         });
       });
   };
-  exports.GetCountDomain = (req, res) => {
+exports.GetCountDomain = (req, res) => {
     const table = req.params.table;
     if(table == 'domain') {
       Whoisdb.findAll({
@@ -242,11 +245,9 @@ function AddNsServer(nsServer, newDomain) {
 }
 exports.UpdateDataBase = (req, res) => {
 
-  const readline = require('readline');
-
   async function processLineByLine() {
 
-    const fileStream = fs.createReadStream('./app/data/ru_domains.txt');
+    const fileStream = fs.createReadStream('./app/data/new_ru_domains.txt');
 
     const rl = readline.createInterface({
       input: fileStream,
@@ -254,7 +255,13 @@ exports.UpdateDataBase = (req, res) => {
     });
     var lineCount = 0;
     for await (const line of rl) {
-      if(lineCount > 200) return;
+      if(lineCount > 190) {
+        let promise = new Promise((resolve, reject) => {
+          setTimeout(() => resolve("готово!"), 70000)
+        });
+        let result = await promise;
+        lineCount = 0;
+      }
           var domain = line.split('	')[0];
           var newDomain = {domain_name: '', age: 0, release_date: 0, ns_servers: '', registrant: 0 }
 
@@ -263,9 +270,8 @@ exports.UpdateDataBase = (req, res) => {
             whoiser(domain.toLowerCase().trim()).then(data => {
               if(data['whois.tcinet.ru']['Name Server'] != '') {
                 lineCount++;
-                console.log("_____________________________" + lineCount + "_____________________________") 
                 newDomain.domain_name = domain.toLowerCase();
-
+      
                 const createTime = new Date(
                   data['whois.tcinet.ru']['Created Date'].split('T')[0]);
                 const today = new Date();
@@ -308,21 +314,26 @@ exports.UpdateDataBase = (req, res) => {
 
           await promise.then(() => {
             if(newDomain.release_date != 0) AddNewDomain(newDomain)
-            else{
-              console.log(newDomain)
-            }
           });
         }
   }
   processLineByLine();
 }
-
 exports.DownloadDomains = (req, res) => {
   fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
     download(data)
   });
 }
 async function download(url) {
+  fs.unlink('app/data/old_ru_domains.txt', (err, result) => {
+    if(err) console.log('error', err);
+    fs.rename('app/data/ru_domains.txt', 'app/data/old_ru_domains.txt', (err, result) => {
+      if(err) console.log('error', err);
+    });
+  });
+  fs.unlink('app/data/ru_domains.gz', (err, result) => {
+    if(err) console.log('error', err);
+  });
   var file = fs.createWriteStream('app/data/ru_domains.gz');
   http.get(url, function(response) {
     response.pipe(file);
@@ -335,6 +346,146 @@ async function download(url) {
       inputFile.pipe(zlib.createUnzip()).pipe(outputFile);
     });
   }).on('error', function(err) {
-    fs.unlink('app/data/ru_domains.gz');
+    fs.unlink('app/data/ru_domains.gz', (err, result) => {
+      if(err) console.log('error', err);
+    });
   });
 };
+
+var countStat = {
+  countNew: 0, 
+  countDelete: 0,
+  countChange: 0,
+  lineCount: 0,
+}
+exports.CompareDomains = (req, res) => {
+  fs.unlink('app/data/ru_domains.gz', (err, result) => {
+    if(err) console.log('error', err);
+  });
+  fs.writeFile('./app/data/delete_ru_domains.txt', '', () => { console.log('done') })
+  fs.writeFile('./app/data/new_ru_domains.txt', '', () => { console.log('done') })
+  CompareFile().then(() => {
+    fs.unlink('app/data/old_ru_domains.txt', (err, result) => {
+      if(err) console.log('error', err);
+    });
+    CreateNews();
+    fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
+      download(data)
+    });
+  })
+}
+async function CompareFile (){
+    const File = fs.createReadStream('./app/data/ru_domains.txt');
+    const rl = readline.createInterface({
+      input: File,
+      crlfDelay: Infinity
+    });
+
+    const liner = new lineByLine('./app/data/old_ru_domains.txt');
+    let oldLine =  liner.next().toString('ascii'); 
+    for await (const line of rl) {
+      if(countStat.lineCount == 180000) return;
+      countStat.lineCount++;
+      compareLine = line.split('	')[0].localeCompare(oldLine.split('	')[0]);
+      if(compareLine == 0) {
+        if(line.localeCompare(oldLine) != 0){ 
+          addToFile('./app/data/new_ru_domains.txt', line);
+          addToFile('./app/data/delete_ru_domains.txt', line);
+          countStat.countChange++;
+        }
+        oldLine = liner.next().toString('ascii');
+      }
+      else if(compareLine < 0) {
+        addToFile('./app/data/new_ru_domains.txt', line);
+        countStat.countNew++;
+      }
+      else {
+        while(compareLine > 0){
+          countStat.countDelete++;
+          addToFile('./app/data/delete_ru_domains.txt', line);
+          oldLine = liner.next().toString('ascii');
+          compareLine = line.split('	')[0].localeCompare(oldLine.split('	')[0]);
+          if(compareLine == 0){
+            if(line.localeCompare(oldLine) != 0){
+              countStat.countChange++;
+              addToFile('./app/data/new_ru_domains.txt', line);
+              addToFile('./app/data/delete_ru_domains.txt', line);
+            }
+            oldLine = liner.next().toString('ascii');
+          }
+          else if(compareLine < 0){
+            countStat.countNew++;
+            addToFile('./app/data/new_ru_domains.txt', line);
+          }
+        }
+      }
+    }
+}
+function addToFile(file, str) {
+  fs.appendFile(file, str + '\n', function (err) {
+    if (err) throw err;
+  });
+}
+exports.DeleteDomain = (req, res) => {
+  async function DeleteDomainInBD() {
+
+    const fileStream = fs.createReadStream('./app/data/delete_ru_domains.txt');
+
+    const rl = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity
+    });
+    for await (const line of rl) {
+      let domainName = line.split('	')[0].toLowerCase();
+      console.log(domainName);
+      Whoisdb.findOne({ where: { domain_name: domainName } })
+        .then(data => {
+          if(data){
+            Registrantsdb.findOne({ where: { registrant_id: data.registrant } })
+              .then(reg => {
+                console.log(reg.name + ': ' + reg.count)
+                Registrantsdb.update({ count: reg.count - 1 }, {
+                  where: { name: reg.name }
+                })
+              })
+            
+            
+              data.ns_servers.split(' ').forEach(serv => {
+                if(serv != ''){
+                  NsServersdb.findOne({ where: {name:  serv } })
+                    .then(ns => {
+                      console.log(ns.name + ': ' + ns.count)
+                      NsServersdb.update({ count: ns.count - 1 }, {
+                        where: { name: ns.name }
+                      })
+                    })  
+                }
+              })
+            
+              Whoisdb.destroy({ where: { domain_name : data.domain_name } });
+
+          }
+        })
+
+    }
+  }
+  DeleteDomainInBD();
+}
+function CreateNews() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  let text = `News of changes in the statistics of the zone .ru:\n
+              ${countStat.countNew} domains were added;\n
+              ${countStat.countDelete} domains were deleted;\n
+              ${countStat.countChange} domains were changed;
+              Total domains ${countStat.lineCount}.`;
+  newNews = {
+    title: 'Domain statistics ' + mm + '.' + dd + '.' + yyyy + '.', 
+    preview: text.substring(0, 80),
+    text: text,
+  };
+
+  Newsdb.create(newNews);
+}

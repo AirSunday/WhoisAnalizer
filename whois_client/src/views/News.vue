@@ -1,5 +1,4 @@
 <template>
-  <!-- <img :src="require(`../components/images/back.png`)" alt="not found" class="imgBack"/> -->
   <Admin v-if="Role == 'admin'"/>
 
   <div class="newsAll" v-for="(news,key) in ArrNews" :key="key">
@@ -115,6 +114,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+.newsAll{
+  margin-top: 10vw;
+}
+
 .card{
   width: 70vw;
   height: auto;
@@ -177,13 +180,6 @@ export default {
 .TextMore{
   font-size: 2vw;
 }
-
-/* .imgBack{
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -1;
-} */
 
 .NavigationNews{
   margin: 1vw 2vw;

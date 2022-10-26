@@ -105,8 +105,13 @@ db.sequelize.sync()
   });
 
   cron.schedule('0 2 * * *', () => { // min hore day mounth year (every day 02:00)
+    require("./app/controllers/whois.controller.js").CompareDomains();
+  });
+
+  cron.schedule('0 3 * * *', () => { // min hore day mounth year (every day 03:00)
     require("./app/controllers/whois.controller.js").UpdateDataBase();
   });
+  // require("./app/controllers/whois.controller.js").CompareDomains();
 
   // db.sequelize.sync({ force: true }).then(() => {
     // console.log("Drop and re-sync db.")
