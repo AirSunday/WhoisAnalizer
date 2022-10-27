@@ -1,39 +1,9 @@
 version: "3.8"
 services:
-    # postgres:
-    #     image: postgres:14.1-alpine
-    #     restart: always
-    #     env_file: .env
-    #     environment:
-    #       - POSTGRES_USER=postgres
-    #       - POSTGRES_PASSWORD=123
-    #       - POSTGRES_DB=WhoisDataBase
-    #     ports:
-    #       - "5432:5432"
-    #     volumes:
-    #       - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
-    # server:
-    #     build: whois_server/
-    #     ports:
-    #         - "8080:8080"
-    #     depends_on:
-    #         - postgres
-    # # nginx:
-    # #     restart: always
-    # #     build: nginx/
-    # #     ports:
-    # #         - "80:80"
-    # client:
-    #     build: whois_client/
-    #     network_mode: host
-    #     ports:
-    #       - "8081:8081"
-    #     depends_on:
-    #       - server
 
   postgres:
     image: postgres:14.1-alpine
-    # restart: always
+    restart: always
     env_file: .env
     environment:
       - POSTGRES_USER=${DATABASE_USERNAME}
@@ -46,7 +16,7 @@ services:
 
   node:
     build: whois_server/
-    image: node-app
+    image: airsunday/node-app
     env_file:
       - "./whois_server/.env"
     ports:
@@ -61,7 +31,7 @@ services:
 
   vue:
     build: whois_client/
-    image: vue-app
+    image: airsunday/vue-app
     ports:
       - 8081:8080
     depends_on:

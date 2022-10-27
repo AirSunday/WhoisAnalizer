@@ -11,6 +11,7 @@ const http = require('https');
 const readline = require('readline');
 const lineByLine = require('n-readlines');
 const fs = require('fs');
+require('dotenv').config();
 
 Registrantsdb.hasMany(Whoisdb, {
   foreignKey: 'registrant'
@@ -198,10 +199,16 @@ function UpdateRegistrant(newDomain){
   Whoisdb.update({ registrant: newDomain.registrant  }, {
     where: { domain_name: newDomain.domain_name }
   })
+  .catch(err => {
+    console.log("Error in updateRegistrant")
+  })
 }
 function UpdateNsserver(newDomain){
   Whoisdb.update({ ns_servers: newDomain.ns_servers  }, {
     where: { domain_name: newDomain.domain_name }
+  })
+  .catch(err => {
+    console.log("Error in UpdateNsserver")
   })
 }
 function AddRegistrant(registrant, newDomain){
@@ -223,6 +230,9 @@ function AddRegistrant(registrant, newDomain){
           });
         }
   })
+  .catch(err => {
+    console.log("Error in AddRegistrant")
+  })
 } 
 function AddNsServer(nsServer, newDomain) {
   NsServersdb.findOne({ where: {name: nsServer} })
@@ -242,6 +252,9 @@ function AddNsServer(nsServer, newDomain) {
             UpdateNsserver(newDomain);
           });
   })
+  .catch(err => {
+    console.log("Error in AddNsServer")
+  })
 }
 exports.UpdateDataBase = (req, res) => {
 
@@ -255,12 +268,13 @@ exports.UpdateDataBase = (req, res) => {
     });
     var lineCount = 0;
     for await (const line of rl) {
-      if(lineCount > 190) {
+      lineCount++;
+      console.log(lineCount);
+      if(lineCount % 190 == 0) {
         let promise = new Promise((resolve, reject) => {
           setTimeout(() => resolve("готово!"), 70000)
         });
         let result = await promise;
-        lineCount = 0;
       }
           var domain = line.split('	')[0];
           var newDomain = {domain_name: '', age: 0, release_date: 0, ns_servers: '', registrant: 0 }
@@ -269,7 +283,6 @@ exports.UpdateDataBase = (req, res) => {
 
             whoiser(domain.toLowerCase().trim()).then(data => {
               if(data['whois.tcinet.ru']['Name Server'] != '') {
-                lineCount++;
                 newDomain.domain_name = domain.toLowerCase();
       
                 const createTime = new Date(
@@ -313,15 +326,24 @@ exports.UpdateDataBase = (req, res) => {
           });
 
           await promise.then(() => {
+            console.log(process.env.FLAG_REQUEST)
+            console.log(newDomain)
             if(newDomain.release_date != 0) AddNewDomain(newDomain)
-          });
+            if(lineCount >= countStat.lineCount - 1){
+              process.env.FLAG_REQUEST = true;
+            }
+          })
+          .catch(err => {
+            console.log("Error in processLineByLine")
+          })
         }
   }
   processLineByLine();
 }
 exports.DownloadDomains = (req, res) => {
   fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
-    download(data)
+    if(err) console.log(err);
+    else download(data)
   });
 }
 async function download(url) {
@@ -356,7 +378,7 @@ var countStat = {
   countNew: 0, 
   countDelete: 0,
   countChange: 0,
-  lineCount: 0,
+  lineCount: 404,
 }
 exports.CompareDomains = (req, res) => {
   fs.unlink('app/data/ru_domains.gz', (err, result) => {
@@ -369,9 +391,9 @@ exports.CompareDomains = (req, res) => {
       if(err) console.log('error', err);
     });
     CreateNews();
-    fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
-      download(data)
-    });
+  })
+  .catch(err => {
+    console.log("Error in CompareDomains")
   })
 }
 async function CompareFile (){
@@ -443,10 +465,12 @@ exports.DeleteDomain = (req, res) => {
           if(data){
             Registrantsdb.findOne({ where: { registrant_id: data.registrant } })
               .then(reg => {
-                console.log(reg.name + ': ' + reg.count)
                 Registrantsdb.update({ count: reg.count - 1 }, {
                   where: { name: reg.name }
                 })
+              })
+              .catch(err => {
+                console.log("Error in DeleteDomain")
               })
             
             
@@ -454,17 +478,25 @@ exports.DeleteDomain = (req, res) => {
                 if(serv != ''){
                   NsServersdb.findOne({ where: {name:  serv } })
                     .then(ns => {
-                      console.log(ns.name + ': ' + ns.count)
                       NsServersdb.update({ count: ns.count - 1 }, {
                         where: { name: ns.name }
                       })
                     })  
+                    .catch(err => {
+                      console.log("Error in DeleteDomain")
+                    })
                 }
               })
             
-              Whoisdb.destroy({ where: { domain_name : data.domain_name } });
+              Whoisdb.destroy({ where: { domain_name : data.domain_name } })
+              .catch(err => {
+                console.log("Error in DeleteDomain")
+              })
 
           }
+        })
+        .catch(err => {
+          console.log("Error in DeleteDomain")
         })
 
     }
@@ -487,5 +519,8 @@ function CreateNews() {
     text: text,
   };
 
-  Newsdb.create(newNews);
+  Newsdb.create(newNews)
+  .catch(err => {
+    console.log("Error in CreateNews")
+  })
 }
