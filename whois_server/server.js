@@ -9,16 +9,18 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const cookieParser = require('cookie-parser');
 const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
+import {hostServe, hostClient} from "../../config"; 
+
 
 require('./app/models/users.model.js');
 require('./app/models/session.model.js');
 
 app.use(cors({
   origin: [
-    'http://localhost:8081',
-    'https://localhost:8081',
-    'http://localhost:8080',
-    'https://localhost:8080',
+    hostClient,
+    // 'https://localhost:8081',
+    // 'http://localhost:8080',
+    // 'https://localhost:8080',
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']
@@ -27,7 +29,7 @@ app.use(cors({
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connec
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
+  res.setHeader('Access-Control-Allow-Origin', hostClient);
   // res.setHeader('Access-Control-Allow-Origin', 'http://172.20.10.5:8081');
 
   // Request methods you wish to allow
