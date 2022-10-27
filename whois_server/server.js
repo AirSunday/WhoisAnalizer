@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
 
-const hostClient = "http://5.101.51.92/:8081";
+const hostClient = "http://5.101.51.92:8081";
 
 require('./app/models/users.model.js');
 require('./app/models/session.model.js');
