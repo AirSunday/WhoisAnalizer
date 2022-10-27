@@ -9,7 +9,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const cookieParser = require('cookie-parser');
 const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
-import {hostServe, hostClient} from "../../config"; 
+import {hostServe, hostClient} from "./config";
 
 
 require('./app/models/users.model.js');
