@@ -407,6 +407,7 @@ async function CompareFile (){
       // if(countStat.lineCount == 180000) return; // МОЖЕТ ДОБАВИТЬ В ПРОДАКЩЕН????
       countStat.lineCount++;
       compareLine = line.split('	')[0].localeCompare(oldLine.split('	')[0]);
+      console.log(compareLine)
       if(compareLine == 0) {
         if(line.localeCompare(oldLine) != 0){ 
           addToFile('./app/data/new_ru_domains.txt', line);
