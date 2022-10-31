@@ -106,7 +106,7 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('35 12 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('48 13 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
@@ -114,7 +114,7 @@ db.sequelize.sync()
   require("./app/controllers/whois.controller.js").CompareDomains();
 
   // require("./app/controllers/whois.controller.js").DownloadDomains();
-  cron.schedule('40 12 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('50 13 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
@@ -122,7 +122,7 @@ db.sequelize.sync()
   // require("./app/controllers/whois.controller.js").CompareDomains();
 
   // cron.schedule('0 3 * * *', () => { // min hore day mounth year (every day 03:00)
-    cron.schedule('40 13 * * *', () => { // min hore day mounth year (every day 03:00)
+    cron.schedule('00 14 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
