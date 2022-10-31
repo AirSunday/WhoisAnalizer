@@ -11,7 +11,7 @@ const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
 
 // const hostClient = "http://localhost:8081";
-const hostClient = "http://80.249.147.155:8081";
+const hostClient = "http://5.53.124.242:8081";
 
 require('./app/models/users.model.js');
 require('./app/models/session.model.js');

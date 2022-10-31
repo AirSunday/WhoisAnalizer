@@ -1,6 +1,6 @@
 import axios from "axios"; 
 // const hostServe = "http://localhost:8080";
-const hostServe = "http://80.249.147.155:8080";
+const hostServe = "http://5.53.124.242:8080";
 export default axios.create({
   withCredentials: true,
   baseURL: hostServe + "/api",
