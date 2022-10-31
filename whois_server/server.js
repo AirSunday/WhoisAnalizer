@@ -106,13 +106,13 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('0 10 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('25 11 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
   // require("./app/controllers/whois.controller.js").DownloadDomains();
-  cron.schedule('20 10 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('35 11 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }

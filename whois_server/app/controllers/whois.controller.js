@@ -399,15 +399,30 @@ async function CompareFile (){
       input: File,
       crlfDelay: Infinity
     });
+    
+    var stats1 = fs.statSync("./app/data/ru_domains.txt")
+    var fileSizeInBytes1 = stats1.size;
+// Convert the file size to megabytes (optional)
+   var fileSizeInMegabytes1 = fileSizeInBytes1 / (1024*1024);
+
+    var stats = fs.statSync("./app/data/old_ru_domains.txt")
+    var fileSizeInBytes = stats.size;
+// Convert the file size to megabytes (optional)
+   var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
 
     const liner = new lineByLine('./app/data/old_ru_domains.txt');
     addToFile('app/data/logs.log', 'Create all stream');
+    addToFile('app/data/logs.log', 'old_ru_domains.txt' + fileSizeInMegabytes);
+    addToFile('app/data/logs.log', 'ru_domains.txt' + fileSizeInMegabytes1);
+
+
+
     let oldLine =  liner.next().toString('ascii'); 
     for await (const line of rl) {
       // if(countStat.lineCount == 180000) return; // МОЖЕТ ДОБАВИТЬ В ПРОДАКЩЕН????
       countStat.lineCount++;
       compareLine = line.split('	')[0].localeCompare(oldLine.split('	')[0]);
-      // console.log(compareLine)
+      console.log(countStat.lineCount + ' ' + line)
       if(compareLine == 0) {
         if(line.localeCompare(oldLine) != 0){ 
           addToFile('./app/data/new_ru_domains.txt', line);
