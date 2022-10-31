@@ -405,7 +405,7 @@ async function CompareFile (){
 
     let oldLine =  liner.next().toString('ascii'); 
     for await (const line of rl) {
-      // if(countStat.lineCount == 180000) return; // МОЖЕТ ДОБАВИТЬ В ПРОДАКЩЕН????
+      if(countStat.lineCount == 180000) return; // МОЖЕТ ДОБАВИТЬ В ПРОДАКЩЕН????
       countStat.lineCount++;
       compareLine = oldLine.split('	')[0] == false
                     ? line.split('	')[0].localeCompare(oldLine.split('	')[0]) 
