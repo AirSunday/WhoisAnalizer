@@ -1,1 +1,31 @@
-OLD LOGS
+clear logs
+delete old_ru_domains.txt
+rename ru_domains.txt to old_ru_domains
+create write stream ru_domains.gz
+start open archiv ru_domains.gz
+end open archiv ru_domains.gz
+Start Compare File
+Create all stream
+old_ru_domains.txt0
+ru_domains.txt279.8246841430664
+delete ru_domains.gz
+clear new_ru_domains.txt
+clear delete_ru_domains.txt
+old_ru_domains.txt0
+Start Compare File
+Create all stream
+ru_domains.txt200.2913694381714
+Create all stream
+Start Compare File
+ru_domains.txt200.2913694381714
+old_ru_domains.txt0
+Start Compare File
+Create all stream
+Start Compare File
+Create all stream
+Start Compare File
+Create all stream
+Start Compare File
+Create all stream
+Create all stream
+Start Compare File
