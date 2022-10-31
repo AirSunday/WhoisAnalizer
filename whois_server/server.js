@@ -11,7 +11,7 @@ const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
 
 // const hostClient = "http://localhost:8081";
-const hostClient = "http://5.101.51.92:8081";
+const hostClient = "http://80.249.147.155:8081";
 
 require('./app/models/users.model.js');
 require('./app/models/session.model.js');
@@ -106,13 +106,13 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('10 8 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('20 9 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
   // require("./app/controllers/whois.controller.js").DownloadDomains();
-  cron.schedule('20 8 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('40 9 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
@@ -120,7 +120,7 @@ db.sequelize.sync()
   // require("./app/controllers/whois.controller.js").CompareDomains();
 
   // cron.schedule('0 3 * * *', () => { // min hore day mounth year (every day 03:00)
-    cron.schedule('10 9 * * *', () => { // min hore day mounth year (every day 03:00)
+    cron.schedule('30 10 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
