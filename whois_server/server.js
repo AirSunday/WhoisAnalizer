@@ -106,7 +106,7 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('50 7 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('10 8 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
