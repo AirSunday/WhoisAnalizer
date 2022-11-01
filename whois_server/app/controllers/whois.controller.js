@@ -272,7 +272,7 @@ exports.UpdateDataBase = (req, res) => {
     for await (const line of rl) {
       lineCount++;
       console.log(lineCount);
-      if(lineCount % 190 == 0) {
+      if(lineCount % 110 == 0) {
         addToFile('app/data/logs.log', lineCount + ' domains was push in BD'); 
         let promise = new Promise((resolve, reject) => {
           setTimeout(() => resolve("готово!"), 70000)
