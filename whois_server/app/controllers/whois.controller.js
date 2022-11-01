@@ -198,6 +198,8 @@ function AddNewDomain(newDomain){
 function UpdateRegistrant(newDomain){
   Whoisdb.update({ registrant: newDomain.registrant  }, {
     where: { domain_name: newDomain.domain_name }
+  }).then(() => {
+    AddNewDomain(newDomain); // ЕЕЕЕЕЕЕЕЕЕЕЕЕЕБАТЬ какой кастыль!!!!!!!! ПЕРЕДЕЛАТЬ!!!!!!! 
   })
   .catch(err => {
     console.log("Error in updateRegistrant")
@@ -302,9 +304,6 @@ exports.UpdateDataBase = (req, res) => {
           });
 
           await promise.then(() => {
-            console.log(process.env.FLAG_REQUEST)
-            console.log(newDomain)
-            if(newDomain.release_date != 0) AddNewDomain(newDomain)
             if(lineCount >= countStat.lineCount - 1){
               addToFile('app/data/logs.log', 'end push domains. Count domains = ' + lineCount); 
               process.env.FLAG_REQUEST = true;
