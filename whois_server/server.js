@@ -111,7 +111,6 @@ db.sequelize.sync()
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
-  require("./app/controllers/whois.controller.js").CompareDomains();
 
   // require("./app/controllers/whois.controller.js").DownloadDomains();
   cron.schedule('50 13 * * *', () => { // min hore day mounth year (every day 02:00)
@@ -128,6 +127,8 @@ db.sequelize.sync()
       require("./app/controllers/whois.controller.js").UpdateDataBase();
     }
   });
+  require("./app/controllers/whois.controller.js").UpdateDataBase();
+
   // require("./app/controllers/whois.controller.js").CompareDomains();
 
   // db.sequelize.sync({ force: true }).then(() => {
