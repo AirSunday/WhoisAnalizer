@@ -98,7 +98,7 @@ db.sequelize.sync()
   var cron = require('node-cron');
 
   // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-  cron.schedule('30 19 * * *', () => { // min hore day mounth year (every day 00:00)
+  cron.schedule('00 19 * * *', () => { // min hore day mounth year (every day 00:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/users.controller.js").CheckUsersDomain();
     }
@@ -110,19 +110,19 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('50 19 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('00 20 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
   });
 
-  cron.schedule('50 19 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('50 20 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DeleteDomainInBD();
     }
   });
 
-  cron.schedule('40 20 * * *', () => { // min hore day mounth year (every day 03:00)
+  cron.schedule('50 21 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
