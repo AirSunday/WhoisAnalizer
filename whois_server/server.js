@@ -16,6 +16,7 @@ require('./app/models/session.model.js');
 app.use(cors({
   origin: [
     process.env.IP_HOST,
+    'http://188.68.222.76:80',
     // 'https://localhost:8081',
     // 'http://localhost:8080',
     // 'https://localhost:8080',
