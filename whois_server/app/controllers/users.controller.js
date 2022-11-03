@@ -36,7 +36,6 @@ exports.getUserByEmail = email => Usersdb.findOne({
   where: { email },
 });
 exports.create = (req, res) => {
-  console.log("dada")
   Usersdb.findAll({
     attributes: [ 
       [sequelize.fn('count', sequelize.col('name')), 'user_count']
@@ -153,7 +152,6 @@ exports.AddDomain = (req, res) => {
     const id = req.body.userId;
     Usersdb.findOne({ where: { userId: id } }).then(user => {
       if(user){
-
         user.domains += user.domains == '' ? req.body.domainName :  ' ' + req.body.domainName;
       }
     

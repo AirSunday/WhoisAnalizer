@@ -10,15 +10,12 @@ const cookieParser = require('cookie-parser');
 const passportConfig = require('./app/config/passport');
 const sequelize = require('./app/models/index').sequelize;
 
-// const hostClient = "http://localhost:8081";
-const hostClient = "http://5.53.124.242:8081";
-
 require('./app/models/users.model.js');
 require('./app/models/session.model.js');
 
 app.use(cors({
   origin: [
-    hostClient,
+    process.env.IP_HOST,
     // 'https://localhost:8081',
     // 'http://localhost:8080',
     // 'https://localhost:8080',
@@ -30,7 +27,7 @@ app.use(cors({
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connec
-  res.setHeader('Access-Control-Allow-Origin', hostClient);
+  res.setHeader('Access-Control-Allow-Origin', process.env.IP_HOST);
   // res.setHeader('Access-Control-Allow-Origin', 'http://172.20.10.5:8081');
 
   // Request methods you wish to allow
@@ -79,6 +76,7 @@ passportConfig(passport);
     store: new SequelizeStore({
       db: sequelize,
       table: 'sessionsdbs',
+      logging: false
    }),
   }));
 
@@ -112,28 +110,30 @@ db.sequelize.sync()
     }
   });
 
-  // require("./app/controllers/whois.controller.js").DownloadDomains();
   cron.schedule('50 19 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
   });
-  // require("./app/controllers/whois.controller.js").CompareDomains();
 
-  // cron.schedule('0 3 * * *', () => { // min hore day mounth year (every day 03:00)
-    cron.schedule('40 20 * * *', () => { // min hore day mounth year (every day 03:00)
+  cron.schedule('50 19 * * *', () => { // min hore day mounth year (every day 02:00)
+    if(process.env.FLAG_REQUEST == 'true'){
+      require("./app/controllers/whois.controller.js").DeleteDomainInBD();
+    }
+  });
+
+  cron.schedule('40 20 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
     }
   });
 
-  // require("./app/controllers/whois.controller.js").CompareDomains();
 
   // db.sequelize.sync({ force: true }).then(() => {
   //   console.log("Drop and re-sync db.")
   // })
   // .then(() => {
-    //  const whoisdbs = require("./app/controllers/whois.controller.js");
-    //  whoisdbs.UpdateDataBase();
+  //    const whoisdbs = require("./app/controllers/whois.controller.js");
+  //    whoisdbs.UpdateDataBase();
   // })

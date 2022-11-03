@@ -11,24 +11,27 @@ const http = require('https');
 const readline = require('readline');
 const lineByLine = require('n-readlines');
 const fs = require('fs');
+const { resolve } = require("path");
+const { start } = require("repl");
+const { AddDomain } = require("./users.controller");
 require('dotenv').config();
 
-Registrantsdb.hasMany(Whoisdb, {
-  foreignKey: 'registrant'
-})
-Whoisdb.belongsTo(Registrantsdb, {
-  foreignKey: 'registrant'
-})
+// Registrantsdb.hasMany(Whoisdb, {
+//   foreignKey: 'registrant'
+// })
+// Whoisdb.belongsTo(Registrantsdb, {
+//   foreignKey: 'registrant'
+// })
 
 exports.create = (req, res) => {
-    // Validate request
+
     if (!req.body.domain_name) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
       return;
     }
-    // Create a Whoisdb
+    
     const whoisdb = {
       domain_name: req.body.domain_name,
       age: req.body.age,
@@ -36,7 +39,7 @@ exports.create = (req, res) => {
       ns_servers: req.body.ns_servers,
       registrant: req.body.registrant,
     };
-    // Save Tutorial in the database
+    
     Whoisdb.create(whoisdb)
       .then(data => {
         res.send(data);
@@ -83,13 +86,11 @@ exports.Get10 = (req, res) => {
               domain_name: el.dataValues.domain_name,
               age: el.dataValues.age,
               release_date: el.dataValues.release_date,
-              registrant: el.dataValues.registrantsdb.dataValues.name,
+              registrant: el.dataValues.registrant,
               ns_servers: el.dataValues.ns_servers
             }));
           })
-            // console.log(newData)
             res.send(newData)
-          // console.log(data[2].dataValues)
           
         } else {
           res.status(404).send({
@@ -192,133 +193,163 @@ exports.GetWhoisInfo = (req, res) => {
   };
 
 /////////////////
-function AddNewDomain(newDomain){
-  Whoisdb.create( newDomain )
-}
-function UpdateRegistrant(newDomain){
-  Whoisdb.update({ registrant: newDomain.registrant  }, {
-    where: { domain_name: newDomain.domain_name }
-  }).then(() => {
-    AddNewDomain(newDomain); // ЕЕЕЕЕЕЕЕЕЕЕЕЕЕБАТЬ какой кастыль!!!!!!!! ПЕРЕДЕЛАТЬ!!!!!!! 
-  })
-  .catch(err => {
-    console.log("Error in updateRegistrant")
-  })
-}
-function UpdateNsserver(newDomain){
-  Whoisdb.update({ ns_servers: newDomain.ns_servers  }, {
-    where: { domain_name: newDomain.domain_name }
-  })
-  .catch(err => {
-    console.log("Error in UpdateNsserver")
-  })
-}
-function AddRegistrant(registrant, newDomain){
+function AddRegistrantInDB(registrant, count){
   Registrantsdb.findOne({ where: {name: registrant} })
       .then(domainBD => {
-        if(!domainBD) {
-            Registrantsdb.create({ name: registrant, count: 1 })
-              .then(res => { 
-                newDomain.registrant = res.registrant_id;
-                UpdateRegistrant(newDomain);
-              })
-        }
-        else {
-          Registrantsdb.update({ count: domainBD.count + 1 }, {
+        if(!domainBD)
+          Registrantsdb.create({ name: registrant, count: count });
+        else
+          Registrantsdb.update({ count: domainBD.count + count }, {
                         where: { name: registrant }
-          }).then((res) => { 
-            newDomain.registrant = domainBD.registrant_id;
-            UpdateRegistrant(newDomain);
-          });
-        }
+                      });
   })
   .catch(err => {
     console.log("Error in AddRegistrant")
   })
 } 
-function AddNsServer(nsServer, newDomain) {
+function AddNsServerInDB(nsServer, count) {
   NsServersdb.findOne({ where: {name: nsServer} })
       .then(domainBD => {
-        if(!domainBD) {
-          NsServersdb.create({ name: nsServer, count: 1 })
-              .then(res => { 
-                newDomain.ns_servers += res.name + " ";
-                UpdateNsserver(newDomain);
-              })
-        }
+        if(!domainBD)
+          NsServersdb.create({ name: nsServer, count: count });
         else
-          NsServersdb.update({ count: domainBD.count + 1 }, {
+          NsServersdb.update({ count: domainBD.count + count }, {
                         where: { name: nsServer }
-          }).then((res) => { 
-            newDomain.ns_servers += domainBD.name + " ";
-            UpdateNsserver(newDomain);
-          });
+                      })
   })
   .catch(err => {
     console.log("Error in AddNsServer")
-  })
+  });
 }
-exports.UpdateDataBase = (req, res) => {
 
-  async function processLineByLine() {
-
-    const fileStream = fs.createReadStream('./app/data/new_ru_domains.txt');
-
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity
+function AddDomainInDB(doamin){
+  
+  Whoisdb.create(doamin)
+    .catch(err => {
+      console.log('Error in AddDomainInDB')
     });
-    var lineCount = 0;
-    for await (const line of rl) {
-      lineCount++;
-      console.log(lineCount);
-      if(lineCount % 110 == 0) {
-        addToFile('app/data/logs.log', lineCount + ' domains was push in BD'); 
-        let promise = new Promise((resolve, reject) => {
-          setTimeout(() => resolve("готово!"), 70000)
-        });
-        let result = await promise;
-      }
-          var domain = line.split('	')[0];
-          var newDomain = {domain_name: '', age: 0, release_date: 0, ns_servers: '', registrant: 0 }
-
-          let promise = new Promise((resolve, reject) => {
-
-            whoiser(domain.toLowerCase().trim()).then(data => {
-              if(data['whois.tcinet.ru']['Name Server'] != '') {
-                newDomain.domain_name = domain.toLowerCase();
-      
-                const createTime = new Date(
-                  data['whois.tcinet.ru']['Created Date'].split('T')[0]);
-                const today = new Date();
-                newDomain.age = today.getFullYear() - createTime.getFullYear();
-
-                newDomain.release_date = data['whois.tcinet.ru']['free-date'];
-                data['whois.tcinet.ru']['Name Server'].forEach(element => {
-                  AddNsServer(element, newDomain)
-                });
-                AddRegistrant(data['whois.tcinet.ru']['Registrar'], newDomain);
-              }
-              resolve();
-            })
-          });
-
-          await promise.then(() => {
-            if(lineCount >= countStat.lineCount - 1){
-              addToFile('app/data/logs.log', 'end push domains. Count domains = ' + lineCount); 
-              process.env.FLAG_REQUEST = true;
-            }
-          })
-          .catch(err => {
-            console.log("Error in processLineByLine")
-            addToFile('app/data/logs.log', 'error in processLineByLine'); 
-          })
-        }
-  }
-  processLineByLine();
 }
+
+async function FillDomainObject(line){
+  let domain = line.split('	')[0].toLowerCase().trim();
+  let newDomain = { 
+    domain_name: '', 
+    age: 0, 
+    release_date: 0, 
+    ns_servers: '', 
+    registrant: '' 
+  };
+
+  await whoiser(domain).then(data => {
+    if(typeof data['whois.tcinet.ru']['Registrar'] !== 'undefined'){
+      newDomain.domain_name = domain;
+
+      const createTime = new Date(
+        data['whois.tcinet.ru']['Created Date'].split('T')[0]);
+      const today = new Date();
+      newDomain.age = today.getFullYear() - createTime.getFullYear();
+
+      newDomain.release_date = data['whois.tcinet.ru']['free-date'];
+
+      newDomain.ns_servers = data['whois.tcinet.ru']['Name Server'].join(' ');
+
+      newDomain.registrant = data['whois.tcinet.ru'].Registrar;
+    }
+  });
+
+  return newDomain;
+}
+
+function delay(timeout) {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+} 
+
+async function FillRegistrantDB(registrants, timeout) {
+  for(const registrant of registrants){
+    AddRegistrantInDB(...registrant);
+    await delay(timeout);
+  }
+}
+
+async function FillNsServersDB(ns_servers, timeout) {
+  for(const ns_server of ns_servers){
+    AddNsServerInDB(...ns_server);
+    await delay(timeout);
+  }
+}
+
+async function FillDomainDB(domains, timeout){ 
+  for(const domain of domains){
+    AddDomainInDB(domain, timeout);
+    await delay(timeout);
+  }
+}
+
+async function AddDamoinToDB(objAddtoBD){
+  let timeoutRegistrants = Math.floor(60000 / objAddtoBD.registrant.size);
+  let timeoutNsServers = Math.floor(60000 / objAddtoBD.ns_servers.size);
+  let timeoutDomains = Math.floor(60000 / objAddtoBD.domains.length);
+  
+  FillRegistrantDB(objAddtoBD.registrant, timeoutRegistrants);
+  FillNsServersDB(objAddtoBD.ns_servers, timeoutNsServers);
+  FillDomainDB(objAddtoBD.domains, timeoutDomains);
+
+}
+
+exports.UpdateDataBase = async function() {
+  const fileStream = fs.createReadStream('./app/data/new_ru_domains.txt');
+
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  });
+  var lineCount = 0;
+  objAddtoBD = {
+    registrant: new Map(),
+    ns_servers: new Map(),
+    domains: []
+  };
+
+  for await (const line of rl) {
+    lineCount++;
+    if(lineCount % 110 == 0 || lineCount == countStat.lineCount) {
+      if(lineCount >= countStat.lineCount - 1){
+        console.log('end push domains. Count domains = ' + lineCount); 
+        process.env.FLAG_REQUEST = true;
+      }
+      console.log(lineCount + ' domains was push in BD'); 
+      await delay(70000);
+
+      AddDamoinToDB(objAddtoBD);
+      objAddtoBD.registrant.clear();
+      objAddtoBD.ns_servers.clear();
+      objAddtoBD.domains = [];
+    }
+
+    FillDomainObject(line).then((newDomain) => {
+      if(newDomain.domain_name != ''){
+        const registrantCount = objAddtoBD.registrant.get(newDomain.registrant);
+        registrantCount
+          ? objAddtoBD.registrant.set(newDomain.registrant, registrantCount + 1)
+          : objAddtoBD.registrant.set(newDomain.registrant, 1);
+        
+        newDomain.ns_servers.split(' ').forEach(ns => {
+          let ns_serversCount = objAddtoBD.ns_servers.get(ns);
+          ns_serversCount
+            ? objAddtoBD.ns_servers.set(ns , ns_serversCount + 1)
+            : objAddtoBD.ns_servers.set(ns , 1);
+          })
+
+        objAddtoBD.domains.push(newDomain);
+      }
+    })
+    .catch(err => {
+      console.log('error in FillDomainObject'); 
+    })
+  }
+}
+
 exports.DownloadDomains = (req, res) => {
-  fs.writeFile('./app/data/logs.log', '', () => { addToFile('app/data/logs.log', 'clear logs'); })
   fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
     if(err) console.log(err);
     else download(data)
@@ -327,38 +358,38 @@ exports.DownloadDomains = (req, res) => {
 async function download(url) {
   if (fs.existsSync('app/data/old_ru_domains.txt')) 
     fs.unlink('app/data/old_ru_domains.txt', (err, result) => {
-      if(err) addToFile('app/data/logs.log', 'NOT delete old_ru_domains.txt');
-      else addToFile('app/data/logs.log', 'delete old_ru_domains.txt');
+      if(err) console.log('NOT delete old_ru_domains.txt');
+      else console.log('delete old_ru_domains.txt');
       if (fs.existsSync('app/data/ru_domains.txt')) 
         fs.rename('app/data/ru_domains.txt', 'app/data/old_ru_domains.txt', (err, result) => {
-          if(err) addToFile('app/data/logs.log', 'NOT rename ru_domains.txt to old_ru_domains');
-          else addToFile('app/data/logs.log', 'rename ru_domains.txt to old_ru_domains');
+          if(err) console.log('NOT rename ru_domains.txt to old_ru_domains');
+          else console.log('rename ru_domains.txt to old_ru_domains');
         });
     });
   if (fs.existsSync('app/data/ru_domains.gz')) 
     fs.unlink('app/data/ru_domains.gz', (err, result) => {
-      if(err) addToFile('app/data/logs.log', 'NOT delete ru_domains.gz'); 
-      else addToFile('app/data/logs.log', 'delete ru_domains.gz'); 
+      if(err) console.log('NOT delete ru_domains.gz'); 
+      else console.log('delete ru_domains.gz'); 
     });
   var file = fs.createWriteStream('app/data/ru_domains.gz');
   http.get(url, function(response) {
-    addToFile('app/data/logs.log', 'create write stream ru_domains.gz'); 
+    console.log('create write stream ru_domains.gz'); 
     response.pipe(file);
     response.on('end', function() {
       file.close();
-      addToFile('app/data/logs.log', 'start open archiv ru_domains.gz'); 
+      console.log('start open archiv ru_domains.gz'); 
       const zlib = require('zlib');
       const fs = require('fs');
       const inputFile = fs.createReadStream('./app/data/ru_domains.gz');
       const outputFile = fs.createWriteStream('./app/data/ru_domains.txt');
       inputFile.pipe(zlib.createUnzip()).pipe(outputFile);
-      addToFile('app/data/logs.log', 'end open archiv ru_domains.gz'); 
+      console.log('end open archiv ru_domains.gz'); 
     });
   }).on('error', function(err) {
-    addToFile('app/data/logs.log', 'error with archiv ru_domains.gz'); 
+    console.log('error with archiv ru_domains.gz'); 
     fs.unlink('app/data/ru_domains.gz', (err, result) => {
       if(err) console.log('error', err);
-      else addToFile('app/data/logs.log', 'not delete ru_domains.gz'); 
+      console.log('not delete ru_domains.gz'); 
     });
   });
 };
@@ -367,7 +398,7 @@ var countStat = {
   countNew: 0, 
   countDelete: 0,
   countChange: 0,
-  lineCount: 0,
+  lineCount: 463,
 }
 exports.CompareDomains = (req, res) => {
   if (fs.existsSync('app/data/ru_domains.gz')) 
@@ -385,7 +416,6 @@ exports.CompareDomains = (req, res) => {
         else addToFile('app/data/logs.log', 'delete old_ru_domains.txt');
       });
     CreateNews();
-    DeleteDomainInBD();
   })
   .catch(err => {
     addToFile('app/data/logs.log', 'ERROR in CompareDomains');
@@ -393,14 +423,14 @@ exports.CompareDomains = (req, res) => {
 }
 async function CompareFile (){
     const File = fs.createReadStream('./app/data/ru_domains.txt');
-    addToFile('app/data/logs.log', 'Start Compare File');
+    console.log('Start Compare File');
     const rl = readline.createInterface({
       input: File,
       crlfDelay: Infinity
     });
 
     const liner = new lineByLine('./app/data/old_ru_domains.txt');
-    addToFile('app/data/logs.log', 'Create all stream');
+    console.log('Create all stream');
 
     let oldLine =  liner.next().toString('ascii'); 
     for await (const line of rl) {
@@ -444,7 +474,6 @@ async function CompareFile (){
     }
 }
 function addToFile(file, str) {
-  if(file == 'app/data/logs.log') console.log(str);
   fs.appendFile(file, str + '\n', function (err) {
     if (err) throw err;
   });
@@ -454,7 +483,7 @@ exports.DeleteDomain = (req, res) => {
 }
 
 async function DeleteDomainInBD() {
-  addToFile('app/data/logs.log', 'start delete domains');
+  console.log('start delete domains');
   const fileStream = fs.createReadStream('./app/data/delete_ru_domains.txt');
 
   const rl = readline.createInterface({
@@ -466,14 +495,14 @@ async function DeleteDomainInBD() {
     Whoisdb.findOne({ where: { domain_name: domainName } })
       .then(data => {
         if(data){
-          Registrantsdb.findOne({ where: { registrant_id: data.registrant } })
+          Registrantsdb.findOne({ where: { name: data.registrant } })
             .then(reg => {
               Registrantsdb.update({ count: reg.count - 1 }, {
                 where: { name: reg.name }
               })
             })
             .catch(err => {
-              addToFile('app/data/logs.log', 'ERROR delete domains');
+              console.log('ERROR delete domains');
             })
           
           
@@ -486,27 +515,27 @@ async function DeleteDomainInBD() {
                     })
                   })  
                   .catch(err => {
-                    addToFile('app/data/logs.log', 'ERROR delete domains');
+                    console.log('ERROR delete domains');
                   })
               }
             })
           
             Whoisdb.destroy({ where: { domain_name : data.domain_name } })
             .catch(err => {
-              addToFile('app/data/logs.log', 'ERROR delete domains');
+              console.log('ERROR delete domains');
             })
 
         }
       })
       .catch(err => {
-        addToFile('app/data/logs.log', 'ERROR delete domains');
+        console.log('ERROR delete domains');
       })
 
   }
 }
 
 function CreateNews() {
-  addToFile('app/data/logs.log', 'start create news');
+  console.log('start create news');
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -524,6 +553,6 @@ function CreateNews() {
 
   Newsdb.create(newNews)
   .catch(err => {
-    addToFile('app/data/logs.log', 'ERROR in create news');
+    console.log('ERROR in create news');
   })
 }
