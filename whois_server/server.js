@@ -131,10 +131,10 @@ db.sequelize.sync()
   });
 
 
-  db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.")
-  })
-  .then(() => {
-     const whoisdbs = require("./app/controllers/whois.controller.js");
-     whoisdbs.UpdateDataBase();
-  })
+  // db.sequelize.sync({ force: true }).then(() => {
+  //   console.log("Drop and re-sync db.")
+  // })
+  // .then(() => {
+  //    const whoisdbs = require("./app/controllers/whois.controller.js");
+  //    whoisdbs.UpdateDataBase();
+  // })
