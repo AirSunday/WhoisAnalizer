@@ -16,7 +16,7 @@ require('./app/models/session.model.js');
 app.use(cors({
   origin: [
     // process.env.IP_HOST,
-    'http://188.68.222.76',
+    'http://188.68.222.76', //http://whoisa.ru/
     // 'https://localhost:8081',
     // 'http://localhost:8080',
     // 'https://localhost:8080',
@@ -131,10 +131,10 @@ db.sequelize.sync()
   });
 
 
-  // db.sequelize.sync({ force: true }).then(() => {
-  //   console.log("Drop and re-sync db.")
-  // })
-  // .then(() => {
-  //    const whoisdbs = require("./app/controllers/whois.controller.js");
-  //    whoisdbs.UpdateDataBase();
-  // })
+  db.sequelize.sync({ force: true }).then(() => {
+    console.log("Drop and re-sync db.")
+  })
+  .then(() => {
+     const whoisdbs = require("./app/controllers/whois.controller.js");
+     whoisdbs.UpdateDataBase();
+  })

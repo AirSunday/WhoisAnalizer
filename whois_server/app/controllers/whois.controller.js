@@ -66,7 +66,7 @@ exports.findAll = (req, res) => {
   };
 exports.Get10 = (req, res) => {
     const id = req.params.id;
-    Whoisdb.findAll({ include: Registrantsdb,
+    Whoisdb.findAll({
      order: ['release_date'], offset: (id - 1)*10, limit: 10 
   })
       .then(data => {
@@ -398,7 +398,7 @@ var countStat = {
   countNew: 0, 
   countDelete: 0,
   countChange: 0,
-  lineCount: 463,
+  lineCount: 0,
 }
 exports.CompareDomains = (req, res) => {
   if (fs.existsSync('app/data/ru_domains.gz')) 
