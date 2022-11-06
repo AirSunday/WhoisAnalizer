@@ -16,8 +16,8 @@ require('./app/models/session.model.js');
 app.use(cors({
   origin: [
     // process.env.IP_HOST,
-    // 'http://188.68.222.76', //http://whoisa.ru/
-    'http://whoisa.ru'
+    'http://188.68.222.76', //http://whoisa.ru/
+    // 'http://whoisa.ru'
     // 'https://localhost:8081',
     // 'http://localhost:8080',
     // 'https://localhost:8080',
@@ -29,8 +29,8 @@ app.use(cors({
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connec
-  res.setHeader('Access-Control-Allow-Origin', 'http://whoisa.ru');
-  // res.setHeader('Access-Control-Allow-Origin', 'http://172.20.10.5:8081');
+  // res.setHeader('Access-Control-Allow-Origin', 'http://whoisa.ru');
+  res.setHeader('Access-Control-Allow-Origin', 'http://188.68.222.76');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
