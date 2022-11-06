@@ -14,6 +14,7 @@ const fs = require('fs');
 const { resolve } = require("path");
 const { start } = require("repl");
 const { AddDomain } = require("./users.controller");
+const { Console } = require("console");
 require('dotenv').config();
 
 // Registrantsdb.hasMany(Whoisdb, {
@@ -193,43 +194,46 @@ exports.GetWhoisInfo = (req, res) => {
   };
 
 /////////////////
-function AddRegistrantInDB(registrant, count){
-  Registrantsdb.findOne({ where: {name: registrant} })
-      .then(domainBD => {
-        if(!domainBD)
-          Registrantsdb.create({ name: registrant, count: count });
-        else
-          Registrantsdb.update({ count: domainBD.count + count }, {
+async function AddRegistrantInDB(registrant, count){
+  await Registrantsdb.findOne({ where: {name: registrant} })
+      .then(async (domainBD) => {
+        if(!domainBD){
+          await Registrantsdb.create({ name: registrant, count: count });
+        }
+        else{
+          await Registrantsdb.update({ count: domainBD.count + count }, {
                         where: { name: registrant }
                       });
+                    }
   })
   .catch(err => {
     console.log("Error in AddRegistrant")
   })
 } 
-function AddNsServerInDB(nsServer, count) {
-  NsServersdb.findOne({ where: {name: nsServer} })
-      .then(domainBD => {
-        if(!domainBD)
-          NsServersdb.create({ name: nsServer, count: count });
-        else
-          NsServersdb.update({ count: domainBD.count + count }, {
+async function AddNsServerInDB(nsServer, count) {
+  await NsServersdb.findOne({ where: {name: nsServer} })
+      .then(async (domainBD) => {
+        if(!domainBD){
+          await NsServersdb.create({ name: nsServer, count: count });
+        }
+        else{
+          await NsServersdb.update({ count: domainBD.count + count }, {
                         where: { name: nsServer }
                       })
+                    }
   })
   .catch(err => {
     console.log("Error in AddNsServer")
   });
 }
 
-function AddDomainInDB(doamin){
-  
-  Whoisdb.create(doamin)
+async function AddDomainInDB(doamin){
+  await Whoisdb.create(doamin)
     .catch(err => {
       console.log('Error in AddDomainInDB')
     });
 }
-
+var a = 0;
 async function FillDomainObject(line){
   let domain = line.split('	')[0].toLowerCase().trim();
   let newDomain = { 
@@ -255,8 +259,10 @@ async function FillDomainObject(line){
 
       newDomain.registrant = data['whois.tcinet.ru'].Registrar;
     }
+  })
+  .catch(err => {
+    console.log('Error in whoiser')
   });
-
   return newDomain;
 }
 
@@ -264,36 +270,28 @@ function delay(timeout) {
   return new Promise(resolve => setTimeout(resolve, timeout));
 } 
 
-async function FillRegistrantDB(registrants, timeout) {
-  for(const registrant of registrants){
-    AddRegistrantInDB(...registrant);
-    await delay(timeout);
+async function FillRegistrantDB(registrants) {
+  for await (const registrant of registrants){
+    await AddRegistrantInDB(...registrant);
   }
 }
 
-async function FillNsServersDB(ns_servers, timeout) {
-  for(const ns_server of ns_servers){
-    AddNsServerInDB(...ns_server);
-    await delay(timeout);
+async function FillNsServersDB(ns_servers) {
+  for await(const ns_server of ns_servers){
+    await AddNsServerInDB(...ns_server);
   }
 }
 
-async function FillDomainDB(domains, timeout){ 
-  for(const domain of domains){
-    AddDomainInDB(domain, timeout);
-    await delay(timeout);
+async function FillDomainDB(domains){ 
+  for await (const domain of domains){
+    await AddDomainInDB(domain);
   }
 }
 
 async function AddDamoinToDB(objAddtoBD){
-  let timeoutRegistrants = Math.floor(60000 / objAddtoBD.registrant.size);
-  let timeoutNsServers = Math.floor(60000 / objAddtoBD.ns_servers.size);
-  let timeoutDomains = Math.floor(60000 / objAddtoBD.domains.length);
-  
-  FillRegistrantDB(objAddtoBD.registrant, timeoutRegistrants);
-  FillNsServersDB(objAddtoBD.ns_servers, timeoutNsServers);
-  FillDomainDB(objAddtoBD.domains, timeoutDomains);
-
+  await FillRegistrantDB(objAddtoBD.registrant);
+  await FillNsServersDB(objAddtoBD.ns_servers);
+  await FillDomainDB(objAddtoBD.domains);
 }
 
 exports.UpdateDataBase = async function() {
@@ -312,21 +310,28 @@ exports.UpdateDataBase = async function() {
 
   for await (const line of rl) {
     lineCount++;
-    if(lineCount % 110 == 0 || lineCount == countStat.lineCount) {
-      if(lineCount >= countStat.lineCount - 1){
+    if(lineCount % 110 == 0 || lineCount == countStat.countNew + countStat.countChange) {
+      if(lineCount >= countStat.countNew + countStat.countChange){
         console.log('end push domains. Count domains = ' + lineCount); 
         process.env.FLAG_REQUEST = true;
       }
       console.log(lineCount + ' domains was push in BD'); 
-      await delay(70000);
+      
+      let promiseAddDomainToDB = new Promise((resolve, reject) => {
+        AddDamoinToDB(objAddtoBD).then( resolve("result") );
+      })
 
-      AddDamoinToDB(objAddtoBD);
+      let promiseDelay = new Promise((resolve, reject) => {
+        setTimeout(resolve, 65000);
+      })
+      
+      await Promise.all([promiseDelay, promiseAddDomainToDB]);
+
       objAddtoBD.registrant.clear();
       objAddtoBD.ns_servers.clear();
       objAddtoBD.domains = [];
     }
-
-    FillDomainObject(line).then((newDomain) => {
+    await FillDomainObject(line).then((newDomain) => {
       if(newDomain.domain_name != ''){
         const registrantCount = objAddtoBD.registrant.get(newDomain.registrant);
         registrantCount
@@ -339,16 +344,11 @@ exports.UpdateDataBase = async function() {
             ? objAddtoBD.ns_servers.set(ns , ns_serversCount + 1)
             : objAddtoBD.ns_servers.set(ns , 1);
           })
-
         objAddtoBD.domains.push(newDomain);
       }
     })
-    .catch(err => {
-      console.log('error in FillDomainObject'); 
-    })
   }
 }
-
 exports.DownloadDomains = (req, res) => {
   fs.readFile('app/data/URL_domains.txt', 'utf8', (err, data) => {
     if(err) console.log(err);
@@ -395,7 +395,7 @@ async function download(url) {
 };
 
 var countStat = {
-  countNew: 0, 
+  countNew: 1042, 
   countDelete: 0,
   countChange: 0,
   lineCount: 0,

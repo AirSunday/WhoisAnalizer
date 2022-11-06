@@ -16,7 +16,8 @@ require('./app/models/session.model.js');
 app.use(cors({
   origin: [
     // process.env.IP_HOST,
-    'http://188.68.222.76', //http://whoisa.ru/
+    // 'http://188.68.222.76', //http://whoisa.ru/
+    'http://whoisa.ru'
     // 'https://localhost:8081',
     // 'http://localhost:8080',
     // 'https://localhost:8080',
@@ -28,7 +29,7 @@ app.use(cors({
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connec
-  res.setHeader('Access-Control-Allow-Origin', 'http://188.68.222.76');
+  res.setHeader('Access-Control-Allow-Origin', 'http://whoisa.ru');
   // res.setHeader('Access-Control-Allow-Origin', 'http://172.20.10.5:8081');
 
   // Request methods you wish to allow
@@ -99,31 +100,31 @@ db.sequelize.sync()
   var cron = require('node-cron');
 
   // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-  cron.schedule('00 7 * * *', () => { // min hore day mounth year (every day 00:00)
+  cron.schedule('00 13 * * *', () => { // min hore day mounth year (every day 00:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/users.controller.js").CheckUsersDomain();
     }
   });
 
-  cron.schedule('40 7 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('40 13 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
 
-  cron.schedule('00 8 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('00 14 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
   });
 
-  cron.schedule('50 8 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('50 14 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
-      require("./app/controllers/whois.controller.js").DeleteDomainInBD();
+      require("./app/controllers/whois.controller.js").DeleteDomain();
     }
   });
 
-  cron.schedule('50 9 * * *', () => { // min hore day mounth year (every day 03:00)
+  cron.schedule('50 15 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
