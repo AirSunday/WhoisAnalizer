@@ -233,7 +233,7 @@ async function AddDomainInDB(doamin){
       console.log('Error in AddDomainInDB')
     });
 }
-var a = 0;
+
 async function FillDomainObject(line){
   let domain = line.split('	')[0].toLowerCase().trim();
   let newDomain = { 
@@ -243,7 +243,6 @@ async function FillDomainObject(line){
     ns_servers: '', 
     registrant: '' 
   };
-
   await whoiser(domain).then(data => {
     if(typeof data['whois.tcinet.ru']['Registrar'] !== 'undefined'){
       newDomain.domain_name = domain;
@@ -282,7 +281,7 @@ async function FillNsServersDB(ns_servers) {
   }
 }
 
-async function FillDomainDB(domains){ 
+async function FillDomainDB(domains){
   for await (const domain of domains){
     await AddDomainInDB(domain);
   }
@@ -302,7 +301,7 @@ exports.UpdateDataBase = async function() {
     crlfDelay: Infinity
   });
   var lineCount = 0;
-  objAddtoBD = {
+  var objAddtoBD = {
     registrant: new Map(),
     ns_servers: new Map(),
     domains: []
@@ -310,23 +309,34 @@ exports.UpdateDataBase = async function() {
 
   for await (const line of rl) {
     lineCount++;
+    if(lineCount > 720000){
     if(lineCount % 110 == 0 || lineCount == countStat.countNew + countStat.countChange) {
       if(lineCount >= countStat.countNew + countStat.countChange){
         console.log('end push domains. Count domains = ' + lineCount); 
         process.env.FLAG_REQUEST = true;
       }
-      console.log(lineCount + ' domains was push in BD'); 
       
       let promiseAddDomainToDB = new Promise((resolve, reject) => {
-        AddDamoinToDB(objAddtoBD).then( resolve("result") );
+        // AddDamoinToDB(objAddtoBD).then( resolve("result") );
+        FillRegistrantDB(objAddtoBD.registrant)
+        .then(() => {
+          FillNsServersDB(objAddtoBD.ns_servers)
+            .then(() => {
+              FillDomainDB(objAddtoBD.domains)
+                .then(() => {
+                  resolve("result");
+                });
+            })
+        })
       })
-
+      
       let promiseDelay = new Promise((resolve, reject) => {
         setTimeout(resolve, 65000);
       })
       
       await Promise.all([promiseDelay, promiseAddDomainToDB]);
-
+      console.log(lineCount + ' domains was push in BD'); 
+      
       objAddtoBD.registrant.clear();
       objAddtoBD.ns_servers.clear();
       objAddtoBD.domains = [];
@@ -347,6 +357,7 @@ exports.UpdateDataBase = async function() {
         objAddtoBD.domains.push(newDomain);
       }
     })
+  }
   }
 }
 exports.DownloadDomains = (req, res) => {
@@ -395,7 +406,7 @@ async function download(url) {
 };
 
 var countStat = {
-  countNew: 1042, 
+  countNew: 4841372, 
   countDelete: 0,
   countChange: 0,
   lineCount: 0,

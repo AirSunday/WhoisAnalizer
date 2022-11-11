@@ -28,7 +28,14 @@ services:
       - DATABASE_HOST=postgres # NAME OF THE SERVICE
     depends_on:
       - postgres
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1024M
+        reservations:
+          cpus: '1'
+          memory: 1024M
   vue:
     build: whois_client/
     image: airsunday/vue-app
