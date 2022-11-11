@@ -406,7 +406,7 @@ async function download(url) {
 };
 
 var countStat = {
-  countNew: 4841372, 
+  countNew: 0, 
   countDelete: 0,
   countChange: 0,
   lineCount: 0,
@@ -414,22 +414,22 @@ var countStat = {
 exports.CompareDomains = (req, res) => {
   if (fs.existsSync('app/data/ru_domains.gz')) 
     fs.unlink('app/data/ru_domains.gz', (err, result) => {
-      if(err) addToFile('app/data/logs.log', 'NOT delete ru_domains.gz');
-      else addToFile('app/data/logs.log', 'delete ru_domains.gz');
+      if(err) console.log('NOT delete ru_domains.gz');
+      else console.log('delete ru_domains.gz');
     });
-  fs.writeFile('./app/data/delete_ru_domains.txt', '', () => { addToFile('app/data/logs.log', 'clear delete_ru_domains.txt'); })
-  fs.writeFile('./app/data/new_ru_domains.txt', '', () => { addToFile('app/data/logs.log', 'clear new_ru_domains.txt'); })
+  fs.writeFile('./app/data/delete_ru_domains.txt', '', () => { console.log('clear delete_ru_domains.txt'); })
+  fs.writeFile('./app/data/new_ru_domains.txt', '', () => { console.log('clear new_ru_domains.txt'); })
   CompareFile().then(() => {
-    addToFile('app/data/logs.log', 'END compare file. ' + countStat);
+    console.log('END compare file. ' + countStat);
     if (fs.existsSync('app/data/old_ru_domains.txt')) 
       fs.unlink('app/data/old_ru_domains.txt', (err, result) => {
-        if(err) addToFile('app/data/logs.log', 'NOT delete old_ru_domains.txt');
-        else addToFile('app/data/logs.log', 'delete old_ru_domains.txt');
+        if(err) console.log('NOT delete old_ru_domains.txt');
+        else console.log('delete old_ru_domains.txt');
       });
     CreateNews();
   })
   .catch(err => {
-    addToFile('app/data/logs.log', 'ERROR in CompareDomains');
+    console.log('ERROR in CompareDomains');
   })
 }
 async function CompareFile (){
@@ -439,6 +439,13 @@ async function CompareFile (){
       input: File,
       crlfDelay: Infinity
     });
+
+    countStat = {
+      countNew: 0, 
+      countDelete: 0,
+      countChange: 0,
+      lineCount: 0,
+    }
 
     const liner = new lineByLine('./app/data/old_ru_domains.txt');
     console.log('Create all stream');

@@ -102,31 +102,31 @@ db.sequelize.sync()
   var cron = require('node-cron');
 
   // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-  cron.schedule('00 17 * * *', () => { // min hore day mounth year (every day 00:00)
+  cron.schedule('00 20 * * *', () => { // min hore day mounth year (every day 00:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/users.controller.js").CheckUsersDomain();
     }
   });
 
-  cron.schedule('40 17 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('40 20 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
 
-  cron.schedule('00 18 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('00 21 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
   });
 
-  cron.schedule('50 18 * * *', () => { // min hore day mounth year (every day 02:00)
+  cron.schedule('50 21 * * *', () => { // min hore day mounth year (every day 02:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DeleteDomain();
     }
   });
 
-  cron.schedule('50 19 * * *', () => { // min hore day mounth year (every day 03:00)
+  cron.schedule('50 22 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
