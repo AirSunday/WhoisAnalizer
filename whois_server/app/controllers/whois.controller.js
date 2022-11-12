@@ -310,7 +310,7 @@ exports.UpdateDataBase = async function() {
 
   for await (const line of rl) {
     lineCount++;
-    if(lineCount > 790000){
+    if(lineCount > 790500){
     if(lineCount % 110 == 0 || lineCount == countStat.countNew + countStat.countChange) {
       if(lineCount >= countStat.countNew + countStat.countChange){
         console.log('end push domains. Count domains = ' + lineCount); 
