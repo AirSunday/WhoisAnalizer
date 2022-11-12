@@ -108,7 +108,7 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('40 21 * * *', () => { // min hore day mounth year (every day 01:00)
+  cron.schedule('40 10 * * *', () => { // min hore day mounth year (every day 01:00)
     if(process.env.FLAG_REQUEST == 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
@@ -126,13 +126,13 @@ db.sequelize.sync()
     }
   });
 
-  cron.schedule('50 23 * * *', () => { // min hore day mounth year (every day 03:00)
+  cron.schedule('50 10 * * *', () => { // min hore day mounth year (every day 03:00)
     if(process.env.FLAG_REQUEST == 'true'){
       process.env.FLAG_REQUEST = false;
       require("./app/controllers/whois.controller.js").UpdateDataBase();
     }
   });
-  require("./app/controllers/whois.controller.js").UpdateDataBase();
+  // require("./app/controllers/whois.controller.js").UpdateDataBase();
   // db.sequelize.sync({ force: true }).then(() => {
   //   console.log("Drop and re-sync db.")
   // })
