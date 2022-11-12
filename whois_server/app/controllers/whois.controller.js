@@ -270,18 +270,27 @@ function delay(timeout) {
 } 
 
 async function FillRegistrantDB(registrants) {
+  /////////
+  list.push(2);
+  /////////
   for await (const registrant of registrants){
     await AddRegistrantInDB(...registrant);
   }
 }
 
 async function FillNsServersDB(ns_servers) {
+  /////////
+  list.push(4);
+  /////////
   for await(const ns_server of ns_servers){
     await AddNsServerInDB(...ns_server);
   }
 }
 
 async function FillDomainDB(domains){
+  /////////
+  list.push(6);
+  /////////
   for await (const domain of domains){
     await AddDomainInDB(domain);
   }
@@ -293,6 +302,9 @@ async function AddDamoinToDB(objAddtoBD){
   await FillDomainDB(objAddtoBD.domains);
 }
 
+  /////////
+  var list = [0];
+  /////////
 exports.UpdateDataBase = async function() {
   const fileStream = fs.createReadStream('./app/data/new_ru_domains.txt');
 
@@ -309,7 +321,7 @@ exports.UpdateDataBase = async function() {
 
   for await (const line of rl) {
     lineCount++;
-    if(lineCount > 720000){
+    if(lineCount > 0){
     if(lineCount % 110 == 0 || lineCount == countStat.countNew + countStat.countChange) {
       if(lineCount >= countStat.countNew + countStat.countChange){
         console.log('end push domains. Count domains = ' + lineCount); 
@@ -318,12 +330,24 @@ exports.UpdateDataBase = async function() {
       
       let promiseAddDomainToDB = new Promise((resolve, reject) => {
         // AddDamoinToDB(objAddtoBD).then( resolve("result") );
+        /////////
+        list.push(1);
+        /////////
         FillRegistrantDB(objAddtoBD.registrant)
         .then(() => {
+          /////////
+          list.push(3);
+          /////////
           FillNsServersDB(objAddtoBD.ns_servers)
             .then(() => {
+              /////////
+              list.push(5);
+              /////////
               FillDomainDB(objAddtoBD.domains)
                 .then(() => {
+                  /////////
+                  list.push(7);
+                  /////////
                   resolve("result");
                 });
             })
@@ -336,7 +360,11 @@ exports.UpdateDataBase = async function() {
       
       await Promise.all([promiseDelay, promiseAddDomainToDB]);
       console.log(lineCount + ' domains was push in BD'); 
-      
+      /////////
+      list.push(8);
+      console.log(list);
+      list = [0];
+      /////////
       objAddtoBD.registrant.clear();
       objAddtoBD.ns_servers.clear();
       objAddtoBD.domains = [];
@@ -406,7 +434,7 @@ async function download(url) {
 };
 
 var countStat = {
-  countNew: 0, 
+  countNew: 800, 
   countDelete: 0,
   countChange: 0,
   lineCount: 0,
