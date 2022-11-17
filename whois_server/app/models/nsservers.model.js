@@ -1,22 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-    const Nsserversdb = sequelize.define("nsserversdb", {
+    return sequelize.define(
+      "nsserversdb",
+      {
         nsserver_id: {
-            type: Sequelize.INTEGER(11),
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
+          type: Sequelize.INTEGER(11),
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true,
         },
         name: {
-            unique: true,
-            type: Sequelize.STRING
+          unique: true,
+          type: Sequelize.STRING,
         },
         count: {
-            type: Sequelize.INTEGER
+          type: Sequelize.INTEGER,
         },
-    },
-    {
-      timestamps: false,
-    }
+      },
+      {
+        timestamps: false,
+      }
     );
-    return Nsserversdb;
   };

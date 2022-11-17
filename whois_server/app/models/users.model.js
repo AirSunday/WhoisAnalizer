@@ -76,10 +76,12 @@ const _ = require('lodash');
     User.addHook('beforeSave', (user) => {
       user.name = _.trim(user.name);
     
-      if ((user.previous('password') !== user.password) && (!_.isEmpty(user.password))) {
+      if (
+        user.previous("password") !== user.password &&
+        !_.isEmpty(user.password)
+      ) {
         const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(user.password, salt);
-        user.password = hash;
+        user.password = bcrypt.hashSync(user.password, salt);
       }
       return user;
     });

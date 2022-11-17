@@ -28,6 +28,8 @@ app.use(cors({
   exposedHeaders: ['set-cookie']
 }));
 
+console.  log()
+
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connec
@@ -103,32 +105,32 @@ db.sequelize.sync()
 
   // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
   cron.schedule('00 10 * * *', () => { // min hore day mounth year (every day 00:00)
-    if(process.env.FLAG_REQUEST == 'true'){
+    if(process.env.FLAG_REQUEST === 'true'){
       require("./app/controllers/users.controller.js").CheckUsersDomain();
     }
   });
 
   cron.schedule('10 11 * * *', () => { // min hore day mounth year (every day 01:00)
-    if(process.env.FLAG_REQUEST == 'true'){
+    if(process.env.FLAG_REQUEST === 'true'){
       require("./app/controllers/whois.controller.js").DownloadDomains();
     }
   });
   
   cron.schedule('20 11 * * *', () => { // min hore day mounth year (every day 02:00)
-    if(process.env.FLAG_REQUEST == 'true'){
+    if(process.env.FLAG_REQUEST === 'true'){
       require("./app/controllers/whois.controller.js").CompareDomains();
     }
   });
 
   cron.schedule('00 12 * * *', () => { // min hore day mounth year (every day 02:00)
-    if(process.env.FLAG_REQUEST == 'true'){
+    if(process.env.FLAG_REQUEST === 'true'){
       require("./app/controllers/whois.controller.js").DeleteDomain();
     }
   });
 
   cron.schedule('50 12 * * *', () => { // min hore day mounth year (every day 03:00)
-    if(process.env.FLAG_REQUEST == 'true'){
-      process.env.FLAG_REQUEST = false;
+    if(process.env.FLAG_REQUEST === 'true'){
+      process.env.FLAG_REQUEST = 'false';
       require("./app/controllers/whois.controller.js").UpdateDataBase();
     }
   });
