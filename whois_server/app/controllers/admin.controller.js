@@ -1,8 +1,11 @@
 const db = require("../models").db;
-const sequelize = require("sequelize");
+const { resolve } = require("bluebird");
+const { response } = require("express");
+var sequelize = require("sequelize");
 const Newsdb = db.newsdbs;
 const Sessiondb = db.sessionsdbs;
 const Usersdb = db.usersdbs;
+const Op = db.Sequelize.Op;
 
 const FindSession = (req) => {
   console.log(2);
@@ -12,7 +15,7 @@ const FindSession = (req) => {
   } catch (e) {
     nowSid = "";
   }
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     Sessiondb.findOne({ where: { sid: nowSid } }).then((session) => {
       if (session && JSON.parse(session.data).passport) {
         resolve(JSON.parse(session.data).passport.user);
@@ -23,10 +26,10 @@ const FindSession = (req) => {
 };
 
 const FindAdmin = (val) => {
-  return new Promise((resolve) => {
-    if (val !== 0) {
+  return new Promise((resolve, reject) => {
+    if (val != 0) {
       Usersdb.findOne({ where: { userId: val } }).then((user) => {
-        if (user && user.dataValues.role === "admin") {
+        if (user && user.dataValues.role == "admin") {
           resolve(true);
         }
         resolve(false);
@@ -74,8 +77,8 @@ exports.GetCountUsers = (req, res) => {
 
 exports.DeleteUser = (req, res) => {
   FindSession(req).then((val) => {
-    FindAdmin(val).then(() => {
-      if (val !== req.body.userId)
+    FindAdmin(val).then((role) => {
+      if (val != req.body.userId)
         Usersdb.destroy({ where: { userId: req.body.userId } })
           .then(() => {
             res.status(200).send({
@@ -115,12 +118,10 @@ exports.ChangeNews = (req, res) => {
 
       Newsdb.findOne({ where: { news_id: req.body.news_id } }).then((news) => {
         if (news) {
-          news.title = req.body.title === "" ? news.title : req.body.title;
-          news.text = req.body.text === "" ? news.text : req.body.text;
+          news.title = req.body.title == "" ? news.title : req.body.title;
+          news.text = req.body.text == "" ? news.text : req.body.text;
           news.preview =
-            req.body.text === ""
-              ? news.preview
-              : req.body.text.substring(0, 80);
+            req.body.text == "" ? news.preview : req.body.text.substring(0, 80);
 
           news
             .save()
@@ -164,10 +165,10 @@ exports.ChangeRole = (req, res) => {
   FindSession(req).then((val) => {
     FindAdmin(val).then((role) => {
       if (!role) return;
-      if (val !== req.body.userId)
+      if (val != req.body.userId)
         Usersdb.findOne({ where: { userId: req.body.userId } }).then((user) => {
           if (user) {
-            if (user.role === "admin") user.role = "user";
+            if (user.role == "admin") user.role = "user";
             else user.role = "admin";
           }
           user

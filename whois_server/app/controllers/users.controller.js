@@ -5,8 +5,9 @@ const Newsdb = db.newsdbs;
 const Sessiondb = db.sessionsdbs;
 const Op = db.Sequelize.Op;
 const transporter = require("../config/email.config");
+const whois = require("whois");
 
-async function FindSession(req) {
+async function FindSession(req, res) {
   // console.log(req.headers.cookie)
   var nowSid;
   try {
@@ -47,7 +48,7 @@ exports.create = (req, res) => {
       status: "",
       domains: "",
     };
-    if (data[0].dataValues.user_count === 0) usersdb.role = "admin";
+    if (data[0].dataValues.user_count == 0) usersdb.role = "admin";
 
     // Save Tutorial in the database
     Usersdb.create(usersdb)
@@ -76,7 +77,7 @@ exports.findOneId = (req, res) => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).send({
         message: "Error retrieving Usersdb with Email=" + id,
       });
@@ -95,7 +96,7 @@ exports.findOneEmail = (req, res) => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).send({
         message: "Error retrieving Usersdb with Email=" + email,
       });
@@ -106,20 +107,20 @@ exports.update = (req, res) => {
 
   Usersdb.findOne({ where: { userId: id } }).then((user) => {
     if (user) {
-      user.name = req.body.name === "" ? user.name : req.body.name;
-      user.email = req.body.email === "" ? user.email : req.body.email;
+      user.name = req.body.name == "" ? user.name : req.body.name;
+      user.email = req.body.email == "" ? user.email : req.body.email;
       user.password =
-        req.body.password === "" ? user.password : req.body.password;
+        req.body.password == "" ? user.password : req.body.password;
     }
 
     user
       .save()
-      .then(() => {
+      .then((response) => {
         res.status(200).send({
           message: "update complite",
         });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500).send({
           message: "Error update",
         });
@@ -132,7 +133,7 @@ exports.delete = (req, res) => {
     where: { email: mail },
   })
     .then((num) => {
-      if (num === 1) {
+      if (num == 1) {
         res.send({
           message: "User was deleted successfully!",
         });
@@ -142,7 +143,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).send({
         message: "Could not delete User with id=" + id,
       });
@@ -153,17 +154,17 @@ exports.AddDomain = (req, res) => {
   Usersdb.findOne({ where: { userId: id } }).then((user) => {
     if (user) {
       user.domains +=
-        user.domains === "" ? req.body.domainName : " " + req.body.domainName;
+        user.domains == "" ? req.body.domainName : " " + req.body.domainName;
     }
 
     user
       .save()
-      .then(() => {
+      .then((response) => {
         res.status(200).send({
           message: "Add domain complite",
         });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500).send({
           message: "Add domain update",
         });
@@ -179,12 +180,12 @@ exports.DeleteDomain = (req, res) => {
 
     user
       .save()
-      .then(() => {
+      .then((response) => {
         res.status(200).send({
           message: "Delete domain complite",
         });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500).send({
           message: "Delete domain update",
         });
@@ -205,7 +206,7 @@ exports.GetDomain = (req, res) => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).send({
         message: "Error retrieving Usersdb with id=" + id,
       });
@@ -274,7 +275,7 @@ exports.CheckUsersDomain = () => {
     response.forEach((user) => {
       user.dataValues.domains.split(" ").forEach((domain) => {
         WhoisGet(domain).then((res) => {
-          if (res.length === 0)
+          if (res.length == 0)
             SendMessage(user.dataValues.name, user.dataValues.email, domain);
         });
       });
