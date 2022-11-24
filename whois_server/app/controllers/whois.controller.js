@@ -24,6 +24,41 @@ require("dotenv").config();
 //   foreignKey: 'registrant'
 // })
 
+exports.getDB = (req, res) => {
+  Whoisdb.findAll({
+    limit: 10,
+  }).then((data) => {
+    if (data) {
+      var domainNode = function (domain) {
+        (this.id = domain.id),
+          (this.domain_name = domain.domain_name),
+          (this.age = domain.age),
+          (this.release_date = domain.release_date),
+          (this.registrant = domain.registrant),
+          (this.ns_servers = domain.ns_servers);
+      };
+      var newData = [];
+      data.forEach((el) => {
+        newData.push(
+          new domainNode({
+            id: el.dataValues.id,
+            domain_name: el.dataValues.domain_name,
+            age: el.dataValues.age,
+            release_date: el.dataValues.release_date,
+            registrant: el.dataValues.registrant,
+            ns_servers: el.dataValues.ns_servers,
+          })
+        );
+      });
+      console.log(newData);
+    } else {
+      res.status(404).send({
+        message: `Cannot find WhoisDB with id.`,
+      });
+    }
+  });
+};
+
 exports.create = (req, res) => {
   if (!req.body.domain_name) {
     res.status(400).send({

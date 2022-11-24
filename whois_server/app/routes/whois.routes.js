@@ -1,10 +1,12 @@
+const whoisdbs = require("../controllers/whois.controller");
 module.exports = (app) => {
   const whoisdbs = require("../controllers/whois.controller.js");
   const usersdbs = require("../controllers/users.controller.js");
   const adminController = require("../controllers/admin.controller.js");
   const router = require("express").Router();
   //
-  router.get("/get/get10/:id", whoisdbs.Get10);
+  router.get("/get/get10/:id", whoisdbs.GetDB);
+  // router.get("/get/get10/:id", whoisdbs.Get10);
   //
   router.get("/get/GetCountDomain/:table", whoisdbs.GetCountDomain);
   //

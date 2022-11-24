@@ -148,6 +148,7 @@ cron.schedule("50 22 * * *", () => {
     require("./app/controllers/whois.controller.js").UpdateDataBase();
   }
 });
+
 // require("./app/controllers/whois.controller.js").UpdateDataBase();
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.")
