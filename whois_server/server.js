@@ -18,10 +18,9 @@ app.use(
     origin: [
       // process.env.IP_HOST,
       // 'http://188.68.222.76',
-      "http://whoisa.ru",
+      // "http://whoisa.ru",
       // "http://localhost",
-      // 'http://whoisa.ru'
-      // 'https://localhost:8081',
+      "http://whoisa.ru",
       // 'http://localhost:8080',
       // 'https://localhost:8080',
     ],

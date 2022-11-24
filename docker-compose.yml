@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
   postgres:
-    image: postgres:15.1-alpine
+    image: postgres:14.1-alpine
     restart: always
     env_file: .env
     environment:
@@ -12,7 +12,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+      - postgres:/var/lib/postgresql/data
+#    volumes:
+#      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
 
   node:
     build: whois_server/
@@ -35,3 +37,8 @@ services:
       - 80:8080
     depends_on:
         - node
+
+volumes:
+  postgres:
+    driver: local
+#    external: true
