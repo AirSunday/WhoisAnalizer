@@ -42,11 +42,15 @@
             <td>Registrant</td>
           </tr>
           <tr v-for="(domainA,key) in domainsAnaliz10" :key="key">
-              <td class="domenNameAnaliz" @click="$emit('pushDomain', domainA.domain_name)">{{ domainA.domain_name }}</td>
+              <td class="domenNameAnaliz"
+                  @click="copy(domainA.domain_name)">
+                    {{ domainA.domain_name }}</td>
               <td>{{ domainA.age }}</td>
-              <td>{{ domainA.release_date.split('T')[0] }}</td>
+              <td>{{ 22222 }}</td>
+<!--            <td>{{ domainA.release_date.split('T')[0] }}</td>-->
               <td>
-                  <p v-for="(nsServer,key) in domainA.ns_servers.split(' ')" :key="key"> {{ nsServer }} </p>
+                <p> 22222 </p>
+<!--                <p v-for="(nsServer,key) in domainA.ns_servers.split(' ')" :key="key"> {{ nsServer }} </p>-->
               </td>
               <td>{{ domainA.registrant }}</td>
           </tr>
@@ -124,6 +128,7 @@ export default {
             this.CountPage = Math.ceil(response.data[0].reg_count / 10);
       });
       this.radioStatus = 1;
+      this.PageDomainInAnaliz = 1;
       WhoisDataService.get10(this.PageDomainInAnaliz)
           .then(response => {
             this.domainsAnaliz10 = response.data;
@@ -135,6 +140,7 @@ export default {
           .then(response => {
             this.CountPage = Math.ceil(response.data[0].reg_count / 20);
       });
+      this.PageDomainInAnaliz = 1;
       WhoisDataService.GetNsServers(this.PageDomainInAnaliz)
           .then(response => {
             this.nsServersAnaliz = response.data;
@@ -142,11 +148,22 @@ export default {
     },
     SortByReg(){
       this.radioStatus = 3;
+      this.PageDomainInAnaliz = 1;
       WhoisDataService.GetRegistrant()
           .then(response => {
             this.registrantAnaliz = response.data;
       });
-    }
+    },
+    copy(domain) {
+      navigator.clipboard.writeText(domain)
+          .then(() => {
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Domain added to buffer' });
+          })
+          .catch(err => {
+            // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
+            console.log('Something went wrong', err);
+          });
+    },
   }
 }
 </script>
@@ -172,7 +189,7 @@ export default {
   margin: 0 2vw;
   width: 95%;
   border-collapse: collapse;
-  font-size: calc(0.5em + 1vw);
+  font-size: calc(0.3em + 1vw);
 }
 
 .TableAnaliz td {

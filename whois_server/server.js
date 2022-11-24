@@ -2,54 +2,60 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-require('dotenv').config();
-const session = require('express-session');
-const passport = require('passport');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const cookieParser = require('cookie-parser');
-const passportConfig = require('./app/config/passport');
-const sequelize = require('./app/models/index').sequelize;
+require("dotenv").config();
+const session = require("express-session");
+const passport = require("passport");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const cookieParser = require("cookie-parser");
+const passportConfig = require("./app/config/passport");
+const sequelize = require("./app/models/index").sequelize;
 
-require('./app/models/users.model.js');
-require('./app/models/session.model.js');
+require("./app/models/users.model.js");
+require("./app/models/session.model.js");
 
-app.use(cors({
-  origin: [
-    // process.env.IP_HOST,
-    // 'http://188.68.222.76', 
-    'http://whoisa.ru',
-    // 'http://localhost'
-    // 'http://whoisa.ru'
-    // 'https://localhost:8081',
-    // 'http://localhost:8080',
-    // 'https://localhost:8080',
-  ],
-  credentials: true,
-  exposedHeaders: ['set-cookie']
-}));
+app.use(
+  cors({
+    origin: [
+      // process.env.IP_HOST,
+      // 'http://188.68.222.76',
+      "http://whoisa.ru",
+      // "http://localhost",
+      // 'http://whoisa.ru'
+      // 'https://localhost:8081',
+      // 'http://localhost:8080',
+      // 'https://localhost:8080',
+    ],
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+  })
+);
 
-console.  log()
+console.log();
 
 app.use(function (req, res, next) {
-
   // Website you wish to allow to connec
-  res.setHeader('Access-Control-Allow-Origin', 'http://whoisa.ru');
-  // res.setHeader('Access-Control-Allow-Origin', 'http://188.68.222.76');
+  res.setHeader("Access-Control-Allow-Origin", "http://whoisa.ru");
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost");
 
   // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
 
   // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
 
   // Set to true if you need the website to include cookies in the requests sent
   // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader("Access-Control-Allow-Credentials", true);
 
   // Pass to next layer of middleware
   next();
 });
-
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -69,8 +75,9 @@ app.listen(PORT, () => {
 });
 
 passportConfig(passport);
-  app.use(session({
-    secret:  process.env.SESSION_SECRET,
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -81,19 +88,21 @@ passportConfig(passport);
     },
     store: new SequelizeStore({
       db: sequelize,
-      table: 'sessionsdbs',
-      logging: false
-   }),
-  }));
+      table: "sessionsdbs",
+      logging: false,
+    }),
+  })
+);
 
-  app.use(passport.initialize());
-  app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-  app.post('/api/sign-in', require('./app/controllers/sign-in'));
-  app.post('/api/sign-out', require('./app/controllers/sign-out'));
+app.post("/api/sign-in", require("./app/controllers/sign-in"));
+app.post("/api/sign-out", require("./app/controllers/sign-out"));
 
 const db = require("./app/models");
-db.sequelize.sync()
+db.sequelize
+  .sync()
   .then(() => {
     console.log("Synced db.");
   })
@@ -101,44 +110,49 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
-  var cron = require('node-cron');
+var cron = require("node-cron");
 
-  // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-  cron.schedule('00 20 * * *', () => { // min hore day mounth year (every day 00:00)
-    if(process.env.FLAG_REQUEST === 'true'){
-      require("./app/controllers/users.controller.js").CheckUsersDomain();
-    }
-  });
+// cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
+cron.schedule("00 20 * * *", () => {
+  // min hore day mounth year (every day 00:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/users.controller.js").CheckUsersDomain();
+  }
+});
 
-  cron.schedule('10 20 * * *', () => { // min hore day mounth year (every day 01:00)
-    if(process.env.FLAG_REQUEST === 'true'){
-      require("./app/controllers/whois.controller.js").DownloadDomains();
-    }
-  });
-  
-  cron.schedule('20 20 * * *', () => { // min hore day mounth year (every day 02:00)
-    if(process.env.FLAG_REQUEST === 'true'){
-      require("./app/controllers/whois.controller.js").CompareDomains();
-    }
-  });
+cron.schedule("10 20 * * *", () => {
+  // min hore day mounth year (every day 01:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").DownloadDomains();
+  }
+});
 
-  cron.schedule('00 21 * * *', () => { // min hore day mounth year (every day 02:00)
-    if(process.env.FLAG_REQUEST === 'true'){
-      require("./app/controllers/whois.controller.js").DeleteDomain();
-    }
-  });
+cron.schedule("20 20 * * *", () => {
+  // min hore day mounth year (every day 02:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").CompareDomains();
+  }
+});
 
-  cron.schedule('50 22 * * *', () => { // min hore day mounth year (every day 03:00)
-    if(process.env.FLAG_REQUEST === 'true'){
-      process.env.FLAG_REQUEST = 'false';
-      require("./app/controllers/whois.controller.js").UpdateDataBase();
-    }
-  });
-  // require("./app/controllers/whois.controller.js").UpdateDataBase();
-  // db.sequelize.sync({ force: true }).then(() => {
-  //   console.log("Drop and re-sync db.")
-  // })
-  // .then(() => {
-  //    const whoisdbs = require("./app/controllers/whois.controller.js");
-  //    whoisdbs.UpdateDataBase();
-  // })
+cron.schedule("00 21 * * *", () => {
+  // min hore day mounth year (every day 02:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").DeleteDomain();
+  }
+});
+
+cron.schedule("50 22 * * *", () => {
+  // min hore day mounth year (every day 03:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    process.env.FLAG_REQUEST = "false";
+    require("./app/controllers/whois.controller.js").UpdateDataBase();
+  }
+});
+// require("./app/controllers/whois.controller.js").UpdateDataBase();
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and re-sync db.")
+// })
+// .then(() => {
+//    const whoisdbs = require("./app/controllers/whois.controller.js");
+//    whoisdbs.UpdateDataBase();
+// })

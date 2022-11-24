@@ -50,7 +50,7 @@ export default {
 
 .AlertMessage{
     margin: 0.5vw 1.5vw;
-    font-size: 2vw;
+    font-size: max(2vw, 30px);
     border-radius: 20px;
     opacity: 0.8;
     padding: 0.5vw 1vw;
@@ -60,7 +60,7 @@ export default {
 
 .AlertMessage span{
   font-family: "Montserrat", sans-serif;
-  font-size: 1.5vw;
+  font-size:max(2vw, 15px);
   margin-left: 1vw;
 }
 

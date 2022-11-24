@@ -1,11 +1,11 @@
 <template>
   <Admin v-if="Role == 'admin'"/>
 
-  <div class="newsAll" v-for="(news,key) in ArrNews" :key="key">
-    <div class="card">
+  <div class="newsAll">
+    <div class="card" v-for="(news,key) in ArrNews" :key="key">
       <div style="display: flex; justify-content: space-between;">
         <h3>{{news.title}}</h3>
-        <h5>{{news.updatedAt.split('T')[0]}}</h5>
+<!--        <h5>{{news.updatedAt.split('T')[0]}}</h5>-->
       </div>
       <div style="display: flex; justify-content: space-between;">
         <p v-if="!ShowText || !(ShowTextKey == key)">{{news.preview}}...</p>
@@ -179,14 +179,6 @@ export default {
 
 .TextMore{
   font-size: 2vw;
-}
-
-.NavigationNews{
-  margin: 1vw 2vw;
-  width: 95%;
-  border-collapse: collapse;
-  text-align: center;
-  font-size: calc(0.5em + 1vw);
 }
 
 .NavigationNews td{

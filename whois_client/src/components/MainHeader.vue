@@ -1,21 +1,17 @@
 <template>
-    <div>
-      <UserDomains :userEmail="userEmail" v-if="userStatus" class="btnMainbtn" @pushDomain="(domainName) => this.domainName = domainName"/> 
-    </div>
   <div class="HeaderChild">
     <div><img :src="require(`../components/images/logo.png`)" alt="not found"/></div>
-    <p @click="$router.push('/')">Home</p>
+    <p @click="$router.push('/')"       v-bind:class="{ activHeader: HeaderPos == 'home' }">Home</p>
     <p @click="$router.push('whois')"   v-bind:class="{ activHeader: HeaderPos == 'whois' }">Whois</p>
     <p @click="$router.push('analiz')"  v-bind:class="{ activHeader: HeaderPos == 'analiz' }">Analysis</p>
     <p @click="$router.push('news')"    v-bind:class="{ activHeader: HeaderPos == 'news' }">News</p>
-    <AuthForm :ModView="'Child'"/>
+    <AuthForm :ModView="'Header'"/>
   </div>
 </template>
 
 <script>
 
 import AuthForm from './AuthForm.vue';
-import UserDomains from '../components/UserDomains.vue';
 
 export default {
   name: 'MainHeader',
@@ -26,7 +22,6 @@ export default {
     },
   },
   components: {
-    UserDomains,
     AuthForm,
 },
 data() {
