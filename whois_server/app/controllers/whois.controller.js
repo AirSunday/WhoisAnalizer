@@ -15,6 +15,7 @@ const { resolve } = require("path");
 const { start } = require("repl");
 const { AddDomain } = require("./users.controller");
 const { Console } = require("console");
+const transporter = require("../config/email.config");
 require("dotenv").config();
 
 // Registrantsdb.hasMany(Whoisdb, {
@@ -334,8 +335,8 @@ async function AddDamoinToDB(objAddtoBD) {
 }
 
 exports.UpdateDataBase = async function () {
-  // const fileStream = fs.createReadStream('./app/data/new_ru_domains.txt');
-  const fileStream = fs.createReadStream("./app/data/ru_domains.txt");
+  const fileStream = fs.createReadStream("./app/data/new_ru_domains.txt");
+  // const fileStream = fs.createReadStream("./app/data/ru_domains.txt");
 
   const rl = readline.createInterface({
     input: fileStream,
@@ -350,10 +351,11 @@ exports.UpdateDataBase = async function () {
 
   for await (const line of rl) {
     lineCount++;
-    if (lineCount > 1507000) {
+
+    if (lineCount > 0) {
       if (
-        lineCount % 110 == 0 ||
-        lineCount == countStat.countNew + countStat.countChange
+        lineCount % 110 === 0 ||
+        lineCount === countStat.countNew + countStat.countChange
       ) {
         if (lineCount >= countStat.countNew + countStat.countChange) {
           console.log("end push domains. Count domains = " + lineCount);
@@ -382,6 +384,7 @@ exports.UpdateDataBase = async function () {
         objAddtoBD.ns_servers.clear();
         objAddtoBD.domains = [];
       }
+
       await FillDomainObject(line).then((newDomain) => {
         if (newDomain.domain_name != "") {
           const registrantCount = objAddtoBD.registrant.get(
@@ -554,7 +557,6 @@ function addToFile(file, str) {
 exports.DeleteDomain = (req, res) => {
   DeleteDomainInBD();
 };
-
 async function DeleteDomainInBD() {
   console.log("start delete domains");
   const fileStream = fs.createReadStream("./app/data/delete_ru_domains.txt");
@@ -610,7 +612,6 @@ async function DeleteDomainInBD() {
       });
   }
 }
-
 function CreateNews() {
   console.log("start create news");
   var today = new Date();

@@ -3,6 +3,8 @@ services:
 
   postgres:
     image: postgres:14.1-alpine
+    cpus: 0.5
+    mem_limit: "250M"
     restart: always
     env_file: .env
     environment:
@@ -13,12 +15,15 @@ services:
       - "5432:5432"
     volumes:
       - postgres:/var/lib/postgresql/data
-#    volumes:
+
+  #    volumes:
 #      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
 
   node:
     build: whois_server/
     image: airsunday/node-app
+    cpus: 0.5
+    mem_limit: "250M"
     env_file:
       - "./whois_server/.env"
     ports:
@@ -33,6 +38,8 @@ services:
   vue:
     build: whois_client/
     image: airsunday/vue-app
+    cpus: 0.5
+    mem_limit: "250M"
     ports:
       - 80:8080
     depends_on:

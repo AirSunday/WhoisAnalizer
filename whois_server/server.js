@@ -18,9 +18,9 @@ app.use(
     origin: [
       // process.env.IP_HOST,
       // 'http://188.68.222.76',
-      // "http://whoisa.ru",
-      // "http://localhost",
       "http://whoisa.ru",
+      // "http://localhost",
+      // "http://whoisa.ru",
       // 'http://localhost:8080',
       // 'https://localhost:8080',
     ],
@@ -148,6 +148,7 @@ cron.schedule("50 22 * * *", () => {
   }
 });
 
+// require("./app/controllers/whois.controller.js").UpdateDataBase();
 // require("./app/controllers/whois.controller.js").UpdateDataBase();
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.")
