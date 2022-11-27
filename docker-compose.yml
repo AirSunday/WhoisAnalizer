@@ -3,8 +3,6 @@ services:
 
   postgres:
     image: postgres:14.1-alpine
-    cpus: 0.5
-    mem_limit: "250M"
     restart: always
     env_file: .env
     environment:
@@ -22,8 +20,6 @@ services:
   node:
     build: whois_server/
     image: airsunday/node-app
-    cpus: 0.5
-    mem_limit: "250M"
     env_file:
       - "./whois_server/.env"
     ports:
@@ -38,10 +34,9 @@ services:
   vue:
     build: whois_client/
     image: airsunday/vue-app
-    cpus: 0.5
-    mem_limit: "250M"
     ports:
       - 80:8080
+      - 443:443
     depends_on:
         - node
 
