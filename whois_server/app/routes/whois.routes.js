@@ -1,4 +1,3 @@
-const whoisdbs = require("../controllers/whois.controller");
 module.exports = (app) => {
   const whoisdbs = require("../controllers/whois.controller.js");
   const usersdbs = require("../controllers/users.controller.js");

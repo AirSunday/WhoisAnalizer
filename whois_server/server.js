@@ -29,8 +29,6 @@ app.use(
   })
 );
 
-console.log();
-
 app.use(function (req, res, next) {
   // Website you wish to allow to connec
   res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
