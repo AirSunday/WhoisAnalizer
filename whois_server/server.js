@@ -68,10 +68,25 @@ app.get("/", (req, res) => {
 
 require("./app/routes/whois.routes.js")(app);
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+// const PORT = process.env.PORT || 8080;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });
+
+const https = require("https");
+const fs = require("fs");
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync("./app/dockerConf/whois.crt"),
+      cert: fs.readFileSync("./app/dockerConf/whois.rsa"),
+    },
+    app
+  )
+  .listen(443, () => {
+    console.log("Listening at :443...");
+  });
 
 passportConfig(passport);
 app.use(
