@@ -11,7 +11,9 @@ RUN npm run build
 FROM nginx:1.15.2-alpine
 
 COPY --from=build-stage /whois_client/dist /var/www
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY dockerConf/nginx.conf /etc/nginx/nginx.conf
+COPY dockerConf/whoisa.rsa /etc/nginx
+COPY dockerConf/whoisa.crt /etc/nginx
 
 EXPOSE 8080
 
