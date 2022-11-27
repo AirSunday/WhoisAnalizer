@@ -1,13 +1,15 @@
 // import http from "../http-common";
 
+const url = "https://188.68.222.76:8080/api";
+// const url = "http://localhost:8080";
 class WhoisDataService {
   FindSession() {
     // return http.get('users');
-    return fetch("https://188.68.222.76:8080/api/users");
+    return fetch(url + "/users");
   }
   FindByEmail(data) {
     // return http.post(`/users/findout`, data);
-    return fetch("https://188.68.222.76:8080/api/users/findout", {
+    return fetch(url + "/users/findout", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -17,7 +19,7 @@ class WhoisDataService {
   }
   FindById(data) {
     // return http.post(`/users/findbyid`, data);
-    return fetch("https://188.68.222.76:8080/api/users/findbyid", {
+    return fetch(url + "/users/findbyid", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -27,7 +29,7 @@ class WhoisDataService {
   }
   create(data) {
     // return http.post("/users/create", data);
-    return fetch("https://188.68.222.76:8080/api/users/create", {
+    return fetch(url + "/users/create", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -37,7 +39,7 @@ class WhoisDataService {
   }
   update(data) {
     // return http.post(`/users/update`, data);
-    return fetch("https://188.68.222.76:8080/api/users/update", {
+    return fetch(url + "/users/update", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -47,7 +49,7 @@ class WhoisDataService {
   }
   signIn(data) {
     // return http.post(`/sign-in`, data);
-    return fetch("https://188.68.222.76:8080/api/sign-in", {
+    return fetch(url + "/sign-in", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -57,7 +59,7 @@ class WhoisDataService {
   }
   signOut(data) {
     // return http.post(`/sign-out`, data);
-    return fetch("https://188.68.222.76:8080/api/sign-out", {
+    return fetch(url + "/sign-out", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -67,7 +69,7 @@ class WhoisDataService {
   }
   delete(email) {
     // return http.delete(`/users`, { email : email });
-    return fetch("https://188.68.222.76:8080/api/users", {
+    return fetch(url + "/users", {
       method: "DELETE",
       body: JSON.stringify({ email: email }),
       headers: {
@@ -77,7 +79,7 @@ class WhoisDataService {
   }
   getWhoisInfo(data) {
     // return http.post(`/get/getdomain`, data)
-    return fetch("https://188.68.222.76:8080/api/get/getdomain", {
+    return fetch(url + "/get/getdomain", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -87,23 +89,23 @@ class WhoisDataService {
   }
   get10(id) {
     // return http.get(`/get/get10/${id}`);
-    return fetch(`https://188.68.222.76:8080/api/get/get10/${id}`);
+    return fetch(url + `/get/get10/${id}`);
   }
   GetNsServers(id) {
     // return http.get(`/get/nsservers/${id}`);
-    return fetch(`https://188.68.222.76:8080/api/get/nsservers/${id}`);
+    return fetch(url + `/get/nsservers/${id}`);
   }
   GetRegistrant() {
     // return http.get(`/get/registrant`);
-    return fetch("https://188.68.222.76:8080/api/get/registrant");
+    return fetch(url + "/get/registrant");
   }
   GetCountDomain(table) {
     // return http.get(`/get/GetCountDomain/${table}`);
-    return fetch(`https://188.68.222.76:8080/api/get/GetCountDomain/${table}`);
+    return fetch(url + `/get/GetCountDomain/${table}`);
   }
   AddDomain(data) {
     // return http.post(`/users/Domain`, data);
-    return fetch("https://188.68.222.76:8080/api/users/Domain", {
+    return fetch(url + "/users/Domain", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -113,7 +115,7 @@ class WhoisDataService {
   }
   DeleteDomain(data) {
     // return http.put(`/users/Domain`, data);
-    return fetch("https://188.68.222.76:8080/api/users/Domain", {
+    return fetch(url + "/users/Domain", {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
@@ -123,7 +125,7 @@ class WhoisDataService {
   }
   GetDomain(data) {
     // return http.post(`/users/AllDomains`, data);
-    return fetch("https://188.68.222.76:8080/api/users/AllDomains", {
+    return fetch(url + "/users/AllDomains", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -133,7 +135,7 @@ class WhoisDataService {
   }
   GetNews(data) {
     // return http.post(`/news`, data);
-    return fetch("https://188.68.222.76:8080/api/news", {
+    return fetch(url + "/news", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -143,7 +145,7 @@ class WhoisDataService {
   }
   GetNewsTitle(data) {
     // return http.post(`/news/title`, data);
-    return fetch("https://188.68.222.76:8080/api/news/title", {
+    return fetch(url + "/news/title", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -153,11 +155,11 @@ class WhoisDataService {
   }
   GetCountNews() {
     // return http.get(`/news/count`);
-    return fetch("https://188.68.222.76:8080/api/news/count");
+    return fetch(url + "/news/count");
   }
   GetRole(data) {
     // return http.post(`/users/getrole`, data);
-    return fetch("https://188.68.222.76:8080/api/users/getrole", {
+    return fetch(url + "/users/getrole", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -168,15 +170,15 @@ class WhoisDataService {
   /////////////////////////////////
   GetAllUsers(id) {
     // return http.get(`/admin/user/${id}`);
-    return fetch(`https://188.68.222.76:8080/api/get/admin/user/${id}`);
+    return fetch(url + `/get/admin/user/${id}`);
   }
   GetCountUsers() {
     // return http.get(`/admin/countusers`);
-    return fetch("https://188.68.222.76:8080/api/admin/countusers");
+    return fetch(url + "/admin/countusers");
   }
   DeleteUser(data) {
     // return http.post(`/admin/userdelete`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/userdelete", {
+    return fetch(url + "/admin/userdelete", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -186,7 +188,7 @@ class WhoisDataService {
   }
   ChangeRole(data) {
     // return http.post(`/admin/changerole`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/changerole", {
+    return fetch(url + "/admin/changerole", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -196,7 +198,7 @@ class WhoisDataService {
   }
   CreateNews(data) {
     // return http.post(`/admin/news`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/news", {
+    return fetch(url + "/admin/news", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -206,11 +208,11 @@ class WhoisDataService {
   }
   GetAllNews(id) {
     // return http.post(`/admin/getallnews/${id}`);
-    return fetch(`https://188.68.222.76:8080/api/admin/getallnews/${id}`);
+    return fetch(url + `/admin/getallnews/${id}`);
   }
   ChangeNews(data) {
     // return http.put(`/admin/news`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/news", {
+    return fetch(url + "/admin/news", {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
@@ -220,7 +222,7 @@ class WhoisDataService {
   }
   DeleteNews(data) {
     // return http.post(`/admin/newsdelete`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/newsdelete", {
+    return fetch(url + "/admin/newsdelete", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -230,11 +232,11 @@ class WhoisDataService {
   }
   GetUrlDomain() {
     // return http.post(`/admin/url/get`);
-    return fetch("https://188.68.222.76:8080/api/admin/url/get");
+    return fetch(url + "/admin/url/get");
   }
   ChangeUrlDomain(data) {
     // return http.post(`admin/url/change`, data);
-    return fetch("https://188.68.222.76:8080/api/admin/url/change", {
+    return fetch(url + "/admin/url/change", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
