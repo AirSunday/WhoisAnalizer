@@ -18,7 +18,7 @@ app.use(
     origin: [
       // process.env.IP_HOST,
       // 'http://188.68.222.76',
-      "http://whoisa.ru",
+      "https://whoisa.ru",
       // "http://localhost",
       // "http://whoisa.ru",
       // 'http://localhost:8080',
@@ -33,7 +33,7 @@ console.log();
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connec
-  res.setHeader("Access-Control-Allow-Origin", "http://whoisa.ru");
+  res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
   // res.setHeader("Access-Control-Allow-Origin", "http://localhost");
 
   // Request methods you wish to allow
