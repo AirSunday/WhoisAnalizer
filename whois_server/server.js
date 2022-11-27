@@ -79,8 +79,8 @@ const fs = require("fs");
 https
   .createServer(
     {
-      key: fs.readFileSync("./app/dockerConf/whois.crt"),
-      cert: fs.readFileSync("./app/dockerConf/whois.rsa"),
+      key: fs.readFileSync("./app/dockerConf/whoisa.crt"),
+      cert: fs.readFileSync("./app/dockerConf/whoisa.rsa"),
     },
     app
   )
