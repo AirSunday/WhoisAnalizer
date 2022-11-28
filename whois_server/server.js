@@ -73,7 +73,7 @@ require("./app/routes/whois.routes.js")(app);
 
 const https = require("https");
 const fs = require("fs");
-
+const PORT = process.env.PORT || 8080;
 https
   .createServer(
     {
@@ -82,7 +82,7 @@ https
     },
     app
   )
-  .listen(443, () => {
+  .listen(PORT, () => {
     console.log("Listening at :443...");
   });
 
