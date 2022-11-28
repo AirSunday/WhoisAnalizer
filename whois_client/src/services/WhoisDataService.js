@@ -1,6 +1,7 @@
 // import http from "../http-common";
 
-const url = "http://188.68.222.76:8080/api";
+// const url = "http://188.68.222.76:8080/api";
+const url = "https://whoisa.ru/api";
 // const url = "http://localhost:8080";
 class WhoisDataService {
   FindSession() {
