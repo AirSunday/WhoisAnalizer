@@ -95,10 +95,6 @@
             name: this.domainName,
           };
           WhoisDataService.getWhoisInfo(data)
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
              .then(response => {
               const newServer = response.data;
               this.domenNameTemp = this.domainName;
