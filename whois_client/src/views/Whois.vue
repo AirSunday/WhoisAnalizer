@@ -54,12 +54,7 @@
     },
     methods: {
         CheckSessionWhois(){
-          WhoisDataService.FindSession()
-              .then((response) => {
-                console.log(response)
-                return response.json();
-              })
-              .then(response => {
+          WhoisDataService.FindSession().then(response => {
             if(response && response.data.userId != 0){
               this.authId = response.data.userId;
             }
@@ -70,20 +65,12 @@
       },
       trackDomen(){
         WhoisDataService.GetDomain( { userId: this.authId } )
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(response => {
               if(response.data.domains.split(' ').length >= 5)
                 this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'You cannot add more than 5 domains' });
               else
                 if(response.data.domains.indexOf(this.domenNameTemp) == -1){
                   WhoisDataService.AddDomain({ userId: this.authId, domainName: this.domenNameTemp})
-                    .then((response) => {
-                      console.log(response)
-                      return response.json();
-                    })
                     .then(res=> {
                       if(res.statusText == "OK")
                         this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'The domain is being tracked' });
@@ -108,10 +95,6 @@
             name: this.domainName,
           };
           WhoisDataService.getWhoisInfo(data)
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then((response) => {
               console.log(response)
               return response.json();

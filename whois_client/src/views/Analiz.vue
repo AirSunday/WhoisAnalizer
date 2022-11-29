@@ -122,19 +122,11 @@ export default {
     },
     SortByData() {
       WhoisDataService.GetCountDomain('domain')
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(response => {
             this.CountPage = Math.ceil(response.data[0].reg_count / 10);
       });
       this.radioStatus = 1;
       WhoisDataService.get10(this.PageDomainInAnaliz)
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(response => {
             this.domainsAnaliz10 = response.data;
       });
@@ -142,18 +134,10 @@ export default {
     SortByNs(){
       this.radioStatus = 2;
       WhoisDataService.GetCountDomain('nsservers')
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(response => {
             this.CountPage = Math.ceil(response.data[0].reg_count / 20);
       });
       WhoisDataService.GetNsServers(this.PageDomainInAnaliz)
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(response => {
             this.nsServersAnaliz = response.data;
       });
@@ -161,10 +145,6 @@ export default {
     SortByReg(){
       this.radioStatus = 3;
       WhoisDataService.GetRegistrant()
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(response => {
             this.registrantAnaliz = response.data;
       });

@@ -113,28 +113,16 @@
     },
     created() { 
       WhoisDataService.GetUrlDomain()
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(res => {
         this.URLdomain = res.data.url;
       })
       
       WhoisDataService.GetCountUsers()
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(res => {
         this.CountUser = Math.ceil(res.data[0].name_count / 10);
       }).catch(this.CountUser = 0);
 
       WhoisDataService.GetCountNews()
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
           .then(res => {
         this.CountNews = Math.ceil(res.data[0].title_count / 10);
       }).catch(this.CountNews = 0);
@@ -142,10 +130,6 @@
     methods: {
       SaveURL(){
         WhoisDataService.ChangeUrlDomain({ url: this.URLdomain })
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
           if(res.statusText == "OK") 
               this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Update successful' });
@@ -166,10 +150,6 @@
           return;
         }
         WhoisDataService.CreateNews({ title: this.Title, text: this.Text })
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
           .then(res => {
             if(res.statusText == "OK") 
               this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'The addition was successful' });
@@ -180,20 +160,12 @@
       },
       ShowUsersClick(){
         WhoisDataService.GetAllUsers(this.PageUsers)
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 this.ArrUser = res.data;
             });
       },
       DeleteUser(key){
         WhoisDataService.DeleteUser( { userId: this.ArrUser[key].userId } )
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 if(res.statusText == 'OK') {
                     this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'User Delete' });
@@ -202,10 +174,6 @@
                     this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! User dont Delete' });
                 this.ShowUsersClick();
                 WhoisDataService.GetCountUsers()
-                    .then((response) => {
-                      console.log(response)
-                      return response.json();
-                    })
                     .then(res => {
                     this.CountUser = Math.ceil(res.data[0].name_count / 10);
                 }).catch(this.CountUser = 0);
@@ -213,10 +181,6 @@
       },
       ChangeRole(key){
         WhoisDataService.ChangeRole( { userId: this.ArrUser[key].userId } )
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 if(res.statusText == 'OK') {
                     this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Change role' });
@@ -229,10 +193,6 @@
       DeleteNews(key){
         console.log(this.ArrNews[key].news_id);
         WhoisDataService.DeleteNews( { news_id: this.ArrNews[key].news_id } )
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 if(res.statusText == 'OK') {
                     this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'News Delete' });
@@ -241,10 +201,6 @@
                     this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! News dont Delete' });
                 this.ShowUsersClick();
                 WhoisDataService.GetCountNews()
-                    .then((response) => {
-                      console.log(response)
-                      return response.json();
-                    })
                     .then(res => {
                   this.CountNews = Math.ceil(res.data[0].title_count / 10);
                 }).catch(this.CountNews = 0);
@@ -254,20 +210,12 @@
         this.NewsChageId = key;
         this.Title = this.ArrNews[key].title;
         WhoisDataService.GetNewsTitle({ news_id: this.ArrNews[key].news_id })
-          .then((response) => {
-            console.log(response)
-            return response.json();
-          })
         .then(text => {
           this.Text = text.data.text;
         })
       },
       UpdateNewsFinish(){
         WhoisDataService.ChangeNews( { news_id: this.ArrNews[this.NewsChageId].news_id, title: this.Title, text: this.Text } )
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 if(res.statusText == 'OK') {
                     this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'News Delete' });
@@ -276,10 +224,6 @@
                     this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! News dont Delete' });
                 this.ShowNewsClick();
                 WhoisDataService.GetCountNews()
-                    .then((response) => {
-                      console.log(response)
-                      return response.json();
-                    })
                     .then(res => {
                   this.CountNews = Math.ceil(res.data[0].title_count / 10);
                 }).catch(this.CountNews = 0);
@@ -288,10 +232,6 @@
       },
       ShowNewsClick(){
         WhoisDataService.GetAllNews(this.PageNews)
-            .then((response) => {
-              console.log(response)
-              return response.json();
-            })
             .then(res => {
                 this.ArrNews = res.data;
             });
