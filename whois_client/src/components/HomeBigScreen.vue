@@ -70,12 +70,14 @@
     </div>
 
   </div>
+  <AlertMessages ref="AddAlertMess"/>
 </template>
 
 <script>
 
 import {debounce} from '@/services/debounce';
 import MainHeader from './MainHeader.vue';
+import AlertMessages from "@/components/AlertMessages";
 
 export default {
   name: 'HomeMain',
@@ -89,7 +91,7 @@ export default {
       yDown: null,
     }
   },
-  components: { MainHeader },
+  components: { MainHeader, AlertMessages },
   created() {
     const debounceScrollHeader = debounce(this.scrollHeader, 300);
     const debounceHandleTouchStart = debounce(this.handleTouchStart, 300);

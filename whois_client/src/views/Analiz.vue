@@ -86,16 +86,19 @@
       </div>
 
     </div>
+
+  <AlertMessages ref="AddAlertMess"/>
 </template>
 
 <script>
 import WhoisDataService from '../services/WhoisDataService';
 import MainHeader from '../components/MainHeader.vue';
+import AlertMessages from '../components/AlertMessages.vue';
 
 export default {
   name: 'AnalizMain',
   components: {
-    MainHeader
+    MainHeader, AlertMessages,
   },
   data() {
     return {
