@@ -14,7 +14,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -24,7 +25,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -34,7 +36,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -44,7 +47,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -54,7 +58,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -64,7 +69,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -74,7 +80,8 @@ class WhoisDataService {
       method: "DELETE",
       body: JSON.stringify({ email: email }),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -84,7 +91,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -120,7 +128,8 @@ class WhoisDataService {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -130,7 +139,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -140,7 +150,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -150,7 +161,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -164,7 +176,8 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "text/plain",
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
   }
@@ -183,6 +196,7 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -193,6 +207,7 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -203,6 +218,7 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -217,6 +233,7 @@ class WhoisDataService {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -227,6 +244,7 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -241,6 +259,7 @@ class WhoisDataService {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
