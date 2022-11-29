@@ -100,12 +100,22 @@ export default {
             this.$refs.AddAlertMess.AddAlertMess(mess);
         },
         CheckSession() {
-            WhoisDataService.FindSession().then(response => {
+            WhoisDataService.FindSession()
+                .then((response) => {
+                  console.log(response)
+                  return response.json();
+                })
+                .then(response => {
                 if (response && response.data.userId != 0) {
                     this.authId = response.data.userId;
                     this.ImgAuthStatus = "githubAcc.png";
                     this.PAuthStatus = "Profile";
-                    WhoisDataService.FindById({ userId: this.authId }).then(res => {
+                    WhoisDataService.FindById({ userId: this.authId })
+                        .then((response) => {
+                          console.log(response)
+                          return response.json();
+                        })
+                        .then(res => {
                         this.userName = res.data.name;
                         this.userDomain = res.data.domains;
                     });
@@ -121,7 +131,12 @@ export default {
         },
         EditProfile() {
             if (this.Password == this.RePassword || this.Password) {
-                WhoisDataService.FindByEmail({ email: this.Email }).then(response => {
+                WhoisDataService.FindByEmail({ email: this.Email })
+                    .then((response) => {
+                      console.log(response)
+                      return response.json();
+                    })
+                    .then(response => {
                     if (response.data.name) {
                         this.AddAlert({ status: false, message: 'The mail is already registered' });
                         return;
@@ -133,7 +148,12 @@ export default {
                             email: this.Email,
                             password: this.Password
                         };
-                        WhoisDataService.update(data).then(res => {
+                        WhoisDataService.update(data)
+                            .then((response) => {
+                              console.log(response)
+                              return response.json();
+                            })
+                            .then(res => {
                             if (res.statusText == "OK") {
                                 this.AddAlert({ status: true, message: 'The changes were successful' });
                                 this.CheckSession();
@@ -160,7 +180,12 @@ export default {
                 var data = {
                     email: this.Email,
                 };
-                WhoisDataService.FindByEmail(data).then(response => {
+                WhoisDataService.FindByEmail(data)
+                    .then((response) => {
+                      console.log(response)
+                      return response.json();
+                    })
+                    .then(response => {
                     if (response.data.name) {
                         this.AddAlert({ status: false, message: 'The mail is already registered' });
                         return;
@@ -171,7 +196,12 @@ export default {
                             email: this.Email,
                             password: this.Password
                         };
-                        WhoisDataService.create(newUser).then(response => {
+                        WhoisDataService.create(newUser)
+                            .then((response) => {
+                              console.log(response)
+                              return response.json();
+                            })
+                            .then(response => {
                             if(response.statusText == "OK"){
                                 this.AddAlert({ status: true, message: 'Registration was successful' });
                                 this.CheckSession();
@@ -197,7 +227,12 @@ export default {
                 email: this.Email,
                 password: this.Password
             };
-            WhoisDataService.signIn(user).then(response => {
+            WhoisDataService.signIn(user)
+                .then((response) => {
+                  console.log(response)
+                  return response.json();
+                })
+                .then(response => {
                 if(response.statusText == "OK"){
                     this.AddAlert({ status: true, message: 'Authorization was successful' });
                     this.CheckSession();
@@ -213,7 +248,12 @@ export default {
             });
         },
         SignOut() {
-            WhoisDataService.signOut({}).then(res => {
+            WhoisDataService.signOut({})
+                .then((response) => {
+                  console.log(response)
+                  return response.json();
+                })
+                .then(res => {
                 if(res.statusText == "OK"){ 
                     this.AddAlert({ status: true, message: 'You have logged out of your account' });
                     this.CheckSession();
@@ -231,6 +271,10 @@ export default {
         },
         deleteTrack(key) {
             WhoisDataService.DeleteDomain({ userId: this.authId, domainName: this.userDomain.split(" ")[key] })
+                .then((response) => {
+                  console.log(response)
+                  return response.json();
+                })
                 .then(response => {
                 if(response.statusText == "OK"){
                     this.CheckSession();

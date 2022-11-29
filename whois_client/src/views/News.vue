@@ -64,10 +64,19 @@ export default {
   },
   methods: {
     CheckSessionWhois(){
-      WhoisDataService.FindSession().then(response => {
+      WhoisDataService.FindSession()
+        .then((response) => {
+          console.log(response)
+          return response.json();
+        })
+        .then(response => {
         if(response && response.data.userId != 0){
           this.authId = response.data.userId;
           WhoisDataService.GetRole({ userId: this.authId })
+              .then((response) => {
+                console.log(response)
+                return response.json();
+              })
             .then(role => {
               this.Role = role.data.role.role;
             });
@@ -78,7 +87,12 @@ export default {
       });
     },
     GetCountNews(){
-      WhoisDataService.GetCountNews().then(res => {
+      WhoisDataService.GetCountNews()
+        .then((response) => {
+          console.log(response)
+          return response.json();
+        })
+        .then(res => {
         this.CountNews = res.data[0].title_count;
       }).catch(this.CountNews = 0);
     },
@@ -86,6 +100,10 @@ export default {
       // this.countNewsOnPage = Math.ceil(window.innerWidth / 500);
 
       WhoisDataService.GetNews( { count: 5, page: this.PageNews} )
+          .then((response) => {
+            console.log(response)
+            return response.json();
+          })
         .then(res => {
           this.ArrNews = res.data;
         })
@@ -94,6 +112,10 @@ export default {
       this.ShowText = true;
       this.ShowTextKey = key;
       WhoisDataService.GetNewsTitle({ news_id: this.ArrNews[key].news_id })
+          .then((response) => {
+            console.log(response)
+            return response.json();
+          })
         .then(text => {
           this.Text = text.data.text;
         })
