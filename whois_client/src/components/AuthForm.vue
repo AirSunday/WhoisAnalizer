@@ -61,9 +61,25 @@
     </div>
 
   </div>
+
+  <div class = 'toggle-switch'>
+    <label>
+      <input type = 'checkbox' v-model="checkedDark" @click="toggleDark()">
+      <span class = 'slider'></span>
+    </label>
+  </div>
+
+
   <AlertMessages ref="AddAlertMess"/>
 </div>
 </template>
+
+<script setup>
+  import { useDark, useToggle } from "@vueuse/core";
+
+  const isDark = useDark();
+  const toggleDark = useToggle(isDark);
+</script>
 
 <script>
 import WhoisDataService from '../services/WhoisDataService';
@@ -74,6 +90,7 @@ export default {
     data() {
         return {
             isLog: true,
+            checkedDark: false,
             Name: "",
             Email: "",
             Password: "",
@@ -96,6 +113,9 @@ export default {
         this.CheckSession();
     },
     methods: {
+      // ChangeDarkMode(){
+      //   if(this.checkedDark) toggleDark()
+      // },
         AddAlert(mess){
             this.$refs.AddAlertMess.AddAlertMess(mess);
         },
@@ -257,13 +277,63 @@ export default {
 
 <style scoped>
 
+.toggle-switch label {
+  position: absolute;
+  bottom: 5vw;
+  right: 0;
+  width: 30%;
+  height: 6vw;
+  background-color: var(--color-dark);
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  position: absolute;
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  width: 100%;
+  height: 6vw;
+  border-radius: 50px;
+  transition: 0.3s;
+}
+
+input:checked ~ .slider {
+  background-color: var(--color-dark-font);
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  top: 0.5vw;
+  left: 1vw;
+  width: 5vw;
+  height: 5vw;
+  border-radius: 50%;
+  box-shadow: inset 1.7vw -0.1vw 0px 0px var(--color-dark-font);
+  background-color: var(--color-dark);
+  transition: 0.3s;
+}
+
+input:checked ~ .slider::before {
+  transform: translateX(8.5vw);
+  background-color: var(--color-dark);
+  box-shadow: none;
+}
+
+/*.dark .AuthFormMain{*/
+/*  background-color: #000;*/
+/*}*/
+
 .ModChildLogin{
   text-align: center;
   font-size: min(2vw, 25px);
   font-family: "Montserrat", sans-serif;
   width: 5vw;
 }
-
 .ModChildLogin:hover{
   color: #fee8da;
 }
@@ -282,13 +352,6 @@ export default {
     background: #EEE;
     color: #bda496;
 }
-
-.LoSignOutBtngBtn:active{
-    opacity: 0.6;
-    background: #FFF;
-    color: #b8937e;
-}
-
 .DomainsList{
     width: 80%;
     display: flex;
@@ -297,33 +360,26 @@ export default {
     border-bottom: 0.2vw solid #927564;
     padding-bottom: 0.2vw;
 }
-
-
 .btnDelete{
     width: 2vw;
 }
-
 .btnDelete:hover{
   opacity: 0.3;
 }
-
 .UserDomainElement{
     font-family: "Montserrat", Impact;
-    color: #927564;
+    color: var(--color-dark-font);
     margin: 0;
     width: 40vw;
 }
-
 .UserDomainElement:hover {
   opacity: 0.3;
 }
-
 .welcomeUser p{
     font-family: "Montserrat", Impact;
-    color: #bda496;
+    color: var(--color-dark-font);
     text-align: center;
 }
-
 .btnMainbtn{
       width: 9vw;
       height: auto;
@@ -333,12 +389,9 @@ export default {
       top: 2vw;
       opacity: 0.8;
     }
-    
-    .btnMainbtn:hover{
+.btnMainbtn:hover{
       opacity: 0.5;
     }
-
-
 .AuthFormMain{
     position: fixed;
     z-index: 4;
@@ -346,10 +399,9 @@ export default {
     top: 0;
     height: 100%;
     width: 50%;
-    background: #FFF;
+    background: var(--bg);
     box-shadow: -7px 0px 24px -12px #000000;
 }
-
 .cl-btn-7 {
     width: 3vw;
     height: 3vw;
@@ -392,19 +444,16 @@ export default {
     transform: scale(0.8) rotate(45deg);
     color: #fff;
 }
-
 .LogAndSign{
     font-family: "Montserrat", Impact;
     color: #524741;
     font-size: min(4vw, 30px);
 }
-
 .LogOrSign{
     color: #bda496;
     text-decoration: underline #bda496;
     text-underline-offset: 1.5vw;
 }
-
 .LogAndSign:hover {
     color: rgb(230, 208, 197);
 }
@@ -412,11 +461,14 @@ export default {
     color: rgb(230, 208, 197);
     text-decoration: underline rgb(230, 208, 197);
 }
-
 .AuthFormInput{
     margin-left: 7vw;
     top: 10vw;
     position: absolute;
+}
+.AuthFormInput input {
+  background: var(--bg);
+  color: var(--color-dark-font);
 }
 .input-line{
     padding-left: 20px;
@@ -427,28 +479,25 @@ export default {
     height: calc(1em + 1vw);
     font-size: calc(0.6em + 1vw);
 }
-
 .LogBtn{
-    background: #bda496;
-    color: #FFF;
-    border: none;
-    border-radius: 30px;
-    width: calc(70% + 1.5vw);
-    height: calc(1em + 1vw);
-    font-size: min(4vw, 30px);
+  background: var(--color-dark);
+  color: var(--color-light);
+  border: none;
+  border-radius: 30px;
+  width: calc(70% + 1.5vw);
+  height: calc(1em + 1vw);
+  font-size: min(4vw, 30px);
 }
 .LogBtn:hover{
     opacity: 0.6;
     background: #EEE;
-    color: #bda496;
+    color: var(--color-dark);;
 }
-
 .LogBtn:active{
     opacity: 0.6;
     background: #FFF;
     color: #b8937e;
 }
-
 @media only screen and (max-width: 800px)  {
   .AuthFormInput{
     margin-left: 7vw;
@@ -456,5 +505,4 @@ export default {
     position: absolute;
   }
 }
-
 </style>

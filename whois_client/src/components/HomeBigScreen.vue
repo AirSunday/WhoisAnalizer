@@ -56,7 +56,7 @@
             </a>
           </td>
           <td>
-            <p>airsunday2001@gmail.com</p>
+            <p @click="copy">airsunday2001@gmail.com</p>
           </td>
         </tr>
 
@@ -101,7 +101,16 @@ export default {
     window.addEventListener("touchmove", (event) => { debounceHandleTouchMove(event) });
   },
   methods: {
-
+    copy() {
+      navigator.clipboard.writeText('airsunday2001@gmail.com')
+          .then(() => {
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Domain added to buffer' });
+          })
+          .catch(err => {
+            // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
+            console.log('Something went wrong', err);
+          });
+    },
     swapPage(){
       this.CanSwap = true;
     },
@@ -160,7 +169,7 @@ export default {
 .ScrollPage p{
   font-size: 5vw;
   margin: 0;
-  color: rgb(215, 199, 175);
+  color: #bda496;
   opacity: 0.5;
 }
 
@@ -203,17 +212,14 @@ export default {
 }
 
 .GoToAnaliz{
-  color: #bda496;
   left: 56.5vw;
 }
 
 .GoToWhois{
-  color: #bda496;
   left: 5vw;
 }
 
 .GoToNews{
-  color: #bda496;
   left: 5vw;
 }
 
@@ -232,7 +238,8 @@ export default {
 }
 
 .GoTo{
-  background: linear-gradient(0deg, #EECFBA, 2%, #fff5ef);
+  background: linear-gradient(0deg, var(--color-light), 40%, var(--bg));
+  color: #bda496;
   margin: 1vw;
   top: 20vw;
   height: 18vw;
@@ -241,8 +248,8 @@ export default {
   border-radius: 2vw;
   cursor: pointer;
   transition: all 0.1s ease-in-out;
-  box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
-  6px 6px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: -3px -3px 10px var(--bg),
+  3px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .GoTo span {
@@ -261,13 +268,13 @@ export default {
 
 .GoTo:hover{
   opacity: 0.3;
-  box-shadow: -6px -6px 10px rgba(255, 255, 255, 0.8),
+  box-shadow: -6px -6px 10px var(--bg),
   6px 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .GoTo:active{
   opacity: 1;
-  box-shadow: inset -4px -4px 8px rgba(255, 255, 255, 0.5),
+  box-shadow: inset -4px -4px 8px var(--bg),
   inset 8px 8px 16px rgba(0, 0, 0, 0.1);
   color: #a4e0c7;
 }
@@ -285,7 +292,7 @@ export default {
   position: fixed;
   box-shadow: 0 -10px 100px rgba(0, 0, 0, 0.2);
   border-radius: calc(0.5vw + 20px);
-  background: linear-gradient(0deg, #EECFBA, #FFF);
+  background: linear-gradient(0deg, var(--color-light), var(--bg));
   transition-duration: 1s;
 }
 
@@ -311,7 +318,7 @@ export default {
   left: 1.5vw;
   width: 91vw;
   height: 20vh;
-  background: linear-gradient(0deg, #EECFBA, 30%, #FFF);
+  background: linear-gradient(0deg, var(--color-light), 60%, var(--bg));
 }
 
 .panel1 img{
@@ -363,7 +370,7 @@ export default {
   position: absolute;
   bottom: 2vw;
   text-align: center;
-  color: #a08063;
+  color: var(--color-dark);
   font-family: "Montserrat", sans-serif;
   font-size: max(1vw, 7px);
   font-weight: semibold;

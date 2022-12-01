@@ -49,7 +49,7 @@ data() {
   top: 0;
   left: 0;
   border-radius: 1.5vw;
-  background: #bda496;
+  background: var(--color-dark);
   height: min(4vw, 57px );
   width: 42vw;
   margin: 0.5vw 29vw;

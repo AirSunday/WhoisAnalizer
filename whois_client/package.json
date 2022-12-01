@@ -9,6 +9,7 @@
     "run:dev": "http-server dist -p 8081 -c 1 --push-state"
   },
   "dependencies": {
+    "@vueuse/core": "^9.6.0",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "lodash": "^4.17.21",

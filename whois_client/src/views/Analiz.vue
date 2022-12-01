@@ -205,8 +205,9 @@ export default {
   margin-top: 2vw;
   border: 2px solid #000;
   border-radius: 30px;
-  background: #e3dad5;
+  background: var(--bg);
   width: 90vw;
+  color: var(--color-dark-font);
 }
 
 .domenNameAnaliz:hover {
@@ -215,7 +216,7 @@ export default {
 
 .SortBy{  
   font-size: calc(0.9em + 1vw);
-  color: #caa28d;
+  color: var(--color-dark-font);
   text-shadow: rgba(0, 0, 0, 0.456) 10px 5px 10px;
   padding-right: 0.5vw;
 }
@@ -225,20 +226,19 @@ export default {
 }
 
 .radioAll{
-  background: #e3dad5;
+  background: var(--bg);
   border-radius: 30px;
-  opacity: 0.8;
   border: 2px solid #000;
 }
 
 .StatusRadioNoActiv {
-    background: #89756b;
-    color: #DDD;
+  background: var(--color-dark);
+  color: var(--color-dark-font);
 }
 
 .StatusRadioActiv{
-  background: #e3dad5;
-  color: #222;
+  background: var(--bg);
+  color: var(--color-dark);
 }
 
 .radioAll button{
@@ -256,13 +256,6 @@ export default {
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
   margin-right: 2px;  
-}
-
-.imgBack{
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -1;
 }
 
 </style>

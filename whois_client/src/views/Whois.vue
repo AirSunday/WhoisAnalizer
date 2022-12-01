@@ -146,17 +146,17 @@
   }
   
   .inputBlock {
-    color: #2a1b14;
-      background-color: #e3dad5;
-      box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
-      border: 2px solid #000;
-      margin-top: 5%;
-      margin-right: auto;
-      margin-left: auto;
-      padding: 0.5vw 0 1vw 1vw;
-      width: 85vw;
-      min-height: 20px;
-      border-radius: 3vw;
+    color: var(--color-dark-font);
+    background-color: var(--bg);
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
+    border: 2px solid #000;
+    margin-top: 5%;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0.5vw 0 1vw 1vw;
+    width: 85vw;
+    min-height: 20px;
+    border-radius: 3vw;
   }
   
   
@@ -166,7 +166,7 @@
       border: none;
       background: transparent;
       border-bottom: 2px solid #000;
-      color: #000;
+      color: var(--color-dark-font);
       outline: none;
       font-family: inherit;
       font-size: 2vw;
@@ -179,7 +179,7 @@
   }
   
   .SearchBtn {
-      background: #bda496;
+      background: var(--color-dark);
       float:right;
       border: none;
       cursor: pointer;
@@ -207,7 +207,7 @@
   }
   
   .btnAddDomen{
-    background: #bda496;
+    background: var(--color-dark);
     margin-right: 3vw;
     padding: 1vw 1vw;
     float:right;
@@ -218,7 +218,7 @@
     font-size: calc(0.5em + 1vw);
     height: auto;
     border-radius: 2vw;
-    color: #FFF;
+    color: var(--color-dark-font);
   }
 
   .imgBack{

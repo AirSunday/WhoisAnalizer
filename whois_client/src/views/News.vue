@@ -124,13 +124,13 @@ export default {
   width: 70vw;
   height: auto;
   padding: 0.5vw 2vw;
-  background: #e3dad5;
+  background: var(--bg);
   margin: 3vw;
   font-family: "Montserrat", sans-serif;
   box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
-  border: 1px solid #bda496;
+  border: 1px solid var(--color-dark);
   border-radius: 20px;
-  color: rgba(0, 0, 0, 0.651);
+  color: var(--color-dark-font);
 }
 
 .card h3{
@@ -150,7 +150,7 @@ export default {
 
 .card span{
   font-size: min(1.5vw, 30px);
-  border: 2px solid #bda496;
+  border:  var(--color-dark);
   padding: 0.5vw;
   margin: 1vw;
   width: 9vw;
@@ -159,8 +159,7 @@ export default {
 
 .card span:hover{
   color:#fff;
-  border-color: #89756b;
-  background: #89756b;
+  background: var(--color-dark);
 }
 
 .NavigationNews{
@@ -172,6 +171,7 @@ export default {
 }
 
 .NavigationNews td{
+  color: var(--color-dark-font);
   width: 2vw;
 }
 

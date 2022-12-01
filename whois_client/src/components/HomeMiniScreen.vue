@@ -114,12 +114,12 @@ export default {
 .LeftPanelInAboutPanels{
   display: flex;
   align-items: center;
-  color: #bda496;
+  color: var(--color-dark);
   font-family: "Montserrat", Impact, serif;
   font-size: 4vw;
   width: 25%;
   height: 100%;
-  background: #f6ddcd;
+  background: var(--color-light);
   border-radius: 5vw 0 0 5vw;
   padding: 0  0 0 1vw;
 }
@@ -129,22 +129,22 @@ export default {
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  color: #f6ddcd;
+  color: var(--color-light);
   border-radius: 5vw;
   margin: 2vw;
   font-family: "Montserrat", sans-serif;
   font-size: 3vw;
   text-align: center;
-  background: #bda496;
+  background: var(--color-dark);
 }
 
 .GoTo{
   height: 24vw;
   cursor: pointer;
-  color: #f6ddcd;
+  color: var(--color-light);
   border-radius: 5vw;
   margin: 2vw;
-  background: #bda496;
+  background: var(--color-dark);
 }
 
 .GoTo span {
@@ -174,8 +174,8 @@ export default {
 
 .HeaderPanel{
   text-align: center;
-  color: #bda496;
-  background: #f6ddcd;
+  color: var(--color-dark);
+  background: var(--color-light);
   border-radius: 5vw 5vw 0 0;
 }
 
