@@ -18,8 +18,8 @@ app.use(
     origin: [
       // process.env.IP_HOST,
       // 'http://188.68.222.76',
-      "https://whoisa.ru",
-      // "http://localhost",
+      // "https://whoisa.ru",
+      "http://localhost",
       // "http://whoisa.ru",
       // 'http://localhost:8080',
       // 'https://localhost:8080',
@@ -31,8 +31,8 @@ app.use(
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connec
-  res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
-  // res.setHeader("Access-Control-Allow-Origin", "http://localhost");
+  // res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost");
 
   // Request methods you wish to allow
   res.setHeader(
@@ -70,21 +70,6 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
-// const https = require("https");
-// const fs = require("fs");
-// const PORT = process.env.PORT || 8080;
-// https
-//   .createServer(
-//     {
-//       key: fs.readFileSync("./app/dockerConf/whoisa.rsa"),
-//       cert: fs.readFileSync("./app/dockerConf/whoisa.crt"),
-//     },
-//     app
-//   )
-//   .listen(PORT, () => {
-//     console.log("Listening at : " + PORT);
-//   });
 
 passportConfig(passport);
 app.use(

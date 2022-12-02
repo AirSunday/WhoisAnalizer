@@ -35,6 +35,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       type: Sequelize.TEXT,
     },
+    darkMode: {
+      allowNull: false,
+      type: Sequelize.TEXT,
+    },
   };
 
   const User = sequelize.define("usersdb", mappings, {

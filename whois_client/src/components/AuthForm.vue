@@ -64,7 +64,7 @@
 
   <div class = 'toggle-switch'>
     <label>
-      <input type = 'checkbox' v-model="checkedDark" @click="toggleDark()">
+      <input type = 'checkbox' :checked="!isDark" @click="ChangeDarkMode">
       <span class = 'slider'></span>
     </label>
   </div>
@@ -74,23 +74,21 @@
 </div>
 </template>
 
-<script setup>
-  import { useDark, useToggle } from "@vueuse/core";
-
-  const isDark = useDark();
-  const toggleDark = useToggle(isDark);
-</script>
-
 <script>
 import WhoisDataService from '../services/WhoisDataService';
 import AlertMessages from './AlertMessages.vue';
+import { useToggle, useDark } from '@vueuse/core';
 
 export default {
     name: "AuthForm",
+    setup() {
+      const isDark = useDark()
+      const toggleDark = useToggle(isDark)
+      return {toggleDark, isDark}
+    },
     data() {
         return {
             isLog: true,
-            checkedDark: false,
             Name: "",
             Email: "",
             Password: "",
@@ -101,6 +99,7 @@ export default {
             authId: 0,
             userName: "",
             userDomain: "",
+            userDarkMode: "Light",
         };
     },
     props: {
@@ -113,9 +112,18 @@ export default {
         this.CheckSession();
     },
     methods: {
-      // ChangeDarkMode(){
-      //   if(this.checkedDark) toggleDark()
-      // },
+        ChangeDarkMode() {
+          this.toggleDark();
+          if(!this.isLog){
+            WhoisDataService.update({
+              userId: this.authId,
+              name: "",
+              email: "",
+              password: "",
+              darkMode: this.isDark ? "Dark" : "Light",
+            })
+          }
+        },
         AddAlert(mess){
             this.$refs.AddAlertMess.AddAlertMess(mess);
         },
@@ -130,6 +138,7 @@ export default {
                         .then(res => {
                         this.userName = res.data.name;
                         this.userDomain = res.data.domains;
+                        this.userDarkMode = res.data.darkMode;
                     });
                 }
                 else {
@@ -194,8 +203,10 @@ export default {
                         var newUser = {
                             name: this.Name,
                             email: this.Email,
-                            password: this.Password
+                            password: this.Password,
+                            darkMode: 'Light',
                         };
+                        if(this.isDark) newUser.darkMode = 'Dark';
                         WhoisDataService.create(newUser)
                             .then(response => {
                             if(response.statusText == "OK"){
@@ -283,7 +294,7 @@ export default {
   right: 0;
   width: 30%;
   height: 6vw;
-  background-color: var(--color-dark);
+  background-color: var(--color-dark-font);
   border-radius: 50px;
   cursor: pointer;
 }
@@ -313,20 +324,16 @@ input:checked ~ .slider {
   width: 5vw;
   height: 5vw;
   border-radius: 50%;
-  box-shadow: inset 1.7vw -0.1vw 0px 0px var(--color-dark-font);
-  background-color: var(--color-dark);
+  box-shadow: inset 2vw -0.1vw 0px 0px var(--color-light-font);
+  background-color: var(--color-dark-font);
   transition: 0.3s;
 }
 
 input:checked ~ .slider::before {
   transform: translateX(8.5vw);
-  background-color: var(--color-dark);
+  background-color: var(--color-light-font);
   box-shadow: none;
 }
-
-/*.dark .AuthFormMain{*/
-/*  background-color: #000;*/
-/*}*/
 
 .ModChildLogin{
   text-align: center;
@@ -339,8 +346,8 @@ input:checked ~ .slider::before {
 }
 .SignOutBtn{
     margin-left: 7vw;
-    background: #bda496;
-    color: #FFF;
+    background: var(--color-dark);
+    color: var(--color-light);
     border: none;
     border-radius: 30px;
     width: calc(70% + 1.5vw);
@@ -350,7 +357,7 @@ input:checked ~ .slider::before {
 .SignOutBtn:hover{
     opacity: 0.6;
     background: #EEE;
-    color: #bda496;
+    color: var(--color-dark);;
 }
 .DomainsList{
     width: 80%;
@@ -491,7 +498,7 @@ input:checked ~ .slider::before {
 .LogBtn:hover{
     opacity: 0.6;
     background: #EEE;
-    color: var(--color-dark);;
+    color: var(--color-dark);
 }
 .LogBtn:active{
     opacity: 0.6;
