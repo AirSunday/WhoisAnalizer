@@ -120,7 +120,7 @@ export default {
               name: "",
               email: "",
               password: "",
-              darkMode: this.isDark ? "Dark" : "Light",
+              darkmode: this.isDark ? "Dark" : "Light",
             })
           }
         },
@@ -138,7 +138,7 @@ export default {
                         .then(res => {
                         this.userName = res.data.name;
                         this.userDomain = res.data.domains;
-                        this.userDarkMode = res.data.darkMode;
+                        this.userDarkMode = res.data.darkmode;
                     });
                 }
                 else {
@@ -204,9 +204,9 @@ export default {
                             name: this.Name,
                             email: this.Email,
                             password: this.Password,
-                            darkMode: 'Light',
+                            darkmode: 'Light',
                         };
-                        if(this.isDark) newUser.darkMode = 'Dark';
+                        if(this.isDark) newUser.darkmode = 'Dark';
                         WhoisDataService.create(newUser)
                             .then(response => {
                             if(response.statusText == "OK"){

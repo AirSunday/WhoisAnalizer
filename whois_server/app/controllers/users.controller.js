@@ -47,7 +47,7 @@ exports.create = (req, res) => {
       role: "user",
       status: "",
       domains: "",
-      darkMode: req.body.darkMode,
+      darkmode: req.body.darkmode,
     };
     if (data[0].dataValues.user_count == 0) usersdb.role = "admin";
 

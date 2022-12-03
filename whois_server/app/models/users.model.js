@@ -35,7 +35,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       type: Sequelize.TEXT,
     },
-    darkMode: {
+    darkmode: {
       allowNull: false,
       type: Sequelize.TEXT,
     },
