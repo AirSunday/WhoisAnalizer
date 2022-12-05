@@ -22,7 +22,7 @@ body {
   --color-dark-font: #1b1917;
   --color-light-font: #f9f9f8;
   --bg-i: url('./components/images/back.png');
-  --progress: #b26e00
+  --progress: #b26e00;
 }
 
 html.dark {
@@ -32,7 +32,7 @@ html.dark {
   --color-light: #bda496;
   --color-dark: #282623;
   --bg-i: url('./components/images/back-dark.png');
-  --progress: #f6ddcd
+  --progress: #f6ddcd;
 }
 
 #nprogress .bar {

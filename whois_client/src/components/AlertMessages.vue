@@ -1,9 +1,8 @@
 <template>
-<div style="position: absolute; bottom: 0; width: 100%; z-index: 5;">
-  <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; width: 100%; height: 50%;">
+<div class="AllMessage">
     <div v-for="(statAlert,key) in StatusAlertArray" :key="key">
       <div v-if="statAlert.status" class="AlertMessage AlertSucc">
-        &#10003; 
+        &#10003;
         <span>{{ statAlert.message }}</span>
       </div>
 
@@ -12,7 +11,6 @@
         <span>{{ statAlert.message }}</span>
       </div>
     </div>
-  </div>
 </div>
 </template>
 
@@ -35,6 +33,20 @@ export default {
 </script>
 
 <style scoped>
+
+.AllMessage {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  width: 100%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 50%;
+}
 
 .AlertSucc{
     background-color: rgba(157, 230, 157, 0.727);
