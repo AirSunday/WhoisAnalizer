@@ -22,25 +22,25 @@
     </div>
   <AlertMessages ref="AddAlertMess"/>
   </template>
-  
+
   <script>
   import BlockWithInfo from '../components/BlockWithInfo.vue';
   import WhoisDataService from '../services/WhoisDataService';
   import MainHeader from '../components/MainHeader.vue';
   import AlertMessages from '@/components/AlertMessages.vue';
-  
+
   export default {
   name: 'WhoisMain',
   components: {
     BlockWithInfo,
     MainHeader,
-    AlertMessages
+    AlertMessages,
 },
     data() {
       return {
           width: window.innerWidth,
           domainName: "",
-          domenNameTemp: "", 
+          domenNameTemp: "",
           status: { info: [], type: 'Status', path: '' },
           all: { info: [], type: 'All', path: '' },
           date: { info: [], type: 'Date', path: 'date' },
@@ -80,7 +80,7 @@
                         this.AddAlert({ status: false, message: 'Oops... something went wrong' });
                     })
                 }
-                else 
+                else
                   this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Are you already tracking this domain' });
             })
             .catch(() => {
@@ -107,11 +107,11 @@
               this.tech.info = [];
               this.all.info = newServer.split('\n');
               this.all.info.forEach(element => {
-                if (element.indexOf('Date') >= 0) { this.date.info.push(element.replace('Date', '')); } 
-                else if ( element.indexOf('Registrant') >= 0) { this.registrant.info.push(element.replace('Registrant', '')); } 
-                else if ( element.indexOf('Admin') >= 0) { this.admin.info.push(element.replace('Admin', '')); } 
-                else if ( element.indexOf('Tech') >= 0) { this.tech.info.push(element.replace('Tech', '')); } 
-                else if ( element.indexOf('Status') >= 0 || element.indexOf('state') >= 0) { this.status.info.push(element); } 
+                if (element.indexOf('Date') >= 0) { this.date.info.push(element.replace('Date', '')); }
+                else if ( element.indexOf('Registrant') >= 0) { this.registrant.info.push(element.replace('Registrant', '')); }
+                else if ( element.indexOf('Admin') >= 0) { this.admin.info.push(element.replace('Admin', '')); }
+                else if ( element.indexOf('Tech') >= 0) { this.tech.info.push(element.replace('Tech', '')); }
+                else if ( element.indexOf('Status') >= 0 || element.indexOf('state') >= 0) { this.status.info.push(element); }
                 else if ( element.indexOf('No entries found for the selected source(s).') >= 0 ||
                           element.indexOf('No match for domain') >= 0 ||
                           element.indexOf('ERROR') >= 0 ||
@@ -136,7 +136,7 @@
     },
   }
   </script>
-  
+
   <style>
 
   .InfoMain{
@@ -144,7 +144,7 @@
       left: 3vw;
       opacity: 0.9;
   }
-  
+
   .inputBlock {
     color: var(--color-dark-font);
     background-color: var(--bg);
@@ -158,8 +158,8 @@
     min-height: 20px;
     border-radius: 3vw;
   }
-  
-  
+
+
   .inputBlock input {
       width: 75vw;
       box-sizing: border-box;
@@ -171,13 +171,13 @@
       font-family: inherit;
       font-size: 2vw;
   }
-  
+
   @media only screen and (max-width: 501px)  {
     .inputBlock input{
       width: calc(100% - 60px);
     }
   }
-  
+
   .SearchBtn {
       background: var(--color-dark);
       float:right;
@@ -191,7 +191,7 @@
       border-radius: 4vw;
       color: #DDD;
   }
-  
+
 .imgSearch{
   margin-top: 0.3vw;
   width: 2.5vw;
@@ -201,11 +201,11 @@
   .inputBlock button:hover{
       opacity: 0.4;
   }
-  
+
   .inputBlock button:active{
       opacity: 0.6;
   }
-  
+
   .btnAddDomen{
     background: var(--color-dark);
     margin-right: 3vw;
@@ -228,4 +228,3 @@
       z-index: -1;
     }
   </style>
-  
