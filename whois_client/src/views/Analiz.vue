@@ -7,28 +7,26 @@
           Sort By:
         </td>
         <td>
-
           <table class="radioAll">
             <td>
-              <button class="radio1" 
+              <button class="radio1"
               v-bind:class="{ StatusRadioActiv: radioStatus == 1, StatusRadioNoActiv: !radioStatus != 2 }"
               @click="SortByData(); this.PageDomainInAnaliz = 1"
               >Release date</button>
             </td>
             <td>
-              <button class="radio2" 
+              <button class="radio2"
               v-bind:class="{ StatusRadioActiv: radioStatus == 2, StatusRadioNoActiv: radioStatus != 2 }"
               @click="SortByNs(); this.PageDomainInAnaliz = 1"
               >NS-Servers</button>
             </td>
             <td>
-              <button class="radio3" 
+              <button class="radio3"
               v-bind:class="{ StatusRadioActiv: radioStatus == 3, StatusRadioNoActiv: !radioStatus != 2 }"
               @click="SortByReg"
               >Registrant</button>
             </td>
           </table>
-
         </td>
       </table>
 
@@ -76,7 +74,7 @@
           </tr>
         </table>
 
-        <table v-if="radioStatus != 3" class="NavigationAnaliz">
+        <table class="NavigationAnaliz">
           <td @click="GoPage(-2)"> &lt;&lt; </td>
           <td @click="GoPage(-1)"> &lt; </td>
           <td>{{ PageDomainInAnaliz }}</td>
@@ -116,17 +114,18 @@ export default {
   },
   methods: {
     GoPage(direction){
-      if(direction == 1 && this.PageDomainInAnaliz < this.CountPage) this.PageDomainInAnaliz += 1;
-      else if (direction == -1 && this.PageDomainInAnaliz > 1) this.PageDomainInAnaliz -= 1;
-      else if (direction == -2) this.PageDomainInAnaliz = 1;
-      else if (direction == 2) this.PageDomainInAnaliz = this.CountPage;
-      if (this.radioStatus == 1) this.SortByData();
-      else this.SortByNs();
+      if(direction === 1 && this.PageDomainInAnaliz < this.CountPage) this.PageDomainInAnaliz += 1;
+      else if (direction === -1 && this.PageDomainInAnaliz > 1) this.PageDomainInAnaliz -= 1;
+      else if (direction === -2) this.PageDomainInAnaliz = 1;
+      else if (direction === 2) this.PageDomainInAnaliz = this.CountPage;
+      if (this.radioStatus === 1) this.SortByData();
+      else if(this.radioStatus === 2) this.SortByReg();
+      else if(this.radioStatus === 3) this.SortByNs();
     },
     SortByData() {
       WhoisDataService.GetCountDomain('domain')
           .then(response => {
-            this.CountPage = Math.ceil(response.data[0].reg_count / 10);
+            this.CountPage = Math.ceil(response.data[0].reg_count / 5);
       });
       this.radioStatus = 1;
       WhoisDataService.get10(this.PageDomainInAnaliz)
@@ -138,7 +137,7 @@ export default {
       this.radioStatus = 2;
       WhoisDataService.GetCountDomain('nsservers')
           .then(response => {
-            this.CountPage = Math.ceil(response.data[0].reg_count / 20);
+            this.CountPage = Math.ceil(response.data[0].reg_count / 10);
       });
       WhoisDataService.GetNsServers(this.PageDomainInAnaliz)
           .then(response => {
@@ -147,7 +146,11 @@ export default {
     },
     SortByReg(){
       this.radioStatus = 3;
-      WhoisDataService.GetRegistrant()
+      WhoisDataService.GetCountDomain('registrant')
+          .then(response => {
+            this.CountPage = Math.ceil(response.data[0].reg_count / 10);
+      });
+      WhoisDataService.GetRegistrant(this.PageDomainInAnaliz)
           .then(response => {
             this.registrantAnaliz = response.data;
       });
@@ -159,6 +162,7 @@ export default {
           })
           .catch(err => {
             // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
+            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Domain dont added to buffer' });
             console.log('Something went wrong', err);
           });
     },
@@ -214,7 +218,7 @@ export default {
   opacity: 0.3;
 }
 
-.SortBy{  
+.SortBy{
   font-size: calc(0.9em + 1vw);
   color: var(--color-dark-font);
   text-shadow: rgba(0, 0, 0, 0.456) 10px 5px 10px;
@@ -255,7 +259,7 @@ export default {
 .radio3{
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
-  margin-right: 2px;  
+  margin-right: 2px;
 }
 
 </style>

@@ -87,7 +87,7 @@ export default {
     GetNewsOnPage(){
       // this.countNewsOnPage = Math.ceil(window.innerWidth / 500);
 
-      WhoisDataService.GetNews( { count: 5, page: this.PageNews} )
+      WhoisDataService.GetNews( { count: 4, page: this.PageNews} )
         .then(res => {
           this.ArrNews = res.data;
         })
@@ -101,7 +101,7 @@ export default {
         })
     },
     GoPageNews(direction){
-      var maxPage = Math.ceil(this.CountNews / 5);
+      var maxPage = Math.ceil(this.CountNews / 4);
       if(direction == 1 && this.PageNews < maxPage) this.PageNews += 1;
       else if (direction == -1 && this.PageNews > 1) this.PageNews -= 1;
       else if (direction == -2) this.PageNews = 1;
@@ -117,7 +117,7 @@ export default {
 <style scoped>
 
 .newsAll{
-  margin-top: 10vw;
+  margin-top: 6vw;
 }
 
 .card{
@@ -125,7 +125,7 @@ export default {
   height: auto;
   padding: 0.5vw 2vw;
   background: var(--bg);
-  margin: 3vw;
+  margin: 1vw 3vw;
   font-family: "Montserrat", sans-serif;
   box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
   border: 1px solid var(--color-dark);

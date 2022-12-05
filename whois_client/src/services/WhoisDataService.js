@@ -34,8 +34,8 @@ class WhoisDataService {
   GetNsServers(id) {
     return http.get(`/get/nsservers/${id}`);
   }
-  GetRegistrant() {
-    return http.get(`/get/registrant`);
+  GetRegistrant(id) {
+    return http.get(`/get/registrant/${id}`);
   }
   GetCountDomain(table) {
     return http.get(`/get/GetCountDomain/${table}`);
