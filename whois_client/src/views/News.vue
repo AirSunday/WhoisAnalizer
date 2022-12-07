@@ -5,7 +5,7 @@
     <div class="card" v-for="(news,key) in ArrNews" :key="key">
       <div style="display: flex; justify-content: space-between;">
         <h3>{{news.title}}</h3>
-<!--        <h5>{{news.updatedAt.split('T')[0]}}</h5>-->
+        <h5>{{news.updatedAt.split('T')[0]}}</h5>
       </div>
       <div style="display: flex; justify-content: space-between;">
         <p v-if="!ShowText || !(ShowTextKey == key)">{{news.preview}}...</p>

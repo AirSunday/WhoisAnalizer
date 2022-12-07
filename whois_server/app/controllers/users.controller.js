@@ -195,7 +195,6 @@ exports.DeleteDomain = (req, res) => {
 };
 exports.GetDomain = (req, res) => {
   const id = req.body.userId;
-  console.log(req.body);
   Usersdb.findOne({ where: { userId: id } })
     .then((data) => {
       if (data) {

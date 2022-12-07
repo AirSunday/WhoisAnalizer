@@ -11,19 +11,19 @@
             <td>
               <button class="radio1"
               v-bind:class="{ StatusRadioActiv: radioStatus == 1, StatusRadioNoActiv: !radioStatus != 2 }"
-              @click="SortByData(); this.PageDomainInAnaliz = 1"
+              @click=" this.PageDomainInAnaliz = 1; SortByData();"
               >Release date</button>
             </td>
             <td>
               <button class="radio2"
               v-bind:class="{ StatusRadioActiv: radioStatus == 2, StatusRadioNoActiv: radioStatus != 2 }"
-              @click="SortByNs(); this.PageDomainInAnaliz = 1"
+              @click=" this.PageDomainInAnaliz = 1; SortByNs();"
               >NS-Servers</button>
             </td>
             <td>
               <button class="radio3"
               v-bind:class="{ StatusRadioActiv: radioStatus == 3, StatusRadioNoActiv: !radioStatus != 2 }"
-              @click="SortByReg"
+              @click=" this.PageDomainInAnaliz = 1; SortByReg()"
               >Registrant</button>
             </td>
           </table>

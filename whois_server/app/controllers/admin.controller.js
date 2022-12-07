@@ -8,7 +8,6 @@ const Usersdb = db.usersdbs;
 const Op = db.Sequelize.Op;
 
 const FindSession = (req) => {
-  console.log(2);
   var nowSid;
   try {
     nowSid = req.headers.cookie.split("%3A")[1].split(".")[0];
