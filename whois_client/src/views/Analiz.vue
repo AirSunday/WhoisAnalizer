@@ -118,9 +118,9 @@ export default {
       else if (direction === -1 && this.PageDomainInAnaliz > 1) this.PageDomainInAnaliz -= 1;
       else if (direction === -2) this.PageDomainInAnaliz = 1;
       else if (direction === 2) this.PageDomainInAnaliz = this.CountPage;
-      if (this.radioStatus === 1) this.SortByData();
-      else if(this.radioStatus === 2) this.SortByReg();
-      else if(this.radioStatus === 3) this.SortByNs();
+      if (this.radioStatus === 1)     this.SortByData();
+      else if(this.radioStatus === 2) this.SortByNs();
+      else if(this.radioStatus === 3) this.SortByReg();
     },
     SortByData() {
       WhoisDataService.GetCountDomain('domain')

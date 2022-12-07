@@ -37,6 +37,7 @@ html.dark {
 
 #nprogress .bar {
   background: var(--progress) !important;
+  padding-bottom: 2px;
 }
 
 </style>

@@ -104,7 +104,7 @@ export default {
     copy() {
       navigator.clipboard.writeText('airsunday2001@gmail.com')
           .then(() => {
-            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Domain added to buffer' });
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Mail added to buffer' });
           })
           .catch(err => {
             // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
