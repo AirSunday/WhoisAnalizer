@@ -27,7 +27,7 @@ require("dotenv").config();
 
 exports.getDB = (req, res) => {
   Whoisdb.findAll({
-    limit: 10,
+    limit: 5,
   }).then((data) => {
     if (data) {
       var domainNode = function (domain) {
@@ -103,8 +103,8 @@ exports.Get10 = (req, res) => {
   const id = req.params.id;
   Whoisdb.findAll({
     order: ["release_date"],
-    offset: (id - 1) * 10,
-    limit: 10,
+    offset: (id - 1) * 5,
+    limit: 5,
   })
     .then((data) => {
       if (data) {
@@ -146,8 +146,8 @@ exports.GetNsServers = (req, res) => {
   const id = req.params.id;
   NsServersdb.findAll({
     order: [["count", "DESC"]],
-    offset: (id - 1) * 20,
-    limit: 20,
+    offset: (id - 1) * 10,
+    limit: 10,
   })
     .then((data) => {
       if (data) {
@@ -165,7 +165,12 @@ exports.GetNsServers = (req, res) => {
     });
 };
 exports.GetRegistrant = (req, res) => {
-  Registrantsdb.findAll({ order: [["count", "DESC"]] })
+  const id = req.params.id;
+  Registrantsdb.findAll({
+    order: [["count", "DESC"]],
+    offset: (id - 1) * 10,
+    limit: 10,
+  })
     .then((data) => {
       if (data) {
         res.send(data);
@@ -205,6 +210,24 @@ exports.GetCountDomain = (req, res) => {
       });
   } else if (table == "nsservers") {
     NsServersdb.findAll({
+      attributes: [[sequelize.fn("count", sequelize.col("name")), "reg_count"]],
+    })
+      .then((data) => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `Cannot find WhoisDB Registrant.`,
+          });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: "Error retrieving WhoisDB with NsServers",
+        });
+      });
+  } else if (table == "registrant") {
+    Registrantsdb.findAll({
       attributes: [[sequelize.fn("count", sequelize.col("name")), "reg_count"]],
     })
       .then((data) => {
@@ -352,9 +375,9 @@ exports.UpdateDataBase = async function () {
   for await (const line of rl) {
     lineCount++;
 
-    if (lineCount > 655000) {
+    if (lineCount > 1040000) {
       if (
-        lineCount % 110 === 0 ||
+        lineCount % 115 === 0 ||
         lineCount === countStat.countNew + countStat.countChange
       ) {
         if (lineCount >= countStat.countNew + countStat.countChange) {

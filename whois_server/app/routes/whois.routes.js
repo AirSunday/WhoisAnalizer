@@ -10,7 +10,7 @@ module.exports = (app) => {
   //
   router.get("/get/nsservers/:id", whoisdbs.GetNsServers);
   //
-  router.get("/get/registrant", whoisdbs.GetRegistrant);
+  router.get("/get/registrant/:id", whoisdbs.GetRegistrant);
   //
   router.post("/get/getdomain", whoisdbs.GetWhoisInfo);
   //
