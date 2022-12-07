@@ -44,8 +44,6 @@ export default {
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
-  width: 100%;
-  height: 50%;
 }
 
 .AlertSucc{
