@@ -2,7 +2,7 @@
     <div v-if="info.length > 0" class="blocksInfo">
         <table>
             <td v-if="pathImg.length > 0">
-                <img :src="itemImage" class="myImg">
+                <img :src="itemImage" class="myImg" alt="Privet? Why u see that?">
             </td>
             <td>
                 <p>{{ typeName }}</p>
@@ -14,9 +14,14 @@
 </template>
 
 <script>
+import { useDark } from '@vueuse/core';
 
 export default {
   name: 'BlockWithInfoAboutDomen',
+  setup() {
+    const isDark = useDark()
+    return {isDark}
+  },
   props: {
     info: {
       type: Array,
@@ -37,6 +42,7 @@ export default {
         return
       }
       const fileName = this.pathImg.toLowerCase()
+      if(this.isDark) return require(`./images/${fileName}-dark.png`)
       return require(`./images/${fileName}.png`)
     }
   }
@@ -63,6 +69,7 @@ export default {
 }
 
 .myImg {
+  /*content: url(this.itemImage);*/
    width: 5vw;
    vertical-align: middle;
 }

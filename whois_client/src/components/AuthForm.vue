@@ -53,8 +53,8 @@
         <div v-if="userDomain != ''">
             <p style="font-size: 2vw;">The domain names you're tracking</p>
             <div class="DomainsList" v-for="(domain,key) in userDomain.split(' ')" :key="key">
-                <label class="UserDomainElement" @click="$emit('pushDomain', domain)" style="font-size: 2vw;">{{ domain }}</label>
-                <img src="../components/images/trash.png" @click="deleteTrack(key)" class="btnDelete"/>
+                <label class="UserDomainElement" @click="$emit('pushDomain', domain)">{{ domain }}</label>
+              <p class="UserDomainElement" @click="deleteTrack(key)">&#128465;</p>
             </div>
         </div>
         <button class="SignOutBtn" @click="SignOut">Sign Out</button>
@@ -98,7 +98,7 @@ export default {
             PAuthStatus: "LogIn",
             authId: 0,
             userName: "",
-            userDomain: "",
+            userDomain: "vk.com google.ru",
             userDarkMode: "Light",
         };
     },
@@ -244,7 +244,7 @@ export default {
                     this.Password = "";
                     this.RePassword = "";
                 }
-                else 
+                else
                     this.AddAlert({ status: false, message: 'Authorization was unsuccessful' });
             }).catch(() => {
                 this.AddAlert({ status: false, message: 'Authorization was unsuccessful' });
@@ -253,7 +253,7 @@ export default {
         SignOut() {
             WhoisDataService.signOut({})
                 .then(res => {
-                if(res.statusText == "OK"){ 
+                if(res.statusText == "OK"){
                     this.AddAlert({ status: true, message: 'You have logged out of your account' });
                     this.CheckSession();
                     this.Name = "";
@@ -261,7 +261,7 @@ export default {
                     this.Password = "";
                     this.RePassword = "";
                 }
-                else 
+                else
                     this.AddAlert({ status: false, message: 'Oops... something went wrong' });
             })
             .catch(() => {
@@ -362,6 +362,7 @@ input:checked ~ .slider::before {
 .DomainsList{
     width: 80%;
     display: flex;
+    justify-content: space-between;
     margin: 1vw 3vw;
     text-decoration: none;
     border-bottom: 0.2vw solid #927564;
@@ -374,10 +375,10 @@ input:checked ~ .slider::before {
   opacity: 0.3;
 }
 .UserDomainElement{
-    font-family: "Montserrat", Impact;
-    color: var(--color-dark-font);
-    margin: 0;
-    width: 40vw;
+  font-size: 3vw;
+  font-family: "Montserrat", Impact;
+  color: var(--color-dark-font);
+  margin: 0;
 }
 .UserDomainElement:hover {
   opacity: 0.3;
