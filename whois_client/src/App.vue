@@ -17,6 +17,7 @@ body {
 
 :root {
   --bg: #f9f9f8;
+  --bg-light: #d0d0d0;
   --color-light: #f6ddcd;
   --color-dark: #bda496;
   --color-dark-font: #1b1917;
@@ -27,6 +28,7 @@ body {
 
 html.dark {
   --bg: #1b1917;
+  --bg-light: #0c0c0c;
   --color-dark-font: #f9f9f8;
   --color-light-font: #1b1917;
   --color-light: #bda496;

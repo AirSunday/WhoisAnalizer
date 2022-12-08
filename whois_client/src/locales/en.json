@@ -1,0 +1,114 @@
+{
+  "analiz": {
+    "Sort_By": "Sort By",
+    "Release_date": "Release date",
+    "NS_Servers": "NS-Servers",
+    "Registrant": "Registrant",
+    "Domain_name": "Domain name",
+    "Age": "Age",
+    "Count": "Count"
+  },
+  "news": {
+    "Read_More": "Read More"
+  },
+  "whois": {
+    "Track_domain": "Track domain"
+  },
+  "admin": {
+    "Show_Users": "Show Users",
+    "Add_News": "Add News",
+    "Change News": "Change News",
+    "Save": "Save",
+    "ID": "ID",
+    "Title": "Title",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Cansel": "Cansel",
+    "Create": "Create",
+    "Name": "Name",
+    "Email": "Email",
+    "Role": "Role"
+  },
+  "authForm": {
+    "Log_In": "Log in",
+    "Sign_In": "Sign In",
+    "Sign_Up": "Sign Up",
+    "Profile": "Profile",
+    "Edit": "Edit",
+    "Edit_Profile": "Edit Profile",
+    "Welcome": "Welcome",
+    "Track_domain": "The domain names you're tracking",
+    "Sign_Out": "Sign Out",
+    "Name": "Name",
+    "Email": "Email",
+    "Password": "Password",
+    "Repeat_Password": "Repeat Password",
+    "Dark_Mode": "Dark Mode",
+    "Light_Mode": "Light Mode"
+  },
+  "help": {
+    "Help": "Help",
+    "Analiz_Help1": "On the \"Analysis\" page, you can learn about statistics in the .ru zone.",
+    "Analiz_Help2": "Sort by release date, find out how many domains are registered with certain registrars, and how many domains are located on ns servers.",
+    "News_Help1": "On the \"News\" page you can find information about the distribution of domains in the .ru zone, about the number of new and deleted domains.",
+    "News_Help2": "News on the project is also published on this page.",
+    "Whois_Help1": "On the \"Whois\" page, you can get data for any domain name.",
+    "Whois_Help2": "If you are registered, you can start tracking it, to do this, enter it in the search box, click the search button, and then the tracking button.",
+    "Whois_Help3": "Each user can track no more than 5 domains."
+  },
+  "home": {
+    "Scroll_Page": "Scroll Page",
+    "Whois": "Whois",
+    "Whois_Info" : "Find out the whois of the domain name and track its release",
+    "Analysis": "Analysis",
+    "Analysis_Info": "Take a look at the distribution of domains by Registrars, NS-servers and by release date",
+    "News": "News",
+    "News_Info": "Find out the latest news on the project",
+    "Repository": "Project repository on Github",
+    "ProfileGithub": "My Github profile",
+    "Contact_Email": "Contact Email",
+    "Project": "Project",
+    "Github": "Github",
+    "Contact": "Contact"
+  },
+  "mainHeader": {
+    "Home": "Home",
+    "Whois": "Whois",
+    "Analysis": "Analysis",
+    "News": "News"
+  },
+  "alert" : {
+    "t_Domain_Add_Buffer": "Domain added to buffer",
+    "f_Domain_Add_Buffer": "Domain dont added to buffer",
+    "f_More_Than_5": "You cannot add more than 5 domains",
+    "t_Domain_Track": "The domain is being tracked",
+    "f_Oops": "Oops... something went wrong",
+    "f_Deduplicate_Domain": "Are you already tracking this domain",
+    "t_Update_Success": "Update successful",
+    "f_Err_Success": "Error successful",
+    "f_Necessary_To_Fill": "It is necessary to fill in all fields",
+    "t_Add_Success": "The addition was successful",
+    "t_User_Delete": "User Delete",
+    "f_Err_User_Dont_Delete": "ERROR! User dont Delete",
+    "t_Change_Role": "Change role",
+    "f_Err_Change_Role": "ERROR! Dont Change role",
+    "t_News_Delete": "News Delete",
+    "f_Err_News_Delete": "ERROR! News dont Delete",
+    "t_News_Change": "News Change",
+    "f_Err_News_Change": "ERROR! News dont Change",
+    "f_Mail_Is_Reg": "The mail is already registered",
+    "t_Change_Successful": "The changes were successful",
+    "f_Change_Not_Successful": "The changes were unsuccessful",
+    "f_Password_Not_Match": "Passwords don't match",
+    "t_Reg_Successful": "Registration was successful",
+    "t_Reg_Not_Successful": "Registration was unsuccessful",
+    "t_Auth_Successful": "Authorization was successful",
+    "f_Auth_Not_Successful": "Authorization was not successful",
+    "t_Have_Logged_Acc": "You have logged out of your account",
+    "t_Delete_Successful": "The delete was successful",
+    "t_Mail_Add_To_Buf": "Mail added to buffer"
+  },
+  "localeSwitcher" : {
+    "Language": "Language Selection"
+  }
+}

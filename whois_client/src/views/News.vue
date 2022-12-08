@@ -1,5 +1,6 @@
 <template>
   <Admin v-if="Role == 'admin'"/>
+  <Help :ModHelp="'news'"></Help>
 
   <div class="newsAll">
     <div class="card" v-for="(news,key) in ArrNews" :key="key">
@@ -9,7 +10,7 @@
       </div>
       <div style="display: flex; justify-content: space-between;">
         <p v-if="!ShowText || !(ShowTextKey == key)">{{news.preview}}...</p>
-        <span v-if="!ShowText || !(ShowTextKey == key)" @click="ReadMore(key)">Read More</span>
+        <span v-if="!ShowText || !(ShowTextKey == key)" @click="ReadMore(key)">{{ $t('news.Read_More') }}</span>
       </div>
       <div v-if="ShowText && ShowTextKey == key" class="TextMore"> {{Text}} </div>
     </div>
@@ -24,22 +25,20 @@
   </table>
 
   <MainHeader :HeaderPos="'news'"></MainHeader>
-  <AlertMessages ref="AddAlertMess"/>
 </template>
 
 <script>
   import MainHeader from '../components/MainHeader.vue';
   import WhoisDataService from '../services/WhoisDataService';
-import AlertMessages from '../components/AlertMessages.vue';
-import Admin from '../components/Admin.vue';
-
+  import Admin from '../components/Admin.vue';
+  import Help from "@/components/Help";
 
 export default {
   name: 'NewsMain',
   components: {
     MainHeader,
-    AlertMessages,
-    Admin
+    Admin,
+    Help
 },
   data() {
     return {

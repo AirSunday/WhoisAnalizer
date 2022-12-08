@@ -1,38 +1,38 @@
 <template>
-  
+
   <div style="display: flex; justify-content: space-between;">
     <div>
-      <button @click="this.ShowUsers = !this.ShowUsers; ShowUsersClick()" class="AddNewsBtn">Show Users</button>
-      <button @click="ShowAddNews = !ShowAddNews" class="AddNewsBtn">Add News</button>
-      <button @click="ShowChangeNews = !ShowChangeNews; ShowNewsClick()" class="AddNewsBtn">Chage News</button>
+      <button @click="this.ShowUsers = !this.ShowUsers; ShowUsersClick()" class="AddNewsBtn">{{ $t('admin.Show_Users') }}</button>
+      <button @click="ShowAddNews = !ShowAddNews" class="AddNewsBtn">{{ $t('admin.Add_News') }}</button>
+      <button @click="ShowChangeNews = !ShowChangeNews; ShowNewsClick()" class="AddNewsBtn">{{ $t('admin.Change News') }}</button>
     </div>
     <div class="AdminURL">
       <input v-model="URLdomain" type='text' placeholder='URL to download domains' class='input-line'/>
-      <button @click="SaveURL">Save</button>
+      <button @click="SaveURL">{{ $t('admin.Save') }}</button>
     </div>
   </div>
 
     <div v-show="ShowChangeNews" class="ShowUsersBlock">
         <table>
             <tr>
-                <td>ID</td>
-                <td>Title</td>
-                <td>Update</td>
-                <td>Delete</td>
+                <td>{{ $t('admin.ID') }}</td>
+                <td>{{ $t('admin.Title') }}</td>
+                <td>{{ $t('admin.Update') }}</td>
+                <td>{{ $t('admin.Delete') }}</td>
             </tr>
             <tr v-for="(news,key) in ArrNews" :key="key">
                 <td><label>{{ news.news_id }}</label></td>
                 <td><label>{{ news.title }}</label></td>
-                <td><p @click="ChangeNews(key); UpdateNewsShow = true;" class="UpdateNews">Update</p></td>
-                <td><p @click="DeleteNews(key)" class="DeleteNews">Delete</p></td>
+                <td><p @click="ChangeNews(key); UpdateNewsShow = true;" class="UpdateNews">{{ $t('admin.Update') }}</p></td>
+                <td><p @click="DeleteNews(key)" class="DeleteNews">{{ $t('admin.Delete') }}</p></td>
             </tr>
         </table>
 
         <div v-show="UpdateNewsShow" class="AddNewsBlock">
           <input v-model="Title" type='text' placeholder='Title'/>
           <textarea v-model="Text" type='text' placeholder='Text'></textarea>
-          <button style="right: 1vw;" @click="UpdateNewsFinish">Update</button>
-          <button style="right: 10vw;" @click="UpdateNewsShow = false">Cansel</button>
+          <button style="right: 1vw;" @click="UpdateNewsFinish">{{ $t('admin.Update') }}</button>
+          <button style="right: 10vw;" @click="UpdateNewsShow = false">{{ $t('admin.Cansel') }}</button>
         </div>
 
         <table class="NavigationUsers">
@@ -47,17 +47,17 @@
     <div v-show="ShowAddNews" class="AddNewsBlock">
       <input v-model="Title" type='text' placeholder='Title'/>
       <textarea v-model="Text" type='text' placeholder='Text'></textarea>
-      <button style="right: 1vw;" @click="AddNews">Create</button>
+      <button style="right: 1vw;" @click="AddNews">{{ $t('admin.Create') }}</button>
     </div>
-  
+
     <div v-show="ShowUsers" class="ShowUsersBlock">
         <table>
             <tr>
-                <td>ID</td>
-                <td>Name</td>
-                <td>Email</td>
-                <td>Role</td>
-                <td>Delete</td>
+                <td>{{ $t('admin.ID') }}</td>
+                <td>{{ $t('admin.Name') }}</td>
+                <td>{{ $t('admin.Email') }}</td>
+                <td>{{ $t('admin.Role') }}</td>
+                <td>{{ $t('admin.Delete') }}</td>
             </tr>
             <tr v-for="(user,key) in ArrUser" :key="key">
                 <td><label>{{ user.userId }}</label></td>
@@ -82,12 +82,12 @@
 
   <AlertMessages ref="AddAlertMess"/>
   </template>
-  
+
   <script>
     import WhoisDataService from '../services/WhoisDataService';
     import AlertMessages from './AlertMessages.vue';
-  
-  
+
+
   export default {
     name: 'AdminComponent',
     components: {
@@ -111,12 +111,12 @@
         URLdomain: '',
       }
     },
-    created() { 
+    created() {
       WhoisDataService.GetUrlDomain()
           .then(res => {
         this.URLdomain = res.data.url;
       })
-      
+
       WhoisDataService.GetCountUsers()
           .then(res => {
         this.CountUser = Math.ceil(res.data[0].name_count / 10);
@@ -131,10 +131,10 @@
       SaveURL(){
         WhoisDataService.ChangeUrlDomain({ url: this.URLdomain })
             .then(res => {
-          if(res.statusText == "OK") 
-              this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Update successful' });
-          else 
-            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Error successful' });
+          if(res.statusText == "OK")
+              this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Update_Success") });
+          else
+            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Err_Success") });
         })
       },
       GoPageAdmin(direction){
@@ -146,13 +146,13 @@
       },
       AddNews(){
         if(this.Text == '' || this.Title == '') {
-          this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'It is necessary to fill in all fields' });
+          this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Necessary_To_Fill") });
           return;
         }
         WhoisDataService.CreateNews({ title: this.Title, text: this.Text })
           .then(res => {
-            if(res.statusText == "OK") 
-              this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'The addition was successful' });
+            if(res.statusText == "OK")
+              this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Add_Success") });
           })
           this.Text = '';
           this.Title = '';
@@ -168,10 +168,10 @@
         WhoisDataService.DeleteUser( { userId: this.ArrUser[key].userId } )
             .then(res => {
                 if(res.statusText == 'OK') {
-                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'User Delete' });
+                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_User_Delete") });
                 }
-                else 
-                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! User dont Delete' });
+                else
+                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Err_User_Dont_Delete") });
                 this.ShowUsersClick();
                 WhoisDataService.GetCountUsers()
                     .then(res => {
@@ -183,10 +183,10 @@
         WhoisDataService.ChangeRole( { userId: this.ArrUser[key].userId } )
             .then(res => {
                 if(res.statusText == 'OK') {
-                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Change role' });
+                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Change_Role") });
                 }
-                else 
-                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! Dont Change role' });
+                else
+                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Err_Change_Role") });
                 this.ShowUsersClick();
             });
       },
@@ -195,10 +195,10 @@
         WhoisDataService.DeleteNews( { news_id: this.ArrNews[key].news_id } )
             .then(res => {
                 if(res.statusText == 'OK') {
-                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'News Delete' });
+                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_News_Delete") });
                 }
-                else 
-                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! News dont Delete' });
+                else
+                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Err_News_Delete") });
                 this.ShowUsersClick();
                 WhoisDataService.GetCountNews()
                     .then(res => {
@@ -218,10 +218,10 @@
         WhoisDataService.ChangeNews( { news_id: this.ArrNews[this.NewsChageId].news_id, title: this.Title, text: this.Text } )
             .then(res => {
                 if(res.statusText == 'OK') {
-                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'News Delete' });
+                    this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_News_Change") });
                 }
-                else 
-                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'ERROR! News dont Delete' });
+                else
+                    this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Err_News_Change") });
                 this.ShowNewsClick();
                 WhoisDataService.GetCountNews()
                     .then(res => {
@@ -246,7 +246,7 @@
     }
   }
   </script>
-  
+
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
 
@@ -354,7 +354,7 @@
       background: #EEE;
       color: #bda496;
   }
-  
+
   .AddNewsBtn:active{
       opacity: 0.6;
       background: #FFF;
@@ -393,7 +393,7 @@
     margin-bottom: 2vw;
     height: 15vw;
     font-size: calc(0.2em + 1vw);
-    top: 7vw; 
+    top: 7vw;
     width: 50vw;
     resize: none;
   }
@@ -405,7 +405,7 @@
     margin-bottom: 2vw;
     height: 3vw;
     font-size: calc(0.2em + 1vw);
-    top: 25vw; 
+    top: 25vw;
     width: 8vw;
   }
   .AddNewsBlock button:hover{

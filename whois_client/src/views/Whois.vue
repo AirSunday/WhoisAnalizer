@@ -1,5 +1,7 @@
 <template>
   <MainHeader :HeaderPos="'whois'"></MainHeader>
+  <Help :ModHelp="'whois'"></Help>
+
     <div class="InfoMain">
       <div class="inputBlock">
           <input type="text"
@@ -9,7 +11,7 @@
               <img src="../components/images/loup.png" class="imgSearch">
           </button>
           <div v-if="all.info.length > 0">
-              <button v-if="authId != 0" class="btnAddDomen" @click="trackDomen">Track domen</button>
+              <button v-if="authId != 0" class="btnAddDomen" @click="trackDomen">{{ $t('whois.Track_domain') }}</button>
               <h1 style="font-size: 5vw">{{domenNameTemp}}</h1>
               <BlockWithInfo :info="status.info" :typeName="status.type" />
               <BlockWithInfo :info="date.info" :typeName="date.type" :pathImg="date.path" />
@@ -28,6 +30,7 @@
   import WhoisDataService from '../services/WhoisDataService';
   import MainHeader from '../components/MainHeader.vue';
   import AlertMessages from '@/components/AlertMessages.vue';
+  import Help from '@/components/Help.vue';
 
   export default {
   name: 'WhoisMain',
@@ -35,6 +38,7 @@
     BlockWithInfo,
     MainHeader,
     AlertMessages,
+    Help,
 },
     data() {
       return {
@@ -67,24 +71,24 @@
         WhoisDataService.GetDomain( { userId: this.authId } )
             .then(response => {
               if(response.data.domains.split(' ').length >= 5)
-                this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'You cannot add more than 5 domains' });
+                this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_More_Than_5") });
               else
                 if(response.data.domains.indexOf(this.domenNameTemp) == -1){
                   WhoisDataService.AddDomain({ userId: this.authId, domainName: this.domenNameTemp})
                     .then(res=> {
                       if(res.statusText == "OK")
-                        this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'The domain is being tracked' });
+                        this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Domain_Track") });
                       this.CheckSessionWhois();
                     })
                     .catch(() => {
-                        this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                        this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
                     })
                 }
                 else
-                  this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Are you already tracking this domain' });
+                  this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Deduplicate_Domain") });
             })
             .catch(() => {
-                this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
             })
       },
         updateWidth() {

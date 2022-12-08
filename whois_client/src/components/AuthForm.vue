@@ -6,10 +6,10 @@
   <div v-if="authId == 0">
     <table style="width: 90%; margin-left: 40px;">
         <td style="width: 1vw;">
-            <p class="LogAndSign" v-bind:class="{ LogOrSign: isLog}" @click="isLog = true">Log In</p>
+            <p class="LogAndSign" v-bind:class="{ LogOrSign: isLog}" @click="isLog = true">{{ $t('authForm.Log_In') }}</p>
         </td>
         <td style="width: 10vw;">
-            <p class="LogAndSign" v-bind:class="{ LogOrSign: !isLog}" @click="isLog = false">Sign Up</p>
+            <p class="LogAndSign" v-bind:class="{ LogOrSign: !isLog}" @click="isLog = false">{{ $t('authForm.Sign_In') }}</p>
         </td>
         <td style="width: 20%;">
             <div @click="authForm = !authForm" class="cl-btn-7"></div>
@@ -17,12 +17,12 @@
     </table>
 
     <div class='AuthFormInput' v-if="authForm">
-        <input v-model="Name" type='text' placeholder='Name' class='input-line' v-show="!isLog"/>
-        <input v-model="Email" type='email' placeholder='E-mail' class='input-line'/>
-        <input v-model="Password" type='password' placeholder='Password' class='input-line'/>
-        <input v-model="RePassword" type='password' placeholder='Repeat Password' class='input-line' v-show="!isLog"/>
-        <button class="LogBtn" v-show="isLog" @click="LogIn">Log In</button>
-        <button class="LogBtn" v-show="!isLog" @click="SignUp">Sign Up</button>
+        <input v-model="Name" type='text' :placeholder='$t("authForm.Name")' class='input-line' v-show="!isLog"/>
+        <input v-model="Email" type='email' :placeholder='$t("authForm.Email")' class='input-line'/>
+        <input v-model="Password" type='password' :placeholder='$t("authForm.Password")' class='input-line'/>
+        <input v-model="RePassword" type='password' :placeholder='$t("authForm.Repeat_Password")' class='input-line' v-show="!isLog"/>
+        <button class="LogBtn" v-show="isLog" @click="LogIn">{{ $t('authForm.Log_In') }}</button>
+        <button class="LogBtn" v-show="!isLog" @click="SignUp">{{ $t('authForm.Sign_Up') }}</button>
     </div>
 
   </div>
@@ -30,10 +30,10 @@
   <div v-else>
     <table style="width: 90%; margin-left: 40px;">
         <td style="width: 1vw;">
-            <p class="LogAndSign" v-bind:class="{ LogOrSign: isLog}" @click="isLog = true">Profile</p>
+            <p class="LogAndSign" v-bind:class="{ LogOrSign: isLog}" @click="isLog = true">{{ $t('authForm.Profile') }}</p>
         </td>
         <td style="width: 10vw;">
-            <p class="LogAndSign" v-bind:class="{ LogOrSign: !isLog}" @click="isLog = false">Edit</p>
+            <p class="LogAndSign" v-bind:class="{ LogOrSign: !isLog}" @click="isLog = false">{{ $t('authForm.Edit') }}</p>
         </td>
         <td style="width: 20%;">
             <div @click="authForm = !authForm" class="cl-btn-7"></div>
@@ -41,34 +41,37 @@
     </table>
 
     <div class='AuthFormInput' v-if="!isLog">
-        <input v-model="Name" type='text' placeholder='Name' class='input-line'/>
-        <input v-model="Email" type='email' placeholder='E-mail' class='input-line'/>
-        <input v-model="Password" type='password' placeholder='Password' class='input-line'/>
-        <input v-model="RePassword" type='password' placeholder='Repeat Password' class='input-line'/>
-        <button class="LogBtn" v-show="!isLog" @click="EditProfile">Edit Profile</button>
+        <input v-model="Name" type='text' :placeholder='$t("authForm.Name")' class='input-line'/>
+        <input v-model="Email" type='email' :placeholder='$t("authForm.Email")' class='input-line'/>
+        <input v-model="Password" type='password' :placeholder='$t("authForm.Password")' class='input-line'/>
+        <input v-model="RePassword" type='password' :placeholder='$t("authForm.Repeat_Password")' class='input-line'/>
+        <button class="LogBtn" v-show="!isLog" @click="EditProfile">{{ $t('authForm.Edit_Profile') }}</button>
     </div>
 
     <div v-else class="welcomeUser">
-        <p style="font-size: 3vw;">Welcome, {{ userName }}</p>
+        <p style="font-size: 3vw;">{{ $t('authForm.Welcome') }}, {{ userName }}</p>
         <div v-if="userDomain != ''">
-            <p style="font-size: 2vw;">The domain names you're tracking</p>
+            <p style="font-size: 2vw;">{{ $t('authForm.Track_domain') }}</p>
             <div class="DomainsList" v-for="(domain,key) in userDomain.split(' ')" :key="key">
                 <label class="UserDomainElement" @click="$emit('pushDomain', domain)">{{ domain }}</label>
               <p class="UserDomainElement" @click="deleteTrack(key)">&#128465;</p>
             </div>
         </div>
-        <button class="SignOutBtn" @click="SignOut">Sign Out</button>
+        <button class="SignOutBtn" @click="SignOut">{{ $t('authForm.Sign_Out') }}</button>
     </div>
 
   </div>
 
-  <div class = 'toggle-switch'>
-    <label>
-      <input type = 'checkbox' :checked="!isDark" @click="ChangeDarkMode">
-      <span class = 'slider'></span>
-    </label>
-  </div>
+  <label class="label">
+    <div class="toggle">
+      <input class="toggle-state" type="checkbox" :checked="!isDark" @click="ChangeDarkMode" />
+      <div class="indicator"></div>
+    </div>
+    <div v-if="!isDark" class="label-text">{{ $t('authForm.Dark_Mode') }}</div>
+    <div v-else class="label-text">{{ $t('authForm.Light_Mode') }}</div>
+  </label>
 
+  <LocaleSwitcher/>
 
   <AlertMessages ref="AddAlertMess"/>
 </div>
@@ -78,6 +81,7 @@
 import WhoisDataService from '../services/WhoisDataService';
 import AlertMessages from './AlertMessages.vue';
 import { useToggle, useDark } from '@vueuse/core';
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 export default {
     name: "AuthForm",
@@ -95,7 +99,7 @@ export default {
             RePassword: "",
             authForm: false,
             ImgAuthStatus: "LogIn.png",
-            PAuthStatus: "LogIn",
+            PAuthStatus: this.$t("authForm.Log_In"),
             authId: 0,
             userName: "",
             userDomain: "vk.com google.ru",
@@ -133,7 +137,7 @@ export default {
                 if (response && response.data.userId != 0) {
                     this.authId = response.data.userId;
                     this.ImgAuthStatus = "githubAcc.png";
-                    this.PAuthStatus = "Profile";
+                    this.PAuthStatus = this.$t("authForm.Profile");
                     WhoisDataService.FindById({ userId: this.authId })
                         .then(res => {
                         this.userName = res.data.name;
@@ -146,7 +150,7 @@ export default {
                     this.userDomain = "";
                     this.authId = 0;
                     this.ImgAuthStatus = "LogIn.png";
-                    this.PAuthStatus = "LogIn";
+                    this.PAuthStatus = this.$t("authForm.Log_In");
                 }
             });
         },
@@ -155,7 +159,7 @@ export default {
                 WhoisDataService.FindByEmail({ email: this.Email })
                     .then(response => {
                     if (response.data.name) {
-                        this.AddAlert({ status: false, message: 'The mail is already registered' });
+                        this.AddAlert({ status: false, message: this.$t("alert.f_Mail_Is_Reg") });
                         return;
                     }
                     else {
@@ -168,24 +172,25 @@ export default {
                         WhoisDataService.update(data)
                             .then(res => {
                             if (res.statusText == "OK") {
-                                this.AddAlert({ status: true, message: 'The changes were successful' });
+                                this.AddAlert({ status: true, message: this.$t("alert.t_Change_Successful") });
                                 this.CheckSession();
                                 this.Name = "";
                                 this.Email = "";
                                 this.Password = "";
                                 this.RePassword = "";
+                                this.authForm = false;
                             }
                             else {
-                                this.AddAlert({ status: false, message: 'The changes were unsuccessful' });
+                                this.AddAlert({ status: false, message: this.$t("alert.f_Change_Not_Successful") });
                             }
                         }).catch(() => {
-                            this.AddAlert({ status: false, message: 'The changes were unsuccessful' });
+                            this.AddAlert({ status: false, message: this.$t("alert.f_Change_Not_Successful") });
                         });
                     }
                 });
             }
             else
-                this.AddAlert({ status: false, message: "Passwords don't match" });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Password_Not_Match") });
 
         },
         SignUp() {
@@ -196,7 +201,7 @@ export default {
                 WhoisDataService.FindByEmail(data)
                     .then(response => {
                     if (response.data.name) {
-                        this.AddAlert({ status: false, message: 'The mail is already registered' });
+                        this.AddAlert({ status: false, message: this.$t("alert.f_Mail_Is_Reg") });
                         return;
                     }
                     else {
@@ -210,24 +215,25 @@ export default {
                         WhoisDataService.create(newUser)
                             .then(response => {
                             if(response.statusText == "OK"){
-                                this.AddAlert({ status: true, message: 'Registration was successful' });
+                                this.AddAlert({ status: true, message: this.$t("alert.t_Reg_Successful") });
                                 this.CheckSession();
                                 this.LogIn();
                                 this.Name = "";
                                 this.Email = "";
                                 this.Password = "";
                                 this.RePassword = "";
+                                this.authForm = false;
                             }
-                            else this.AddAlert({ status: false, message: 'Registration was unsuccessful' });
+                            else this.AddAlert({ status: false, message: this.$t("alert.t_Reg_Not_Successful") });
                         })
                         .catch(() => {
-                            this.AddAlert({ status: false, message: 'Registration was unsuccessful' });
+                            this.AddAlert({ status: false, message: this.$t("alert.t_Reg_Not_Successful") });
                         });
                     }
                 });
             }
             else
-                this.AddAlert({ status: false, message: "Passwords don't match" });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Password_Not_Match") });
         },
         LogIn() {
             var user = {
@@ -237,35 +243,37 @@ export default {
             WhoisDataService.signIn(user)
                 .then(response => {
                 if(response.statusText == "OK"){
-                    this.AddAlert({ status: true, message: 'Authorization was successful' });
+                    this.AddAlert({ status: true, message: this.$t("alert.t_Auth_Successful") });
                     this.CheckSession();
                     this.Name = "";
                     this.Email = "";
                     this.Password = "";
                     this.RePassword = "";
+                    this.authForm = false;
                 }
                 else
-                    this.AddAlert({ status: false, message: 'Authorization was unsuccessful' });
+                    this.AddAlert({ status: false, message: this.$t("alert.f_Auth_Not_Successful") });
             }).catch(() => {
-                this.AddAlert({ status: false, message: 'Authorization was unsuccessful' });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Auth_Not_Successful") });
             });
         },
         SignOut() {
             WhoisDataService.signOut({})
                 .then(res => {
                 if(res.statusText == "OK"){
-                    this.AddAlert({ status: true, message: 'You have logged out of your account' });
+                    this.AddAlert({ status: true, message: this.$t("alert.t_Have_Logged_Acc") });
                     this.CheckSession();
                     this.Name = "";
                     this.Email = "";
                     this.Password = "";
                     this.RePassword = "";
+                    this.authForm = false;
                 }
                 else
-                    this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                    this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
             })
             .catch(() => {
-                this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
             });
         },
         deleteTrack(key) {
@@ -273,20 +281,69 @@ export default {
                 .then(response => {
                 if(response.statusText == "OK"){
                     this.CheckSession();
-                    this.AddAlert({ status: true, message: 'The deletion was successful' });
+                    this.AddAlert({ status: true, message: this.$t("alert.t_Delete_Successful") });
                 }
-                else this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                else this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
             })
             .catch(() => {
-                this.AddAlert({ status: false, message: 'Oops... something went wrong' });
+                this.AddAlert({ status: false, message: this.$t("alert.f_Oops") });
             });
         }
     },
-    components: { AlertMessages }
+    components: {LocaleSwitcher, AlertMessages }
 }
 </script>
 
 <style scoped>
+
+
+.label {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-dark-font);
+}
+
+.label-text {
+  margin-left: 16px;
+}
+
+.toggle {
+  isolation: isolate;
+  position: relative;
+  height: 30px;
+  width: 60px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow:
+      -8px -4px 8px 0px var(--bg),
+      8px 4px 12px 0px var(--bg-light),
+      4px 4px 4px 0px var(--bg-light) inset,
+      -4px -4px 4px 0px var(--bg) inset;
+}
+
+.toggle-state {
+  display: none;
+}
+
+.indicator {
+  height: 100%;
+  width: 200%;
+  background: var(--color-dark-font);
+  border-radius: 15px;
+  transform: translate3d(-75%, 0, 0);
+  transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+  box-shadow:
+      -8px -4px 8px 0px var(--bg),
+      8px 4px 12px 0px var(--bg-light);
+}
+
+.toggle-state:checked ~ .indicator {
+  transform: translate3d(25%, 0, 0);
+}
 
 .toggle-switch label {
   position: absolute;
@@ -339,7 +396,7 @@ input:checked ~ .slider::before {
   text-align: center;
   font-size: min(2vw, 25px);
   font-family: "Montserrat", sans-serif;
-  width: 5vw;
+  width: 8vw;
 }
 .ModChildLogin:hover{
   color: #fee8da;

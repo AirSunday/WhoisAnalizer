@@ -6,7 +6,7 @@
     <p class="HeaderMainP">Whois</p>
     <p class="HeaderMainP" style="top: 15vw">Analiz</p>
     <div class="ScrollPage">
-      <p>Scroll Page</p>
+      <p>{{ $t("home.Scroll_Page") }}</p>
       <div class="arrow">
         <span></span>
         <span></span>
@@ -16,8 +16,8 @@
 
     <div class="PanelInfo panel1" v-bind:style="{ top: top1 + '%' }">
       <div @click="$router.push('whois')" class="GoTo GoToWhois">
-        <span>Whois</span>
-        <p>Find out the whois of the domain name and track its release</p>
+        <span>{{ $t("home.Whois") }}</span>
+        <p>{{ $t("home.Whois_Info") }}</p>
       </div>
       <img :src="require(`@/components/images/pc3.png`)" alt="not found" class="backPC"/>
       <img :src="require(`@/components/images/pc2.png`)" alt="not found" class="PC"/>
@@ -26,8 +26,8 @@
 
     <div class="PanelInfo panel2" v-bind:style="{ top: top2 + '%' }">
       <div @click="$router.push('analiz')" class="GoTo GoToAnaliz">
-        <span>Analysis</span>
-        <p>Take a look at the distribution of domains by Registrars, NS-servers and by release date</p>
+        <span>{{ $t("home.Analysis") }}</span>
+        <p>{{ $t("home.Analysis_Info") }}</p>
       </div>
       <img :src="require(`@/components/images/analiz2.png`)" alt="not found" class="analizImg"/>
       <img :src="require(`@/components/images/analiz.png`)" alt="not found" class="analizImg"/>
@@ -35,8 +35,8 @@
 
     <div class="PanelInfo panel3" v-bind:style="{ top: top3 + '%' }">
       <div @click="$router.push('news')" class="GoTo GoToNews">
-        <span>News</span>
-        <p>Find out the latest news on the project</p>
+        <span>{{ $t("home.News") }}</span>
+        <p>{{ $t("home.News_Info") }}</p>
       </div>
       <img :src="require(`@/components/images/news2.png`)" alt="not found" class="newsBackImg"/>
       <img :src="require(`@/components/images/news.png`)" alt="not found" class="newsImg"/>
@@ -46,7 +46,7 @@
       <table>
         <tr>
           <td>
-            <a href="https://github.com/AirSunday/WhoisCheckerAll.git">
+            <a href="https://github.com/AirSunday/WhoisAnalizer">
               <img :src="require(`@/components/images/githubRep.png`)" alt="not found"/>
             </a>
           </td>
@@ -61,9 +61,9 @@
         </tr>
 
         <tr>
-          <td>Project repository on Github</td>
-          <td>My Github profile</td>
-          <td>Contact Email</td>
+          <td>{{ $t("home.Repository") }}</td>
+          <td>{{ $t("home.ProfileGithub") }}</td>
+          <td>{{ $t("home.Contact_Email") }}</td>
         </tr>
 
       </table>
@@ -104,11 +104,11 @@ export default {
     copy() {
       navigator.clipboard.writeText('airsunday2001@gmail.com')
           .then(() => {
-            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Mail added to buffer' });
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Mail_Add_To_Buf") });
           })
-          .catch(err => {
+          .catch(() => {
             // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
-            console.log('Something went wrong', err);
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.f_Oops") });
           });
     },
     swapPage(){
@@ -242,7 +242,7 @@ export default {
   color: #bda496;
   margin: 1vw;
   top: 20vw;
-  height: 18vw;
+  height: 20vw;
   width: 25vw;
   position: relative;
   border-radius: 2vw;

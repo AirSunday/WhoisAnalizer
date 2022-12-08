@@ -145,6 +145,7 @@ cron.schedule("00 13 * * *", () => {
     require("./app/controllers/whois.controller.js").UpdateDataBase();
   }
 });
+require("./app/controllers/whois.controller.js").UpdateDataBase();
 
 // require("./app/controllers/whois.controller.js").UpdateDataBase();
 // require("./app/controllers/whois.controller.js").UpdateDataBase();

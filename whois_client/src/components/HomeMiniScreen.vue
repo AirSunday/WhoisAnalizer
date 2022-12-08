@@ -8,35 +8,35 @@
  <div class="GoToAll">
 
       <div @click="$router.push('analiz')" class="GoTo LongPanel">
-        <div class="HeaderPanel"><span>Analysis</span></div>
-        <p>Take a look at the distribution of domains by Registrars, NS-servers and by release date</p>
+        <div class="HeaderPanel"><span>{{ $t("home.Analysis") }}</span></div>
+        <p>{{ $t("home.Analysis_Info") }}</p>
       </div>
 
      <div @click="$router.push('whois')" class="GoTo ShortPanel">
-       <div class="HeaderPanel"><span>Whois</span></div>
-       <p>Find out the whois of the domain name and track its release</p>
+       <div class="HeaderPanel"><span>{{ $t("home.Whois") }}</span></div>
+       <p>{{ $t("home.Whois_Info") }}</p>
      </div>
 
      <div @click="$router.push('news')" class="GoTo ShortPanel">
-       <div class="HeaderPanel"><span>News</span></div>
-       <p>Find out the latest news on the project</p>
+       <div class="HeaderPanel"><span>{{ $t("home.News") }}</span></div>
+       <p>{{ $t("home.News_Info") }}</p>
      </div>
 
       <div>
           <a class="LinkInPanel" href="https://github.com/AirSunday/WhoisAnalizer">
           <div class="AboutPanels LongPanel">
-            <div class="LeftPanelInAboutPanels">Project</div>
-            <div class="RightPanelInAboutPanels"><p>Project repository on Github</p></div>
+            <div class="LeftPanelInAboutPanels">{{ $t("home.Project") }}</div>
+            <div class="RightPanelInAboutPanels"><p>{{ $t("home.Repository") }}</p></div>
           </div>
         </a>
         <a class="LinkInPanel" href="https://github.com/AirSunday">
          <div class="AboutPanels LongPanel">
-           <div class="LeftPanelInAboutPanels">Github</div>
-             <div class="RightPanelInAboutPanels"><p>My Github profile</p></div>
+           <div class="LeftPanelInAboutPanels">{{ $t("home.Github") }}</div>
+             <div class="RightPanelInAboutPanels"><p>{{ $t("home.ProfileGithub") }}</p></div>
          </div>
         </a>
          <div class="AboutPanels LongPanel" @click="copy">
-           <div class="LeftPanelInAboutPanels">Contact</div>
+           <div class="LeftPanelInAboutPanels">{{ $t("home.Contact") }}</div>
            <div class="RightPanelInAboutPanels">
              <p>airsunday2001@gmail.com</p>
            </div>
@@ -51,7 +51,8 @@
 
 <script>
 import AlertMessages from './AlertMessages.vue';
-import AuthForm from './AuthForm'
+import AuthForm from './AuthForm';
+// import i18n from '@/plugins/i18n.js';
 
 export default {
   name: 'HomeMain',
@@ -68,11 +69,11 @@ export default {
     copy() {
       navigator.clipboard.writeText('airsunday2001@gmail.com')
           .then(() => {
-            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Mail added to buffer' });
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Mail_Add_To_Buf") });
           })
-          .catch(err => {
+          .catch(() => {
             // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
-            console.log('Something went wrong', err);
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.f_Oops") });
           });
     }
   },

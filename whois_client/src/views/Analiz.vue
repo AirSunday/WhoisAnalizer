@@ -1,30 +1,31 @@
 <template>
 <MainHeader :HeaderPos="'analiz'"></MainHeader>
+<Help :ModHelp="'analiz'"></Help>
 
     <div class="radios">
       <table>
         <td class="SortBy">
-          Sort By:
+          {{ $t('analiz.Sort_By') }}
         </td>
         <td>
           <table class="radioAll">
             <td>
               <button class="radio1"
               v-bind:class="{ StatusRadioActiv: radioStatus == 1, StatusRadioNoActiv: !radioStatus != 2 }"
-              @click=" this.PageDomainInAnaliz = 1; SortByData();"
-              >Release date</button>
+              @click=" this.PageDomainInAnaliz = 1; SortByData();">
+                {{ $t('analiz.Release_date') }}</button>
             </td>
             <td>
               <button class="radio2"
               v-bind:class="{ StatusRadioActiv: radioStatus == 2, StatusRadioNoActiv: radioStatus != 2 }"
-              @click=" this.PageDomainInAnaliz = 1; SortByNs();"
-              >NS-Servers</button>
+              @click=" this.PageDomainInAnaliz = 1; SortByNs();">
+                {{ $t('analiz.NS_Servers') }}</button>
             </td>
             <td>
               <button class="radio3"
               v-bind:class="{ StatusRadioActiv: radioStatus == 3, StatusRadioNoActiv: !radioStatus != 2 }"
-              @click=" this.PageDomainInAnaliz = 1; SortByReg()"
-              >Registrant</button>
+              @click=" this.PageDomainInAnaliz = 1; SortByReg()">
+                {{ $t('analiz.Registrant') }}</button>
             </td>
           </table>
         </td>
@@ -33,11 +34,11 @@
       <div class="AnalizMain">
         <table v-if="radioStatus == 1" class="TableAnaliz">
           <tr>
-            <td>Domain name</td>
-            <td>Age</td>
-            <td>Release date</td>
-            <td>NS-Servers</td>
-            <td>Registrant</td>
+            <td>{{ $t('analiz.Domain_name') }}</td>
+            <td>{{ $t('analiz.Age') }}</td>
+            <td>{{ $t('analiz.Release_date') }}</td>
+            <td>{{ $t('analiz.NS_Servers') }}</td>
+            <td>{{ $t('analiz.Registrant') }}</td>
           </tr>
           <tr v-for="(domainA,key) in domainsAnaliz10" :key="key">
               <td class="domenNameAnaliz"
@@ -54,8 +55,8 @@
 
         <table v-if="radioStatus == 2" class="TableAnaliz">
           <tr>
-            <td>NS-Servers</td>
-            <td>Count</td>
+            <td>{{ $t('analiz.NS_Servers') }}</td>
+            <td>{{ $t('analiz.Count') }}</td>
           </tr>
           <tr v-for="(domainA,key) in nsServersAnaliz" :key="key">
             <td>{{ domainA.name }}</td>
@@ -65,8 +66,8 @@
 
         <table v-if="radioStatus == 3" class="TableAnaliz">
           <tr>
-            <td>Registrant</td>
-            <td>Count</td>
+            <td>{{ $t('analiz.Registrant') }}</td>
+            <td>{{ $t('analiz.Count') }}</td>
           </tr>
           <tr v-for="(domainA,key) in registrantAnaliz" :key="key">
             <td>{{ domainA.name }}</td>
@@ -92,11 +93,12 @@
 import WhoisDataService from '../services/WhoisDataService';
 import MainHeader from '../components/MainHeader.vue';
 import AlertMessages from '../components/AlertMessages.vue';
+import Help from '../components/Help.vue';
 
 export default {
   name: 'AnalizMain',
   components: {
-    MainHeader, AlertMessages,
+    MainHeader, AlertMessages, Help,
   },
   data() {
     return {
@@ -106,6 +108,7 @@ export default {
       domainsAnaliz10: [],
       nsServersAnaliz: [],
       registrantAnaliz: [],
+      locales: ["ru", "en"],
     };
   },
   created (){
@@ -158,11 +161,11 @@ export default {
     copy(domain) {
       navigator.clipboard.writeText(domain)
           .then(() => {
-            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: 'Domain added to buffer' });
+            this.$refs.AddAlertMess.AddAlertMess({ status: true, message: this.$t("alert.t_Domain_Add_Buffer") });
           })
           .catch(err => {
             // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
-            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: 'Domain dont added to buffer' });
+            this.$refs.AddAlertMess.AddAlertMess({ status: false, message: this.$t("alert.f_Domain_Add_Buffer") });
             console.log('Something went wrong', err);
           });
     },

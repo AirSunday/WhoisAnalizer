@@ -1,10 +1,10 @@
 <template>
   <div class="HeaderChild">
     <div><img :src="require(`../components/images/logo.png`)" alt="not found"/></div>
-    <p @click="$router.push('/')"       v-bind:class="{ activHeader: HeaderPos == 'home' }">Home</p>
-    <p @click="$router.push('whois')"   v-bind:class="{ activHeader: HeaderPos == 'whois' }">Whois</p>
-    <p @click="$router.push('analiz')"  v-bind:class="{ activHeader: HeaderPos == 'analiz' }">Analysis</p>
-    <p @click="$router.push('news')"    v-bind:class="{ activHeader: HeaderPos == 'news' }">News</p>
+    <p @click="$router.push('/')"       v-bind:class="{ activHeader: HeaderPos == 'home' }">{{ $t("mainHeader.Home") }}</p>
+    <p @click="$router.push('whois')"   v-bind:class="{ activHeader: HeaderPos == 'whois' }">{{ $t("mainHeader.Whois") }}</p>
+    <p @click="$router.push('analiz')"  v-bind:class="{ activHeader: HeaderPos == 'analiz' }">{{ $t("mainHeader.Analysis") }}</p>
+    <p @click="$router.push('news')"    v-bind:class="{ activHeader: HeaderPos == 'news' }">{{ $t("mainHeader.News") }}</p>
     <AuthForm :ModView="'Header'"/>
   </div>
 </template>
@@ -45,14 +45,16 @@ data() {
   color: #FFF;
   position: fixed;
   display: flex;
+  justify-content: space-between;
   z-index: 1;
   top: 0;
   left: 0;
   border-radius: 1.5vw;
   background: var(--color-dark);
   height: min(4vw, 57px );
-  width: 42vw;
-  margin: 0.5vw 29vw;
+  width: auto;
+  margin: 0.5vw 30vw;
+  padding: 0 10px;
   opacity: 0.93;
   align-items: center;
 }
@@ -72,7 +74,7 @@ data() {
   text-align: center;
   font-size: min(2vw, 25px);
   font-family: "Montserrat", sans-serif;
-  width: 7vw;
+  margin: 0 1vw;
 }
 
 .HeaderChild p:hover{

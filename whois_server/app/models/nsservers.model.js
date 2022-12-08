@@ -14,6 +14,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       count: {
         type: Sequelize.INTEGER,
+        yes,
       },
     },
     {
