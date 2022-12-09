@@ -14,6 +14,10 @@ module.exports = (app) => {
   //
   router.post("/get/getdomain", whoisdbs.GetWhoisInfo);
   //
+  router.post(`/get/GetCountStatistic`, whoisdbs.GetCountStatistic);
+  //
+  router.post(`/get/GetStatistic`, whoisdbs.GetStatistic);
+  //
   router.post("/users/create", usersdbs.create);
   //
   router.post("/users/Domain", usersdbs.AddDomain);

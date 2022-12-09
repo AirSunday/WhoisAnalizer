@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+      - postgres:/var/lib/postgresql/data
 
   node:
     build: whois_server/
@@ -35,9 +35,9 @@ services:
       - 80:8080
       - 443:443
     depends_on:
-        - node
-#
-#volumes:
-#  postgres:
-#    driver: local
-##    external: true
+      - node
+
+volumes:
+  postgres:
+    driver: local
+#    external: true

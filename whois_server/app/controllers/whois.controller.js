@@ -252,6 +252,82 @@ exports.GetWhoisInfo = (req, res) => {
   });
 };
 
+async function ForAge(data, ageList) {
+  for await (const el of data) {
+    let age = parseInt(el.dataValues.age);
+    let count = parseInt(el.dataValues.count);
+    if (age <= 5) ageList._0to4 += count;
+    else if (4 <= age && age < 8) ageList._4to8 += count;
+    else if (8 <= age && age < 12) ageList._8to12 += count;
+    else if (12 <= age && age < 16) ageList._12to16 += count;
+    else if (16 <= age && age < 20) ageList._16to20 += count;
+    else if (20 <= age) ageList._20more += count;
+  }
+}
+
+exports.GetStatistic = (req, res) => {
+  if (req.body.mod === "Age") {
+    Whoisdb.findAll({
+      attributes: [
+        "age",
+        [sequelize.fn("count", sequelize.col("age")), "count"],
+      ],
+      group: ["age"],
+      order: [["count", "DESC"]],
+    })
+      .then((data) => {
+        const ageList = {
+          _0to4: 0,
+          _4to8: 0,
+          _8to12: 0,
+          _12to16: 0,
+          _16to20: 0,
+          _20more: 0,
+        };
+        ForAge(data, ageList).then(() => {
+          res.status(200).json(ageList);
+        });
+      })
+      .catch((err) => res.status(500).json(err));
+  } else if (req.body.mod === "NS_Servers") {
+    NsServersdb.findAll({
+      order: [["count", "DESC"]],
+      limit: 5,
+    })
+      .then((data) => res.status(200).json(data))
+      .catch((err) => res.status(500).json(err));
+  } else if (req.body.mod === "Registrant") {
+    Registrantsdb.findAll({
+      order: [["count", "DESC"]],
+      limit: 5,
+    })
+      .then((data) => res.status(200).json(data))
+      .catch((err) => res.status(500).json(err));
+  }
+};
+
+exports.GetCountStatistic = (req, res) => {
+  if (req.body.mod === "Age") {
+    Whoisdb.findAll({
+      attributes: [[sequelize.fn("count", sequelize.col("age")), "count"]],
+    })
+      .then((data) => res.status(200).json(data))
+      .catch((err) => res.status(500).json(err));
+  } else if (req.body.mod === "NS_Servers") {
+    NsServersdb.findAll({
+      attributes: [[sequelize.fn("sum", sequelize.col("count")), "count"]],
+    })
+      .then((data) => res.status(200).json(data))
+      .catch((err) => res.status(500).json(err));
+  } else if (req.body.mod === "Registrant") {
+    Registrantsdb.findAll({
+      attributes: [[sequelize.fn("sum", sequelize.col("count")), "count"]],
+    })
+      .then((data) => res.status(200).json(data))
+      .catch((err) => res.status(500).json(err));
+  }
+};
+
 /////////////////
 async function AddRegistrantInDB(registrant, count) {
   await Registrantsdb.findOne({ where: { name: registrant } })
@@ -644,7 +720,7 @@ function CreateNews() {
   let text = `News of changes in the statistics of the zone .ru:\n
               ${countStat.countNew} domains were added;\n
               ${countStat.countDelete} domains were deleted;\n
-              ${countStat.countChange} domains were changed;
+              ${countStat.countChange} domains were changed;\n
               Total domains ${countStat.lineCount}.`;
   newNews = {
     title: "Domain statistics " + mm + "." + dd + "." + yyyy + ".",
