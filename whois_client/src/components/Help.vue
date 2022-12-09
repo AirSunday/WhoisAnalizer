@@ -51,6 +51,7 @@ export default {
 <style scoped>
 .HelpCard{
   position: fixed;
+  z-index: 3;
   bottom: 10px;
   right: 10px;
   display: flex;

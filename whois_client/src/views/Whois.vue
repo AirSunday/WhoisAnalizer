@@ -12,7 +12,7 @@
           </button>
           <div v-if="all.info.length > 0">
               <button v-if="authId != 0" class="btnAddDomen" @click="trackDomen">{{ $t('whois.Track_domain') }}</button>
-              <h1 style="font-size: 5vw">{{domenNameTemp}}</h1>
+              <a class="UrlTitle"  :href='`https:\\\\${domenNameTemp}`'>{{domenNameTemp}}</a>
               <BlockWithInfo :info="status.info" :typeName="status.type" />
               <BlockWithInfo :info="date.info" :typeName="date.type" :pathImg="date.path" />
               <BlockWithInfo :info="registrant.info" :typeName="registrant.type" :pathImg="registrant.path" />
@@ -225,10 +225,11 @@
     color: var(--color-dark-font);
   }
 
-  .imgBack{
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: -1;
-    }
+  .UrlTitle{
+    text-decoration: none;
+    font-size: 5vw;
+    color: var(--color-dark-font);
+    font-family: inherit;
+  }
+
   </style>

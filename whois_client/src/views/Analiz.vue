@@ -2,6 +2,12 @@
 <MainHeader :HeaderPos="'analiz'"></MainHeader>
 <Help :ModHelp="'analiz'"></Help>
 
+  <div class="Graphs">
+    <Graph :StatisticMod="'Age'"/>
+    <Graph :StatisticMod="'NS_Servers'"/>
+    <Graph :StatisticMod="'Registrant'"/>
+  </div>
+
     <div class="radios">
       <table>
         <td class="SortBy">
@@ -94,11 +100,12 @@ import WhoisDataService from '../services/WhoisDataService';
 import MainHeader from '../components/MainHeader.vue';
 import AlertMessages from '../components/AlertMessages.vue';
 import Help from '../components/Help.vue';
+import Graph from '../components/Graph.vue';
 
 export default {
   name: 'AnalizMain',
   components: {
-    MainHeader, AlertMessages, Help,
+    MainHeader, AlertMessages, Help, Graph,
   },
   data() {
     return {
@@ -174,6 +181,21 @@ export default {
 </script>
 
 <style scoped>
+
+.Graphs {
+  margin-top: 5vw;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+
+@media only screen and (max-width: 1300px)  {
+  .Graphs {
+    flex-direction: column;
+  }
+}
+
 .NavigationAnaliz{
   margin: 1vw 2vw;
   width: 95%;

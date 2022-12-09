@@ -1,14 +1,6 @@
 import axios from "axios";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-// export default axios.create({
-//   withCredentials: true,
-//   // baseURL: "http://localhost:8080/api",
-//   baseURL: "https://whoisa.ru/api",
-//   headers: {
-//     "Content-type": "application/json",
-//   },
-// });
 
 const instance = axios.create({
   withCredentials: true,

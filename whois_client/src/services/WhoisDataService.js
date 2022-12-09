@@ -2,7 +2,7 @@ import http from "../http-common";
 
 class WhoisDataService {
   FindSession() {
-    return http.get("users");
+    return http.get("/users");
   }
   FindByEmail(data) {
     return http.post(`/users/findout`, data);
@@ -39,6 +39,12 @@ class WhoisDataService {
   }
   GetCountDomain(table) {
     return http.get(`/get/GetCountDomain/${table}`);
+  }
+  GetCountStatistic(data) {
+    return http.post(`/get/GetCountStatistic`, data);
+  }
+  GetStatistic(data) {
+    return http.post(`/get/GetStatistic`, data);
   }
   AddDomain(data) {
     return http.post(`/users/Domain`, data);
@@ -90,7 +96,7 @@ class WhoisDataService {
     return http.post(`/admin/url/get`);
   }
   ChangeUrlDomain(data) {
-    return http.post(`admin/url/change`, data);
+    return http.post(`/admin/url/change`, data);
   }
 }
 export default new WhoisDataService();

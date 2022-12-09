@@ -110,5 +110,11 @@
   },
   "localeSwitcher" : {
     "Language": "Выбор языка"
+  },
+  "graph" : {
+    "Age": "Возраст (Года)",
+    "Registrant": "Регистратор",
+    "NS_Servers": "Сервера NS",
+    "Other": "Другое"
   }
 }

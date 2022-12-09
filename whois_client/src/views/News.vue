@@ -12,7 +12,7 @@
         <p v-if="!ShowText || !(ShowTextKey == key)">{{news.preview}}...</p>
         <span v-if="!ShowText || !(ShowTextKey == key)" @click="ReadMore(key)">{{ $t('news.Read_More') }}</span>
       </div>
-      <div v-if="ShowText && ShowTextKey == key" class="TextMore"> {{Text}} </div>
+      <div v-if="ShowText && ShowTextKey === key" class="TextMore"> <pre>{{Text}}</pre> </div>
     </div>
   </div>
 
@@ -97,6 +97,7 @@ export default {
       WhoisDataService.GetNewsTitle({ news_id: this.ArrNews[key].news_id })
         .then(text => {
           this.Text = text.data.text;
+          console.log(this.Text)
         })
     },
     GoPageNews(direction){
@@ -130,6 +131,11 @@ export default {
   border: 1px solid var(--color-dark);
   border-radius: 20px;
   color: var(--color-dark-font);
+}
+
+.card pre {
+  font-family: "Montserrat", sans-serif;
+  font-size: min(2.5vw, 30px);
 }
 
 .card h3{

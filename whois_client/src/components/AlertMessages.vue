@@ -35,7 +35,7 @@ export default {
 <style scoped>
 
 .AllMessage {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 2px;
   width: 100%;

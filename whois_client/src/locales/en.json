@@ -110,5 +110,11 @@
   },
   "localeSwitcher" : {
     "Language": "Language Selection"
+  },
+  "graph" : {
+    "Age": "Age (Years)",
+    "Registrant": "Registrant",
+    "NS_Servers": "NS-Servers",
+    "Other": "Other"
   }
 }
