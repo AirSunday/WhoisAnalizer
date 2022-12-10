@@ -117,28 +117,28 @@ cron.schedule("00 11 * * *", () => {
   // }
 });
 
-cron.schedule("10 11 * * *", () => {
+cron.schedule("10 12 * * *", () => {
   // min hore day mounth year (every day 01:00)
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DownloadDomains();
   }
 });
 
-cron.schedule("20 11 * * *", () => {
+cron.schedule("20 12 * * *", () => {
   // min hore day mounth year (every day 02:00)
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").CompareDomains();
   }
 });
 
-cron.schedule("00 12 * * *", () => {
+cron.schedule("00 13 * * *", () => {
   // min hore day mounth year (every day 02:00)
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DeleteDomain();
   }
 });
 
-cron.schedule("00 13 * * *", () => {
+cron.schedule("00 14 * * *", () => {
   // min hore day mounth year (every day 03:00)
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";

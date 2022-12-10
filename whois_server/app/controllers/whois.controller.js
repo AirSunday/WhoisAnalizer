@@ -451,7 +451,7 @@ exports.UpdateDataBase = async function () {
   for await (const line of rl) {
     lineCount++;
 
-    if (lineCount > 0) {
+    if (lineCount > 1486000) {
       if (
         lineCount % 118 === 0 ||
         lineCount === countStat.countNew + countStat.countChange
