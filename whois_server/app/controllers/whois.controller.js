@@ -291,7 +291,7 @@ exports.GetStatistic = (req, res) => {
       .catch((err) => res.status(500).json(err));
   } else if (req.body.mod === "NS_Servers") {
     NsServersdb.findAll({
-      order: [["count", "DESC"]],
+      oorder: [["count", "DESC"]],
       limit: 5,
     })
       .then((data) => res.status(200).json(data))

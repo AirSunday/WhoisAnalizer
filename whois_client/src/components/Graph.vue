@@ -10,10 +10,11 @@
     <div class="legend">
       <p class="title">{{ $t(`graph.${StatisticMod}`) }}</p>
       <div class="caption-list">
-        <p v-for="(statistic,key) in Statistics" :key="key"
+        <div v-for="(statistic,key) in Statistics" :key="key"
             class="caption-item">
-          {{ statistic.element }}
-        </p>
+          <span class="StaticItem">{{ statistic.element }}</span>
+          <span class="StaticItem"> {{  Math.floor(statistic.percent) }} %</span>
+        </div>
       </div>
     </div>
   </div>
@@ -43,11 +44,14 @@ export default {
   methods: {
     CalcPercent(){
       let ident = 0;
+      let otherPercent = 0;
       this.Statistics.forEach(element => {
-        element.percent = 100 * element.count / this.Count;
+        element.percent = Math.floor(100 * element.count / this.Count);
+        otherPercent += element.percent;
         element.indent = ident;
         ident += element.percent;
       });
+      this.Statistics[5].percent += 100 - otherPercent;
     },
     SetStatisticMod(){
 
@@ -93,6 +97,7 @@ export default {
 </script>
 
 <style scoped>
+
 .canvas {
   display: flex;
   align-items: center;
@@ -141,12 +146,14 @@ export default {
 
 .caption-item {
   position: relative;
-  margin: 1vw 0;
+  margin: 1vw 1vw 1vw 0;
   padding-left: 3vw;
   font-size: calc(0.2em + 1vw);
   color: var(--color-dark-font);
   cursor: pointer;
   width: 15vw;
+  display: flex;
+  justify-content: space-between;
 }
 
 .caption-item:hover {
@@ -161,6 +168,30 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 8px;
+}
+
+.caption-item:nth-child(1) {
+  border-bottom: solid #99CCCC;
+}
+
+.caption-item:nth-child(2) {
+  border-bottom: solid #CCFFCC;
+}
+
+.caption-item:nth-child(3) {
+  border-bottom: solid #FFCCCC;
+}
+
+.caption-item:nth-child(4) {
+  border-bottom: solid #CC99FF;
+}
+
+.caption-item:nth-child(5) {
+  border-bottom: solid #CCFF66;
+}
+
+.caption-item:nth-child(6) {
+  border-bottom: solid #FFCC66;
 }
 
 .caption-item:nth-child(1)::before {
