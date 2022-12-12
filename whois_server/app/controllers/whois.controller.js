@@ -291,13 +291,19 @@ exports.GetStatistic = (req, res) => {
       .catch((err) => res.status(500).json(err));
   } else if (req.body.mod === "NS_Servers") {
     NsServersdb.findAll({
-      oorder: [["count", "DESC"]],
+      attributes: [
+        ["registrant", "value"],
+        [sequelize.fn("sum", sequelize.col("count")), "count"],
+      ],
+      group: ["value"],
+      order: [["count", "DESC"]],
       limit: 5,
     })
       .then((data) => res.status(200).json(data))
       .catch((err) => res.status(500).json(err));
   } else if (req.body.mod === "Registrant") {
     Registrantsdb.findAll({
+      attributes: [["name", "value"], "count"],
       order: [["count", "DESC"]],
       limit: 5,
     })
@@ -457,7 +463,7 @@ exports.UpdateDataBase = async function () {
   for await (const line of rl) {
     lineCount++;
 
-    if (lineCount > 1486000) {
+    if (lineCount > 1807000) {
       if (
         lineCount % 118 === 0 ||
         lineCount === countStat.countNew + countStat.countChange
@@ -739,24 +745,24 @@ function CreateNews() {
   });
 }
 
-exports.AddRegistrantInNS = (req, res) => {
-  NsServersdb.findAll().then(async function (data) {
-    for await (const ns of data) {
-      await FillNsServersRegistrant(ns.dataValues.nsserver_id);
-      await delay(200);
-    }
-  });
-};
+// exports.AddRegistrantInNS = (req, res) => {
+//   NsServersdb.findAll().then(async function (data) {
+//     for await (const ns of data) {
+//       await FillNsServersRegistrant(ns.dataValues.nsserver_id);
+//       await delay(200);
+//     }
+//   });
+// };
 
-async function FillNsServersRegistrant(ns) {
-  NsServersdb.findOne({
-    where: { nsserver_id: ns },
-  }).then((server) => {
-    if (server) {
-      const length = server.name.split(".").length;
-      server.registrant = length >= 3 ? server.name.split(".")[length - 3] : "";
-      console.log(server.name + ":   " + server.registrant);
-      server.save();
-    }
-  });
-}
+// async function FillNsServersRegistrant(ns) {
+//   NsServersdb.findOne({
+//     where: { nsserver_id: ns },
+//   }).then((server) => {
+//     if (server) {
+//       const length = server.name.split(".").length;
+//       server.registrant = length >= 3 ? server.name.split(".")[length - 3] : "";
+//       console.log(server.name + ":   " + server.registrant);
+//       server.save();
+//     }
+//   });
+// }

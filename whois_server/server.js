@@ -107,45 +107,43 @@ db.sequelize
     console.log("Failed to sync db: " + err.message);
   });
 
-// var cron = require("node-cron");
+var cron = require("node-cron");
 
 // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-// cron.schedule("00 11 * * *", () => {
-//   if (process.env.FLAG_REQUEST === "true") {
-//   require("./app/controllers/users.controller.js").CheckUsersDomain();
-//   }
-// });
-//
-// cron.schedule("10 12 * * *", () => {
-//   if (process.env.FLAG_REQUEST === "true") {
-//     require("./app/controllers/whois.controller.js").DownloadDomains();
-//   }
-// });
-//
-// cron.schedule("20 12 * * *", () => {
-//   if (process.env.FLAG_REQUEST === "true") {
-//     require("./app/controllers/whois.controller.js").CompareDomains();
-//   }
-// });
-//
-// cron.schedule("00 13 * * *", () => {
-//   if (process.env.FLAG_REQUEST === "true") {
-//     require("./app/controllers/whois.controller.js").DeleteDomain();
-//   }
-// });
-//
-// cron.schedule("00 14 * * *", () => {
-//   // min hore day mounth year (every day 03:00)
-//   if (process.env.FLAG_REQUEST === "true") {
-//     process.env.FLAG_REQUEST = "false";
-//     require("./app/controllers/whois.controller.js").UpdateDataBase();
-//   }
-// });
+cron.schedule("00 11 * * *", () => {
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/users.controller.js").CheckUsersDomain();
+  }
+});
 
-require("./app/controllers/whois.controller.js").AddRegistrantInNS();
+cron.schedule("10 12 * * *", () => {
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").DownloadDomains();
+  }
+});
 
-// require("./app/controllers/whois.controller.js").UpdateDataBase();
-// require("./app/controllers/whois.controller.js").UpdateDataBase();
+cron.schedule("20 12 * * *", () => {
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").CompareDomains();
+  }
+});
+
+cron.schedule("00 13 * * *", () => {
+  if (process.env.FLAG_REQUEST === "true") {
+    require("./app/controllers/whois.controller.js").DeleteDomain();
+  }
+});
+
+cron.schedule("00 14 * * *", () => {
+  // min hore day mounth year (every day 03:00)
+  if (process.env.FLAG_REQUEST === "true") {
+    process.env.FLAG_REQUEST = "false";
+    require("./app/controllers/whois.controller.js").UpdateDataBase();
+  }
+});
+
+// require("./app/controllers/whois.controller.js").AddRegistrantInNS();
+
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.")
 // })
