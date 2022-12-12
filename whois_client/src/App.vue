@@ -11,9 +11,9 @@ export default {
 
 <style>
 body {
-    background-image: var(--bg-i); /* Путь к фоновому изображению */
-    background-color: var(--bg); /* Цвет фона */
-   }
+  background-image: var(--bg-i); /* Путь к фоновому изображению */
+  background-color: var(--bg); /* Цвет фона */
+}
 
 :root {
   --bg: #f9f9f8;

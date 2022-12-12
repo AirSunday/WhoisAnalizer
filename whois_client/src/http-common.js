@@ -4,8 +4,8 @@ import "nprogress/nprogress.css";
 
 const instance = axios.create({
   withCredentials: true,
-  baseURL: "http://localhost:8080/api",
-  // baseURL: "https://whoisa.ru/api",
+  // baseURL: "http://localhost:8080/api",
+  baseURL: "https://whoisa.ru/api",
   headers: {
     "Content-type": "application/json",
   },

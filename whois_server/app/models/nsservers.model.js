@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
       count: {
         type: Sequelize.INTEGER,
       },
+      registrant: {
+        type: Sequelize.TEXT,
+      },
     },
     {
       timestamps: false,

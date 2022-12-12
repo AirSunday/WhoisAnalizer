@@ -351,7 +351,13 @@ async function AddNsServerInDB(nsServer, count) {
   await NsServersdb.findOne({ where: { name: nsServer } })
     .then(async (domainBD) => {
       if (!domainBD) {
-        await NsServersdb.create({ name: nsServer, count: count });
+        const reg = nsServer.split(".");
+        const length = reg.length;
+        await NsServersdb.create({
+          name: nsServer,
+          count: count,
+          registrant: length >= 3 ? reg[length - 3] : "",
+        });
       } else {
         await NsServersdb.update(
           { count: domainBD.count + count },
@@ -730,5 +736,27 @@ function CreateNews() {
 
   Newsdb.create(newNews).catch((err) => {
     console.log("ERROR in create news");
+  });
+}
+
+exports.AddRegistrantInNS = (req, res) => {
+  NsServersdb.findAll().then(async function (data) {
+    for await (const ns of data) {
+      await FillNsServersRegistrant(ns.dataValues.nsserver_id);
+      await delay(200);
+    }
+  });
+};
+
+async function FillNsServersRegistrant(ns) {
+  NsServersdb.findOne({
+    where: { nsserver_id: ns },
+  }).then((server) => {
+    if (server) {
+      const length = server.name.split(".").length;
+      server.registrant = length >= 3 ? server.name.split(".")[length - 3] : "";
+      console.log(server.name + ":   " + server.registrant);
+      server.save();
+    }
   });
 }

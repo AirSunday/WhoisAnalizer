@@ -1,19 +1,29 @@
 <template>
   <div class="canvas">
     <svg class="chart" viewBox="0 0 50 50">
-      <circle v-for="(statistic,key) in Statistics" :key="key"
-              class="unit" r="15.9" cx="50%" cy="50%" :style="{
-                'stroke-dasharray': `${statistic.percent} 100`,
-                'stroke-dashoffset': `-${statistic.indent}` }">
-      </circle>
+      <circle
+        v-for="(statistic, key) in Statistics"
+        :key="key"
+        class="unit"
+        r="15.9"
+        cx="50%"
+        cy="50%"
+        :style="{
+          'stroke-dasharray': `${statistic.percent} 100`,
+          'stroke-dashoffset': `-${statistic.indent}`,
+        }"
+      ></circle>
     </svg>
     <div class="legend">
       <p class="title">{{ $t(`graph.${StatisticMod}`) }}</p>
       <div class="caption-list">
-        <div v-for="(statistic,key) in Statistics" :key="key"
-            class="caption-item">
+        <div
+          v-for="(statistic, key) in Statistics"
+          :key="key"
+          class="caption-item"
+        >
           <span class="StaticItem">{{ statistic.element }}</span>
-          <span class="StaticItem"> {{  Math.floor(statistic.percent) }} %</span>
+          <span class="StaticItem"> {{ Math.floor(statistic.percent) }} %</span>
         </div>
       </div>
     </div>
@@ -22,7 +32,6 @@
 
 <script>
 import WhoisDataService from "@/services/WhoisDataService";
-
 
 export default {
   name: "GraphComponent",
@@ -35,69 +44,68 @@ export default {
   props: {
     StatisticMod: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   created() {
     this.SetStatisticMod();
   },
   methods: {
-    CalcPercent(){
+    CalcPercent() {
       let ident = 0;
       let otherPercent = 0;
-      this.Statistics.forEach(element => {
-        element.percent = Math.floor(100 * element.count / this.Count);
+      this.Statistics.forEach((element) => {
+        element.percent = Math.floor((100 * element.count) / this.Count);
         otherPercent += element.percent;
         element.indent = ident;
         ident += element.percent;
       });
       this.Statistics[5].percent += 100 - otherPercent;
     },
-    SetStatisticMod(){
+    SetStatisticMod() {
+      WhoisDataService.GetCountStatistic({ mod: this.StatisticMod }).then(
+        (stat) => {
+          this.Count = stat.data[0].count;
 
-      WhoisDataService.GetCountStatistic({ mod: this.StatisticMod })
-          .then(stat => {
-            this.Count = stat.data[0].count;
-
-            WhoisDataService.GetStatistic({ mod: this.StatisticMod })
-                .then(stat => {
-                  if(this.StatisticMod === 'Age') {
-                    this.Statistics = [
-                      {element: '0 .. 4',   count: stat.data._0to4},
-                      {element: '4 .. 8',  count: stat.data._4to8},
-                      {element: '8 .. 12', count: stat.data._8to12},
-                      {element: '12 .. 16', count: stat.data._12to16},
-                      {element: '16 .. 20', count: stat.data._16to20},
-                      {element: '20 .. * ',   count: stat.data._20more},
-                    ];
-                  }
-                  else {
-                    this.Statistics = [
-                      {element: stat.data[0].name,  count: stat.data[0].count},
-                      {element: stat.data[1].name,  count: stat.data[1].count},
-                      {element: stat.data[2].name,  count: stat.data[2].count},
-                      {element: stat.data[3].name,  count: stat.data[3].count},
-                      {element: stat.data[4].name,  count: stat.data[4].count},
-                      {element: this.$t('graph.Other'),  count: 0},
-                    ];
-                    this.Statistics[5].count
-                        = this.Count
-                        - stat.data[0].count
-                        - stat.data[1].count
-                        - stat.data[2].count
-                        - stat.data[3].count
-                        - stat.data[4].count;
-                  }
-                  this.CalcPercent();
-                });
-          });
-    }
-  }
-}
+          WhoisDataService.GetStatistic({ mod: this.StatisticMod }).then(
+            (stat) => {
+              if (this.StatisticMod === "Age") {
+                this.Statistics = [
+                  { element: "0 .. 4", count: stat.data._0to4 },
+                  { element: "4 .. 8", count: stat.data._4to8 },
+                  { element: "8 .. 12", count: stat.data._8to12 },
+                  { element: "12 .. 16", count: stat.data._12to16 },
+                  { element: "16 .. 20", count: stat.data._16to20 },
+                  { element: "20 .. * ", count: stat.data._20more },
+                ];
+              } else {
+                this.Statistics = [
+                  { element: stat.data[0].name, count: stat.data[0].count },
+                  { element: stat.data[1].name, count: stat.data[1].count },
+                  { element: stat.data[2].name, count: stat.data[2].count },
+                  { element: stat.data[3].name, count: stat.data[3].count },
+                  { element: stat.data[4].name, count: stat.data[4].count },
+                  { element: this.$t("graph.Other"), count: 0 },
+                ];
+                this.Statistics[5].count =
+                  this.Count -
+                  stat.data[0].count -
+                  stat.data[1].count -
+                  stat.data[2].count -
+                  stat.data[3].count -
+                  stat.data[4].count;
+              }
+              this.CalcPercent();
+            }
+          );
+        }
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .canvas {
   display: flex;
   align-items: center;
@@ -171,75 +179,75 @@ export default {
 }
 
 .caption-item:nth-child(1) {
-  border-bottom: solid #99CCCC;
+  border-bottom: solid #99cccc;
 }
 
 .caption-item:nth-child(2) {
-  border-bottom: solid #CCFFCC;
+  border-bottom: solid #ccffcc;
 }
 
 .caption-item:nth-child(3) {
-  border-bottom: solid #FFCCCC;
+  border-bottom: solid #ffcccc;
 }
 
 .caption-item:nth-child(4) {
-  border-bottom: solid #CC99FF;
+  border-bottom: solid #cc99ff;
 }
 
 .caption-item:nth-child(5) {
-  border-bottom: solid #CCFF66;
+  border-bottom: solid #ccff66;
 }
 
 .caption-item:nth-child(6) {
-  border-bottom: solid #FFCC66;
+  border-bottom: solid #ffcc66;
 }
 
 .caption-item:nth-child(1)::before {
-  background-color: #99CCCC;
+  background-color: #99cccc;
 }
 
 .caption-item:nth-child(2)::before {
-  background-color: #CCFFCC;
+  background-color: #ccffcc;
 }
 
 .caption-item:nth-child(3)::before {
-  background-color: #FFCCCC;
+  background-color: #ffcccc;
 }
 
 .caption-item:nth-child(4)::before {
-  background-color: #CC99FF;
+  background-color: #cc99ff;
 }
 
 .caption-item:nth-child(5)::before {
-  background-color: #CCFF66;
+  background-color: #ccff66;
 }
 
 .caption-item:nth-child(6)::before {
-  background-color: #FFCC66;
+  background-color: #ffcc66;
 }
 
 .unit:nth-child(1) {
-  stroke: #99CCCC;
+  stroke: #99cccc;
 }
 
 .unit:nth-child(2) {
-  stroke: #CCFFCC;
+  stroke: #ccffcc;
 }
 
 .unit:nth-child(3) {
-  stroke: #FFCCCC;
+  stroke: #ffcccc;
 }
 
 .unit:nth-child(4) {
-  stroke: #CC99FF;
+  stroke: #cc99ff;
 }
 
 .unit:nth-child(5) {
-  stroke: #CCFF66;
+  stroke: #ccff66;
 }
 
 .unit:nth-child(6) {
-  stroke: #FFCC66;
+  stroke: #ffcc66;
 }
 
 @keyframes render {
@@ -248,11 +256,11 @@ export default {
   }
 }
 
-@media only screen and (max-width: 1300px)  {
+@media only screen and (max-width: 1300px) {
   .canvas {
     width: auto;
   }
-  .caption-list{
+  .caption-list {
     display: flex;
     width: 70vw;
     justify-content: space-between;
@@ -267,5 +275,4 @@ export default {
     height: 1.5vw;
   }
 }
-
 </style>

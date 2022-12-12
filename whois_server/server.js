@@ -18,8 +18,8 @@ app.use(
     origin: [
       // process.env.IP_HOST,
       // 'http://188.68.222.76',
-      // "https://whoisa.ru",
-      "http://localhost:8081",
+      "https://whoisa.ru",
+      // "http://localhost:8081",
       // "http://whoisa.ru",
       // 'http://localhost:8080',
       // 'https://localhost:8080',
@@ -31,8 +31,8 @@ app.use(
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connec
-  // res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
+  res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
 
   // Request methods you wish to allow
   res.setHeader(
@@ -145,6 +145,8 @@ cron.schedule("00 14 * * *", () => {
     require("./app/controllers/whois.controller.js").UpdateDataBase();
   }
 });
+
+require("./app/controllers/whois.controller.js").AddRegistrantInNS();
 
 // require("./app/controllers/whois.controller.js").UpdateDataBase();
 // require("./app/controllers/whois.controller.js").UpdateDataBase();
