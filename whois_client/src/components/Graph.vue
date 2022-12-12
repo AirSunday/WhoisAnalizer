@@ -80,11 +80,11 @@ export default {
                 ];
               } else {
                 this.Statistics = [
-                  { element: stat.data[0].name, count: stat.data[0].count },
-                  { element: stat.data[1].name, count: stat.data[1].count },
-                  { element: stat.data[2].name, count: stat.data[2].count },
-                  { element: stat.data[3].name, count: stat.data[3].count },
-                  { element: stat.data[4].name, count: stat.data[4].count },
+                  { element: stat.data[0].value, count: stat.data[0].count },
+                  { element: stat.data[1].value, count: stat.data[1].count },
+                  { element: stat.data[2].value, count: stat.data[2].count },
+                  { element: stat.data[3].value, count: stat.data[3].count },
+                  { element: stat.data[4].value, count: stat.data[4].count },
                   { element: this.$t("graph.Other"), count: 0 },
                 ];
                 this.Statistics[5].count =
