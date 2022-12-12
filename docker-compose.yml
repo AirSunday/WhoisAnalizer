@@ -28,9 +28,6 @@ services:
       - EMAIL_USER=AirSunday@yandex.ru
     depends_on:
       - postgres
-    volumes:
-        - "/etc/localtime:/etc/localtime:ro"
-        - "/etc/timezone:/etc/timezone:ro"
   vue:
     build: whois_client/
     image: airsunday/vue-app
