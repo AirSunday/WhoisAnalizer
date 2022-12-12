@@ -110,31 +110,31 @@ db.sequelize
 var cron = require("node-cron");
 
 // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-cron.schedule("00 11 * * *", () => {
+cron.schedule("00 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/users.controller.js").CheckUsersDomain();
   }
 });
 
-cron.schedule("10 12 * * *", () => {
+cron.schedule("10 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DownloadDomains();
   }
 });
 
-cron.schedule("20 12 * * *", () => {
+cron.schedule("20 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").CompareDomains();
   }
 });
 
-cron.schedule("00 13 * * *", () => {
+cron.schedule("00 01 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DeleteDomain();
   }
 });
 
-cron.schedule("00 14 * * *", () => {
+cron.schedule("00 01 * * *", () => {
   // min hore day mounth year (every day 03:00)
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";
