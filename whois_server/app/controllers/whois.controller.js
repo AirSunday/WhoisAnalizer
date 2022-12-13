@@ -256,12 +256,12 @@ async function ForAge(data, ageList) {
   for await (const el of data) {
     let age = parseInt(el.dataValues.age);
     let count = parseInt(el.dataValues.count);
-    if (age <= 5) ageList._0to4 += count;
-    else if (4 <= age && age < 8) ageList._4to8 += count;
-    else if (8 <= age && age < 12) ageList._8to12 += count;
-    else if (12 <= age && age < 16) ageList._12to16 += count;
-    else if (16 <= age && age < 20) ageList._16to20 += count;
-    else if (20 <= age) ageList._20more += count;
+    if (age <= 1) ageList[0].count += count;
+    else if (2 <= age && age <= 3) ageList[1].count += count;
+    else if (4 <= age && age <= 7) ageList[2].count += count;
+    else if (8 <= age && age <= 9) ageList[3].count += count;
+    else if (10 <= age && age <= 12) ageList[4].count += count;
+    else if (13 <= age) ageList[5].count += count;
   }
 }
 
@@ -276,14 +276,14 @@ exports.GetStatistic = (req, res) => {
       order: [["count", "DESC"]],
     })
       .then((data) => {
-        const ageList = {
-          _0to4: 0,
-          _4to8: 0,
-          _8to12: 0,
-          _12to16: 0,
-          _16to20: 0,
-          _20more: 0,
-        };
+        const ageList = [
+          { value: "0 .. 1", count: 0 },
+          { value: "2 .. 3", count: 0 },
+          { value: "4 .. 6", count: 0 },
+          { value: "7 .. 9", count: 0 },
+          { value: "10 .. 12", count: 0 },
+          { value: "13 .. *", count: 0 },
+        ];
         ForAge(data, ageList).then(() => {
           res.status(200).json(ageList);
         });

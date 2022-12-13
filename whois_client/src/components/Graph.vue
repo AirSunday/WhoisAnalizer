@@ -69,24 +69,19 @@ export default {
 
           WhoisDataService.GetStatistic({ mod: this.StatisticMod }).then(
             (stat) => {
+              this.Statistics = [
+                { element: stat.data[0].value, count: stat.data[0].count },
+                { element: stat.data[1].value, count: stat.data[1].count },
+                { element: stat.data[2].value, count: stat.data[2].count },
+                { element: stat.data[3].value, count: stat.data[3].count },
+                { element: stat.data[4].value, count: stat.data[4].count },
+                { element: "", count: 0 },
+              ];
               if (this.StatisticMod === "Age") {
-                this.Statistics = [
-                  { element: "0 .. 4", count: stat.data._0to4 },
-                  { element: "4 .. 8", count: stat.data._4to8 },
-                  { element: "8 .. 12", count: stat.data._8to12 },
-                  { element: "12 .. 16", count: stat.data._12to16 },
-                  { element: "16 .. 20", count: stat.data._16to20 },
-                  { element: "20 .. * ", count: stat.data._20more },
-                ];
+                this.Statistics[5].element = stat.data[5].value;
+                this.Statistics[5].count = stat.data[5].count;
               } else {
-                this.Statistics = [
-                  { element: stat.data[0].value, count: stat.data[0].count },
-                  { element: stat.data[1].value, count: stat.data[1].count },
-                  { element: stat.data[2].value, count: stat.data[2].count },
-                  { element: stat.data[3].value, count: stat.data[3].count },
-                  { element: stat.data[4].value, count: stat.data[4].count },
-                  { element: this.$t("graph.Other"), count: 0 },
-                ];
+                this.Statistics[5].element = this.$t("graph.Other");
                 this.Statistics[5].count =
                   this.Count -
                   stat.data[0].count -
