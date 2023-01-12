@@ -6,6 +6,7 @@ const instance = axios.create({
   withCredentials: true,
   // baseURL: "http://localhost:8080/api",
   baseURL: "https://whoisa.ru/api",
+  // baseURL: "http://188.68.222.76",
   headers: {
     "Content-type": "application/json",
   },
