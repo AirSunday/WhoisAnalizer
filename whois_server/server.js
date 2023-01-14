@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [
       // process.env.IP_HOST,
-      // 'http://188.68.222.76',
+      // "http://188.68.222.76",
       "https://whoisa.ru",
       // "http://localhost:8081",
       // "http://whoisa.ru",
@@ -31,6 +31,7 @@ app.use(
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connec
+  // res.setHeader("Access-Control-Allow-Origin", "http://188.68.222.76");
   res.setHeader("Access-Control-Allow-Origin", "https://whoisa.ru");
   // res.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
 
@@ -110,31 +111,32 @@ db.sequelize
 var cron = require("node-cron");
 
 // cron.schedule('0 0 * * *', () => { // min hore day mounth year (every day 00:00)
-cron.schedule("00 00 * * *", () => {
-  if (process.env.FLAG_REQUEST === "true") {
-    require("./app/controllers/users.controller.js").CheckUsersDomain();
-  }
-});
+// cron.schedule("00 00 * * *", () => {
+//   if (process.env.FLAG_REQUEST === "true") {
+//     require("./app/controllers/users.controller.js").CheckUsersDomain();
+//   }
+// });
 
-cron.schedule("00 20 * * *", () => {
+cron.schedule("00 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DownloadDomains();
   }
 });
 
-cron.schedule("10 20 * * *", () => {
+cron.schedule("10 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").CompareDomains();
   }
 });
 
-cron.schedule("00 21 * * *", () => {
+cron.schedule("00 02 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
+    process.env.FLAG_REQUEST = "false";
     require("./app/controllers/whois.controller.js").DeleteDomain();
   }
 });
 
-cron.schedule("00 22 * * *", () => {
+cron.schedule("00 07 * * *", () => {
   // min hore day mounth year (every day 03:00)
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";

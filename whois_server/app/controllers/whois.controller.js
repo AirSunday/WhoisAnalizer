@@ -277,7 +277,7 @@ exports.GetStatistic = (req, res) => {
     })
       .then((data) => {
         const ageList = [
-          { value: "0 ... 1", count: 0 },
+          { value: "0 .. 1", count: 0 },
           { value: "2 .. 3", count: 0 },
           { value: "4 .. 6", count: 0 },
           { value: "7 .. 9", count: 0 },
@@ -447,13 +447,12 @@ async function AddDamoinToDB(objAddtoBD) {
 
 exports.UpdateDataBase = async function () {
   const fileStream = fs.createReadStream("./app/data/new_ru_domains.txt");
-  // const fileStream = fs.createReadStream("./app/data/ru_domains.txt");
 
   const rl = readline.createInterface({
     input: fileStream,
     crlfDelay: Infinity,
   });
-  var lineCount = 0;
+  let lineCount = 0;
   var objAddtoBD = {
     registrant: new Map(),
     ns_servers: new Map(),
@@ -463,61 +462,54 @@ exports.UpdateDataBase = async function () {
   for await (const line of rl) {
     lineCount++;
 
-    if (lineCount > 3585000) {
-      if (
-        lineCount % 118 === 0 ||
-        lineCount === countStat.countNew + countStat.countChange
-      ) {
-        if (lineCount >= countStat.countNew + countStat.countChange) {
-          console.log("end push domains. Count domains = " + lineCount);
-          process.env.FLAG_REQUEST = true;
-        }
+    if (
+      lineCount % 118 === 0 ||
+      lineCount === countStat.countNew + countStat.countChange
+    ) {
+      if (lineCount >= countStat.countNew + countStat.countChange) {
+        console.log("end push domains. Count domains = " + lineCount);
+        process.env.FLAG_REQUEST = true;
+      }
 
-        let promiseAddDomainToDB = new Promise((resolve, reject) => {
-          // AddDamoinToDB(objAddtoBD).then( resolve("result") );
-          FillRegistrantDB(objAddtoBD.registrant).then(() => {
-            FillNsServersDB(objAddtoBD.ns_servers).then(() => {
-              FillDomainDB(objAddtoBD.domains).then(() => {
-                resolve("result");
-              });
+      let promiseAddDomainToDB = new Promise((resolve, reject) => {
+        // AddDamoinToDB(objAddtoBD).then( resolve("result") );
+        FillRegistrantDB(objAddtoBD.registrant).then(() => {
+          FillNsServersDB(objAddtoBD.ns_servers).then(() => {
+            FillDomainDB(objAddtoBD.domains).then(() => {
+              resolve("result");
             });
           });
         });
-
-        let promiseDelay = new Promise((resolve, reject) => {
-          setTimeout(resolve, 65000);
-        });
-
-        await Promise.all([promiseDelay, promiseAddDomainToDB]);
-        console.log(lineCount + " domains was push in BD");
-
-        objAddtoBD.registrant.clear();
-        objAddtoBD.ns_servers.clear();
-        objAddtoBD.domains = [];
-      }
-
-      await FillDomainObject(line).then((newDomain) => {
-        if (newDomain.domain_name != "") {
-          const registrantCount = objAddtoBD.registrant.get(
-            newDomain.registrant
-          );
-          registrantCount
-            ? objAddtoBD.registrant.set(
-                newDomain.registrant,
-                registrantCount + 1
-              )
-            : objAddtoBD.registrant.set(newDomain.registrant, 1);
-
-          newDomain.ns_servers.split(" ").forEach((ns) => {
-            let ns_serversCount = objAddtoBD.ns_servers.get(ns);
-            ns_serversCount
-              ? objAddtoBD.ns_servers.set(ns, ns_serversCount + 1)
-              : objAddtoBD.ns_servers.set(ns, 1);
-          });
-          objAddtoBD.domains.push(newDomain);
-        }
       });
+
+      let promiseDelay = new Promise((resolve, reject) => {
+        setTimeout(resolve, 65000);
+      });
+
+      await Promise.all([promiseDelay, promiseAddDomainToDB]);
+      console.log(lineCount + " domains was push in BD");
+
+      objAddtoBD.registrant.clear();
+      objAddtoBD.ns_servers.clear();
+      objAddtoBD.domains = [];
     }
+
+    await FillDomainObject(line).then((newDomain) => {
+      if (newDomain.domain_name != "") {
+        const registrantCount = objAddtoBD.registrant.get(newDomain.registrant);
+        registrantCount
+          ? objAddtoBD.registrant.set(newDomain.registrant, registrantCount + 1)
+          : objAddtoBD.registrant.set(newDomain.registrant, 1);
+
+        newDomain.ns_servers.split(" ").forEach((ns) => {
+          let ns_serversCount = objAddtoBD.ns_servers.get(ns);
+          ns_serversCount
+            ? objAddtoBD.ns_servers.set(ns, ns_serversCount + 1)
+            : objAddtoBD.ns_servers.set(ns, 1);
+        });
+        objAddtoBD.domains.push(newDomain);
+      }
+    });
   }
 };
 exports.DownloadDomains = (req, res) => {
@@ -591,7 +583,14 @@ exports.CompareDomains = (req, res) => {
   });
   CompareFile()
     .then(() => {
-      console.log("END compare file. " + countStat);
+      console.log(
+        "END compare file. New: " +
+          countStat.countNew +
+          " Delete: " +
+          countStat.countDelete +
+          " Update: " +
+          countStat.countChange
+      );
       if (fs.existsSync("app/data/old_ru_domains.txt"))
         fs.unlink("app/data/old_ru_domains.txt", (err, result) => {
           if (err) console.log("NOT delete old_ru_domains.txt");
@@ -625,8 +624,8 @@ async function CompareFile() {
   for await (const line of rl) {
     // if(countStat.lineCount == 180000) return; // МОЖЕТ ДОБАВИТЬ В ПРОДАКЩЕН????
     countStat.lineCount++;
-    compareLine =
-      oldLine.split("	")[0] == false
+    let compareLine =
+      oldLine.split("	")[0] !== "false"
         ? line.split("	")[0].localeCompare(oldLine.split("	")[0])
         : -1;
     if (compareLine == 0) {
@@ -678,7 +677,10 @@ async function DeleteDomainInBD() {
   });
   for await (const line of rl) {
     let domainName = line.split("	")[0].toLowerCase();
-    Whoisdb.findOne({ where: { domain_name: domainName } })
+    console.log("delete: " + domainName);
+    await delay(200);
+
+    await Whoisdb.findOne({ where: { domain_name: domainName } })
       .then((data) => {
         if (data) {
           Registrantsdb.findOne({ where: { name: data.registrant } })
