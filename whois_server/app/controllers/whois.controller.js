@@ -678,48 +678,46 @@ async function DeleteDomainInBD() {
   for await (const line of rl) {
     let domainName = line.split("	")[0].toLowerCase();
     console.log("delete: " + domainName);
-    await delay(300);
+    await delay(100);
 
     await Whoisdb.findOne({ where: { domain_name: domainName } })
       .then((data) => {
         if (data) {
-          Registrantsdb.findOne({ where: { name: data.registrant } }).then(
-            (reg) => {
-              Registrantsdb.update(
-                { count: reg.count - 1 },
-                {
-                  where: { name: reg.name },
-                }
-              )
-                .then(() => {
-                  data.ns_servers.split(" ").forEach((serv) => {
-                    if (serv != "") {
-                      NsServersdb.findOne({ where: { name: serv } })
-                        .then((ns) => {
-                          NsServersdb.update(
-                            { count: ns.count - 1 },
-                            {
-                              where: { name: ns.name },
-                            }
-                          ).then(() => {
-                            Whoisdb.destroy({
-                              where: { domain_name: data.domain_name },
-                            }).catch((err) => {
-                              console.log("ERROR delete domains");
-                            });
-                          });
-                        })
-                        .catch((err) => {
-                          console.log("ERROR delete domains");
-                        });
+          Whoisdb.destroy({ where: { domain_name: data.domain_name } })
+            .then(() => {
+              Registrantsdb.findOne({ where: { name: data.registrant } })
+                .then((reg) => {
+                  Registrantsdb.update(
+                    { count: reg.count - 1 },
+                    {
+                      where: { name: reg.name },
                     }
+                  ).then(() => {
+                    data.ns_servers.split(" ").forEach((serv) => {
+                      if (serv != "") {
+                        NsServersdb.findOne({ where: { name: serv } })
+                          .then((ns) => {
+                            NsServersdb.update(
+                              { count: ns.count - 1 },
+                              {
+                                where: { name: ns.name },
+                              }
+                            );
+                          })
+                          .catch((err) => {
+                            console.log("ERROR delete domains");
+                          });
+                      }
+                    });
                   });
                 })
                 .catch((err) => {
                   console.log("ERROR delete domains");
                 });
-            }
-          );
+            })
+            .catch((err) => {
+              console.log("ERROR delete domains");
+            });
         }
       })
       .catch((err) => {
