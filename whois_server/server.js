@@ -117,26 +117,26 @@ var cron = require("node-cron");
 //   }
 // });
 
-cron.schedule("25 15 * * *", () => {
+cron.schedule("30 11 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DownloadDomains();
   }
 });
 
-cron.schedule("35 15 * * *", () => {
+cron.schedule("40 11 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").CompareDomains();
   }
 });
 
-cron.schedule("30 17 * * *", () => {
+cron.schedule("30 18 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";
     require("./app/controllers/whois.controller.js").DeleteDomain();
   }
 });
 
-cron.schedule("00 22 * * *", () => {
+cron.schedule("00 23 * * *", () => {
   // min hore day mounth year (every day 03:00)
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";
