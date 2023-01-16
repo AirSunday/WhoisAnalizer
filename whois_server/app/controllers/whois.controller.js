@@ -665,7 +665,9 @@ function addToFile(file, str) {
   });
 }
 exports.DeleteDomain = (req, res) => {
-  DeleteDomainInBD();
+  DeleteDomainInBD().then(() => {
+    process.env.FLAG_REQUEST = true;
+  });
 };
 async function DeleteDomainInBD() {
   console.log("start delete domains");
