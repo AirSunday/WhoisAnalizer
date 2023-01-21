@@ -117,26 +117,26 @@ var cron = require("node-cron");
 //   }
 // });
 
-cron.schedule("10 08 * * *", () => {
+cron.schedule("00 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").DownloadDomains();
   }
 });
 
-cron.schedule("20 08 * * *", () => {
+cron.schedule("10 00 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     require("./app/controllers/whois.controller.js").CompareDomains();
   }
 });
 
-cron.schedule("20 9 * * *", () => {
+cron.schedule("00 01 * * *", () => {
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";
     require("./app/controllers/whois.controller.js").DeleteDomain();
   }
 });
 
-cron.schedule("00 15 * * *", () => {
+cron.schedule("00 06 * * *", () => {
   // min hore day mounth year (every day 03:00)
   if (process.env.FLAG_REQUEST === "true") {
     process.env.FLAG_REQUEST = "false";
@@ -145,7 +145,6 @@ cron.schedule("00 15 * * *", () => {
 });
 
 // require("./app/controllers/whois.controller.js").AddRegistrantInNS();
-
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.")
 // })

@@ -462,6 +462,8 @@ exports.UpdateDataBase = async function () {
   for await (const line of rl) {
     lineCount++;
 
+    if (lineCount > 110000) break;
+
     if (
       lineCount % 118 === 0 ||
       lineCount === countStat.countNew + countStat.countChange
@@ -677,45 +679,35 @@ async function DeleteDomainInBD() {
     input: fileStream,
     crlfDelay: Infinity,
   });
-  for await (const line of rl) {
-    let domainName = line.split("	")[0].toLowerCase();
-    console.log("delete: " + domainName);
-    await delay(100);
 
+  const deleteServ = new Map();
+  const deleteReg = new Map();
+  let stepDelete = 0;
+
+  for await (const line of rl) {
+    if (stepDelete > 2500) break;
+    let domainName = line.split("	")[0].toLowerCase();
+    await delay(100);
+    stepDelete++;
     await Whoisdb.findOne({ where: { domain_name: domainName } })
       .then((data) => {
         if (data) {
           Whoisdb.destroy({ where: { domain_name: data.domain_name } })
             .then(() => {
-              Registrantsdb.findOne({ where: { name: data.registrant } })
-                .then((reg) => {
-                  Registrantsdb.update(
-                    { count: reg.count - 1 },
-                    {
-                      where: { name: reg.name },
-                    }
-                  ).then(() => {
-                    data.ns_servers.split(" ").forEach((serv) => {
-                      if (serv != "") {
-                        NsServersdb.findOne({ where: { name: serv } })
-                          .then((ns) => {
-                            NsServersdb.update(
-                              { count: ns.count - 1 },
-                              {
-                                where: { name: ns.name },
-                              }
-                            );
-                          })
-                          .catch((err) => {
-                            console.log("ERROR delete domains");
-                          });
-                      }
-                    });
-                  });
-                })
-                .catch((err) => {
-                  console.log("ERROR delete domains");
-                });
+              console.log("delete: " + domainName);
+              const registrantCount = deleteReg.get(data.registrant);
+              registrantCount
+                ? deleteReg.set(data.registrant, registrantCount + 1)
+                : deleteReg.set(data.registrant, 1);
+
+              data.ns_servers.split(" ").forEach((serv) => {
+                if (serv !== "") {
+                  const serverCount = deleteServ.get(serv);
+                  serverCount
+                    ? deleteServ.set(serv, serverCount + 1)
+                    : deleteServ.set(serv, 1);
+                }
+              });
             })
             .catch((err) => {
               console.log("ERROR delete domains");
@@ -726,7 +718,44 @@ async function DeleteDomainInBD() {
         console.log("ERROR delete domains");
       });
   }
+
+  console.log("End delete domains");
+  console.log("================================");
+
+  console.log(deleteReg.size);
+  console.log(deleteServ.size);
+
+  for await (const registrant of deleteReg) {
+    await DeleteRegistrantInDB(...registrant);
+    console.log("Delete reg: " + registrant);
+  }
+
+  for await (const serv of deleteServ) {
+    await DeleteServInDB(...serv);
+    console.log("Delete serv: " + serv);
+  }
 }
+
+async function DeleteRegistrantInDB(registrant, count) {
+  await Registrantsdb.findOne({ where: { name: registrant } }).then(
+    async (reg) => {
+      reg.count -= count;
+      reg.save();
+    }
+  );
+}
+
+async function DeleteServInDB(serv, count) {
+  await Registrantsdb.findOne({ where: { name: serv } }).then(
+    async (server) => {
+      if (server) {
+        server.count -= count;
+        server.save();
+      }
+    }
+  );
+}
+
 function CreateNews() {
   console.log("start create news");
   var today = new Date();
