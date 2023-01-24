@@ -118,30 +118,30 @@ var cron = require("node-cron");
 // });
 
 cron.schedule("00 00 * * *", () => {
-  if (process.env.FLAG_REQUEST === "true") {
-    require("./app/controllers/whois.controller.js").DownloadDomains();
-  }
+  // if (process.env.FLAG_REQUEST === "true") {
+  require("./app/controllers/whois.controller.js").DownloadDomains();
+  // }
 });
 
 cron.schedule("10 00 * * *", () => {
-  if (process.env.FLAG_REQUEST === "true") {
-    require("./app/controllers/whois.controller.js").CompareDomains();
-  }
+  // if (process.env.FLAG_REQUEST === "true") {
+  require("./app/controllers/whois.controller.js").CompareDomains();
+  // }
 });
 
 cron.schedule("00 01 * * *", () => {
-  if (process.env.FLAG_REQUEST === "true") {
-    process.env.FLAG_REQUEST = "false";
-    require("./app/controllers/whois.controller.js").DeleteDomain();
-  }
+  // if (process.env.FLAG_REQUEST === "true") {
+  //   process.env.FLAG_REQUEST = "false";
+  require("./app/controllers/whois.controller.js").DeleteDomain();
+  // }
 });
 
 cron.schedule("00 06 * * *", () => {
   // min hore day mounth year (every day 03:00)
-  if (process.env.FLAG_REQUEST === "true") {
-    process.env.FLAG_REQUEST = "false";
-    require("./app/controllers/whois.controller.js").UpdateDataBase();
-  }
+  // if (process.env.FLAG_REQUEST === "true") {
+  //   process.env.FLAG_REQUEST = "false";
+  require("./app/controllers/whois.controller.js").UpdateDataBase();
+  // }
 });
 
 // require("./app/controllers/whois.controller.js").AddRegistrantInNS();
