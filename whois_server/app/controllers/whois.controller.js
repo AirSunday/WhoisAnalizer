@@ -521,20 +521,15 @@ exports.DownloadDomains = (req, res) => {
   });
 };
 async function download(url) {
-  if (fs.existsSync("app/data/old_ru_domains.txt"))
-    fs.unlink("app/data/old_ru_domains.txt", (err, result) => {
-      if (err) console.log("NOT delete old_ru_domains.txt");
-      else console.log("delete old_ru_domains.txt");
-      if (fs.existsSync("app/data/ru_domains.txt"))
-        fs.rename(
-          "app/data/ru_domains.txt",
-          "app/data/old_ru_domains.txt",
-          (err, result) => {
-            if (err) console.log("NOT rename ru_domains.txt to old_ru_domains");
-            else console.log("rename ru_domains.txt to old_ru_domains");
-          }
-        );
-    });
+  if (fs.existsSync("app/data/ru_domains.txt"))
+    fs.rename(
+      "app/data/ru_domains.txt",
+      "app/data/old_ru_domains.txt",
+      (err, result) => {
+        if (err) console.log("NOT rename ru_domains.txt to old_ru_domains");
+        else console.log("rename ru_domains.txt to old_ru_domains");
+      }
+    );
   if (fs.existsSync("app/data/ru_domains.gz"))
     fs.unlink("app/data/ru_domains.gz", (err, result) => {
       if (err) console.log("NOT delete ru_domains.gz");

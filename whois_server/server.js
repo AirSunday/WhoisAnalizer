@@ -117,19 +117,19 @@ var cron = require("node-cron");
 //   }
 // });
 
-cron.schedule("00 00 * * *", () => {
+cron.schedule("47 20 * * *", () => {
   // if (process.env.FLAG_REQUEST === "true") {
   require("./app/controllers/whois.controller.js").DownloadDomains();
   // }
 });
 
-cron.schedule("10 00 * * *", () => {
+cron.schedule("49 20 * * *", () => {
   // if (process.env.FLAG_REQUEST === "true") {
   require("./app/controllers/whois.controller.js").CompareDomains();
   // }
 });
 
-cron.schedule("00 01 * * *", () => {
+cron.schedule("00 21 * * *", () => {
   // if (process.env.FLAG_REQUEST === "true") {
   //   process.env.FLAG_REQUEST = "false";
   require("./app/controllers/whois.controller.js").DeleteDomain();
